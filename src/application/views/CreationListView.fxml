@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -18,18 +17,18 @@
       </VBox>
    </top>
    <center>
-      <ListView BorderPane.alignment="CENTER" />
+      <ListView fx:id="_creationList" onMouseClicked="#creationIsSelected" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
       <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
                <children>
-                  <Button mnemonicParsing="false" text="Play Creation" />
-                  <Button mnemonicParsing="false" text="Delete Creation" />
+                  <Button fx:id="_playButton" disable="true" mnemonicParsing="false" text="Play Creation" />
+                  <Button fx:id="_deleteButton" disable="true" mnemonicParsing="false" text="Delete Creation" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Create New Creation" />
+            <Button fx:id="_createButton" mnemonicParsing="false" text="Create New Creation" />
          </children>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

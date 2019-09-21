@@ -1,6 +1,6 @@
 package application;
 	
-import application.views.MainMenuController;
+import application.controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Parent;

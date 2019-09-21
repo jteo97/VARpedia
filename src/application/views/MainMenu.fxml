@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="400.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.views.MainMenuController">
+<BorderPane prefHeight="400.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
    <bottom>
       <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" text="Launch the Tool" BorderPane.alignment="CENTER" />
    </bottom>
