@@ -6,12 +6,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="401.0" prefWidth="310.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="400.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.views.MainMenuController">
    <bottom>
-      <Button mnemonicParsing="false" text="Launch the Tool" BorderPane.alignment="CENTER" />
+      <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" text="Launch the Tool" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" text="Welcome to Wiki-Speak Authoring Tool!" />
             <Label alignment="CENTER" text="Press the Button to Start" />

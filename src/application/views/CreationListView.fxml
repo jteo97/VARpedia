@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Here's the existing creations" />
+            <Label text="Select any of them to play, delete, or create new creation" />
+            <Label text="Total number of creations: " />
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <ListView BorderPane.alignment="CENTER" />
+   </center>
+   <bottom>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
+               <children>
+                  <Button mnemonicParsing="false" text="Play Creation" />
+                  <Button mnemonicParsing="false" text="Delete Creation" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" text="Create New Creation" />
+         </children>
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </VBox>
+   </bottom>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</BorderPane>
