@@ -22,12 +22,6 @@ public class Main extends Application {
 			MainMenuController controller = (MainMenuController) mainMenuLoader.getController();
 			controller.setScene(new Scene(listRoot, 400, 400));
 
-			FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("controllers/views/VideoPlayer.fxml"));
-			Parent videoRoot = (Parent) videoPlayerLoader.load();
-
-			VideoPlayerController videocontroller = (VideoPlayerController) videoPlayerLoader.getController();
-			videocontroller.setScene(new Scene(videoRoot, 400, 400));
-
 			Scene mainScene = new Scene(menuRoot, 400, 400);
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("VARpedia");

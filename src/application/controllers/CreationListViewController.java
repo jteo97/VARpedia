@@ -39,7 +39,7 @@ public class CreationListViewController {
 			Parent videoRoot = (Parent) videoPlayerLoader.load();
 
 			VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
-			controller.setScene(new Scene(videoRoot, 400, 400));
+			controller.setScene(new Scene(videoRoot, 800, 800));
 
 			controller.makeWindow();
 
