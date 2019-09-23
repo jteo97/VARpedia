@@ -27,12 +27,14 @@ public class CreationListViewController {
 	
 	@FXML
 	private void onDeleteButtonPressed() {
-		
+		String str = _creationList.getSelectionModel().getSelectedItem();
+		//FIND str and delete file and update GUI
 	}
 	
 	@FXML
 	private void onPlayButtonPressed() {
 
+		String str = _creationList.getSelectionModel().getSelectedItem();
 
 		try {
 			FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
@@ -41,7 +43,7 @@ public class CreationListViewController {
 			VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
 			controller.setScene(new Scene(videoRoot, 800, 800));
 
-			controller.makeWindow();
+			controller.makeWindow(str);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -56,5 +58,13 @@ public class CreationListViewController {
 	
 	public void setScene(Scene scene) {
 		_nextScene = scene;
+		//Code for updating _CreationList can go in here
 	}
+
+	public void updateList() {
+		//Update the _CreationList
+		_creationList.getItems().add("");
+	}
+
+
 }

@@ -15,7 +15,7 @@ import java.io.File;
 public class VideoPlayerController {
 
     @FXML private MediaView _media;
-    @FXML private File fileUrl = new File("google.mp4");
+    @FXML private File fileUrl = new File("big_buck_bunny_1_minute.mp4");
 
     @FXML Button _fastForward;
     @FXML Button _rewind;
@@ -25,8 +25,8 @@ public class VideoPlayerController {
     MediaPlayer _player;
 
     @FXML
-    public void makeWindow() {
-
+    public void makeWindow(String fileToOpen) {
+        //fileUrl = new File(fileToOpen);
 
         Media video = new Media(fileUrl.toURI().toString());
         _player = new MediaPlayer(video);
