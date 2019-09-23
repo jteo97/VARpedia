@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.models.CreationListModel;
+import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,9 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
@@ -90,7 +93,24 @@ public class CreationListViewController {
 	
 	@FXML
 	private void onCreateButtonPressed() {
+		// Get user input for search term
+		TextInputDialog userInput = new TextInputDialog();
+		userInput.setTitle("VARPedia Creation");
+		userInput.setHeaderText("Which term are you searching?");
+		userInput.setContentText("Please enter the term:");
+		Optional<String> result = userInput.showAndWait();
 		
+		// set up information box for searching term
+		Alert searching = new Alert(AlertType.INFORMATION);
+		searching.setTitle("Creation");
+		searching.setHeaderText("Searching...Press Cancel to stop the search and return to main list");
+		ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+		searching.getButtonTypes().setAll(cancel);
+		
+		// search the term in background
+		WikiSearchTask task = new WikiSearchTask(result.get());
+		Thread th = new Thread(task);
+		th.start();
 	}
 	
 	public void setScene(Scene scene) {
