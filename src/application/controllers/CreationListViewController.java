@@ -100,17 +100,19 @@ public class CreationListViewController {
 		userInput.setContentText("Please enter the term:");
 		Optional<String> result = userInput.showAndWait();
 		
-		// set up information box for searching term
-		Alert searching = new Alert(AlertType.INFORMATION);
-		searching.setTitle("Creation");
-		searching.setHeaderText("Searching...Press Cancel to stop the search and return to main list");
-		ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-		searching.getButtonTypes().setAll(cancel);
+		if (result.isPresent()) {
+			// set up information box for searching term
+			Alert searching = new Alert(AlertType.INFORMATION);
+			searching.setTitle("Creation");
+			searching.setHeaderText("Searching...Press Cancel to stop the search and return to main list");
+			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+			searching.getButtonTypes().setAll(cancel);
 		
-		// search the term in background
-		WikiSearchTask task = new WikiSearchTask(result.get());
-		Thread th = new Thread(task);
-		th.start();
+			// search the term in background
+			WikiSearchTask task = new WikiSearchTask(result.get());
+			Thread th = new Thread(task);
+			th.start();
+		}
 	}
 	
 	public void setScene(Scene scene) {
