@@ -13,11 +13,20 @@ public class CreationListModel {
     private Label _label;
 
     public void setUp() {
-
+    	// Make the creation directory
+    	BashCommands makeDirectory = new BashCommands("mkdir creations");
+    	makeDirectory.startBashProcess();
+    	try {
+			makeDirectory.getProcess().waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	
+    	_count = 0;
     }
 
     public void delete(String creation) {
-
+    	
     }
 
     public void create(String creation) {

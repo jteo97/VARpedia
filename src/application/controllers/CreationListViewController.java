@@ -1,16 +1,19 @@
 package application.controllers;
 
 import application.models.CreationListModel;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class CreationListViewController {
 	@FXML private Button _createButton;
@@ -20,8 +23,6 @@ public class CreationListViewController {
 	@FXML private ListView<String> _creationList;
 
 	private CreationListModel _creationListModel;
-
-	private Scene _nextScene;
 
 	public void setUpModel() {
 		_creationListModel = new CreationListModel();
@@ -36,7 +37,28 @@ public class CreationListViewController {
 
 	@FXML
 	private void onDeleteButtonPressed() {
-
+		String creation = _creationList.getSelectionModel().getSelectedItem();
+		if (creation != null) {
+			// wait for user confirmation
+			Alert confirmation = new Alert(AlertType.CONFIRMATION);
+			confirmation.setTitle("Deletion");
+			confirmation.setHeaderText("Do you want to delete xxx?");
+			Optional<ButtonType> result = confirmation.showAndWait();
+			
+			// delete the creation if user confirmed
+			if (result.get() == ButtonType.OK) {
+				_creationListModel.delete(creation);
+				Alert info = new Alert(AlertType.INFORMATION);
+				info.setTitle("Deletion successful");
+				info.setHeaderText(creation + " has been deleted successfully");
+				info.showAndWait();
+			}
+		} else {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("No creation selected");
+			error.setHeaderText("You have not selected a creation, please select a creation to delete");
+			error.showAndWait();
+		}
 	}
 	
 	@FXML
@@ -61,9 +83,5 @@ public class CreationListViewController {
 	@FXML
 	private void onCreateButtonPressed() {
 		
-	}
-	
-	public void setScene(Scene scene) {
-		_nextScene = scene;
 	}
 }
