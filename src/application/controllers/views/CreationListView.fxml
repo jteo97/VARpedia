@@ -14,7 +14,7 @@
          <children>
             <Label text="Here's the existing creations" />
             <Label text="Select any of them to play, delete, or create new creation" />
-            <Label text="Total number of creations: " />
+            <Label text="Total number of creations: 0" />
          </children>
       </VBox>
    </top>

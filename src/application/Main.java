@@ -1,5 +1,6 @@
 package application;
 	
+import application.controllers.CreationListViewController;
 import application.controllers.MainMenuController;
 import application.controllers.VideoPlayerController;
 import javafx.application.Application;
@@ -21,6 +22,9 @@ public class Main extends Application {
 			
 			MainMenuController controller = (MainMenuController) mainMenuLoader.getController();
 			controller.setScene(new Scene(listRoot, 400, 400));
+
+			CreationListViewController listController = (CreationListViewController) creationListLoader.getController();
+			listController.setUpModel();
 
 			Scene mainScene = new Scene(menuRoot, 400, 400);
 			primaryStage.setScene(mainScene);
