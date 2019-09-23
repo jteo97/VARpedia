@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.CreationListModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,14 +18,21 @@ public class CreationListViewController {
 	@FXML private Label _creationCount;
 	@FXML private ListView<String> _creationList;
 
+	private CreationListModel _creationListModel;
+
 	private Scene _nextScene;
-	
+
+	public void setUpModel() {
+		_creationListModel = new CreationListModel();
+		_creationListModel.setUp();
+	}
+
 	@FXML
 	private void creationIsSelected() {
 		_playButton.setDisable(false);
 		_deleteButton.setDisable(false);
 	}
-	
+
 	@FXML
 	private void onDeleteButtonPressed() {
 		
