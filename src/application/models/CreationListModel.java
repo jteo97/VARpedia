@@ -1,17 +1,12 @@
 package application.models;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 
 public class CreationListModel {
 
     private ObservableList<String> _creationList;
-    private int _count;
-
-    private ListView<String> _listView;
-    private Label _label;
-
+    
     public void setUp() {
     	// Make the creation directory
     	BashCommands makeDirectory = new BashCommands("mkdir creations");
@@ -22,11 +17,13 @@ public class CreationListModel {
 			e.printStackTrace();
 		}
     	
-    	_count = 0;
+    	// Initial set up
+    	_creationList = FXCollections.observableArrayList();
     }
 
-    public void delete(String creation) {
-    	
+    public ObservableList<String> delete(String creation) {
+    	_creationList.remove(creation);
+    	return _creationList;
     }
 
     public void create(String creation) {

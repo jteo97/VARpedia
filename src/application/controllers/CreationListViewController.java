@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.models.CreationListModel;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -47,7 +48,11 @@ public class CreationListViewController {
 			
 			// delete the creation if user confirmed
 			if (result.get() == ButtonType.OK) {
-				_creationListModel.delete(creation);
+				// change the view after deletion
+				ObservableList<String> listAfterDeletion = _creationListModel.delete(creation);
+				_creationList.getItems().setAll(listAfterDeletion);
+				_creationCount.setText("Total number of creations: " + listAfterDeletion.size());
+				
 				Alert info = new Alert(AlertType.INFORMATION);
 				info.setTitle("Deletion successful");
 				info.setHeaderText(creation + " has been deleted successfully");
