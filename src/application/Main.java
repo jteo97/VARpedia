@@ -9,6 +9,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
 
 public class Main extends Application {
 	@Override
@@ -33,6 +36,20 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getCreationDirectory() {
+		String pathToCreations = "";
+		try {
+			pathToCreations = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
+			pathToCreations = pathToCreations.substring(0, pathToCreations.lastIndexOf("/"));
+
+			pathToCreations = pathToCreations + "/creations";
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+		return pathToCreations;
 	}
 	
 	public static void main(String[] args) {
