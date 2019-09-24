@@ -6,7 +6,6 @@ import application.controllers.CreationSceneController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -23,7 +22,6 @@ public class CompleteWikiSearch implements Runnable {
 	@Override
 	public void run() {
 		// error when the search term cannot be found
-		System.out.println(Platform.isFxApplicationThread());
 		if (_result.equals(_term + " not found :^(")) {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("Error");
@@ -49,10 +47,10 @@ public class CompleteWikiSearch implements Runnable {
 		
 		// load creation scene
 		try {
-			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("controllers/views/CreationScene.fxml"));
+			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("../controllers/views/CreationScene.fxml"));
 			Parent creationRoot = (Parent) creationSceneLoader.load();
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
-			Scene scene = new Scene(creationRoot, 400, 400);
+			Scene scene = new Scene(creationRoot, 600, 600);
 			controller.setup(numLinedWikiOut, scene);
 		} catch (IOException e) {
 			e.printStackTrace();
