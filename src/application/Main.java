@@ -12,8 +12,10 @@ import javafx.fxml.FXMLLoader;
 import java.io.File;
 import java.net.URISyntaxException;
 
-
 public class Main extends Application {
+
+    private static Stage _primaryStage;
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -24,12 +26,13 @@ public class Main extends Application {
 			Parent listRoot = (Parent) creationListLoader.load();
 			
 			MainMenuController controller = (MainMenuController) mainMenuLoader.getController();
-			controller.setScene(new Scene(listRoot, 400, 400));
+			controller.setScene(new Scene(listRoot));
 
 			CreationListViewController listController = (CreationListViewController) creationListLoader.getController();
 			listController.setUpModel();
 
-			Scene mainScene = new Scene(menuRoot, 400, 400);
+			Scene mainScene = new Scene(menuRoot);
+			_primaryStage = primaryStage;
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("VARpedia");
 			primaryStage.show();
@@ -55,4 +58,8 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+    public static Stage get_primaryStage() {
+        return _primaryStage;
+    }
 }

@@ -1,6 +1,7 @@
 package application.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -14,7 +15,13 @@ public class CreationSceneController {
 	@FXML private TextField _inputLine;
 	@FXML private Button _confirmLine;
 	@FXML private Button _cancelCreation;
-	
+
+	public Scene get_scene() {
+		return _scene;
+	}
+
+	private Scene _scene;
+
 	@FXML
 	private void onPreviewPressed() {
 		// do something to preview speech
@@ -38,5 +45,9 @@ public class CreationSceneController {
 	@FXML
 	private void onCancelPressed() {
 		// cancel
+	}
+
+	public void setScene(Scene scene) {
+		_scene = scene;
 	}
 }

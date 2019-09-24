@@ -49,6 +49,7 @@ public class DownloadImagesTask extends Task<Void> {
     private List<String> getImages(int numImages) {
         String url = "https://www.flickr.com/search/?text=" + _searchTerm;
         String html = "";
+        List<String> finalImageList = new ArrayList<String>();
         try {
             URL urlObj = new URL(url);
             BufferedReader input = new BufferedReader((new InputStreamReader(urlObj.openStream())));
@@ -64,8 +65,6 @@ public class DownloadImagesTask extends Task<Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        List<String> finalImageList = new ArrayList<String>();
 
         for (String word: html.split(" ")) {
             if (word.matches(".*live.staticflickr.com.*") && word.matches("(?i)url.*")) {

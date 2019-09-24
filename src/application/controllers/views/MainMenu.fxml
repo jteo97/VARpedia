@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="400.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
+<BorderPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
    <bottom>
-      <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" text="Launch the Tool" BorderPane.alignment="CENTER" />
+      <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" prefHeight="75.0" prefWidth="200.0" text="Launch the Tool" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <VBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Welcome to Wiki-Speak Authoring Tool!" />
-            <Label alignment="CENTER" text="Press the Button to Start" />
+            <Label alignment="CENTER" text="Welcome to Wiki-Speak Authoring Tool!">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
+            <Label alignment="CENTER" text="Press the Button to Start">
+               <font>
+                  <Font size="15.0" />
+               </font></Label>
          </children>
       </VBox>
    </center>

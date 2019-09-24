@@ -16,9 +16,9 @@
    <right>
       <VBox spacing="8.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" text="Preview Speech" />
+            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" prefWidth="168.0" text="Preview Speech" />
             <Button fx:id="_saveCurrent" mnemonicParsing="false" onAction="#onSaveCurrentPressed" text="Save Current Selection" />
-            <Button fx:id="_combineAudio" mnemonicParsing="false" onAction="#onCombineAudioPressed" text="Combine All" />
+            <Button fx:id="_combineAudio" mnemonicParsing="false" onAction="#onCombineAudioPressed" prefWidth="168.0" text="Combine All" />
          </children>
          <BorderPane.margin>
             <Insets />
