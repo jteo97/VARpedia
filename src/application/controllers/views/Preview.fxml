@@ -6,11 +6,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.PreviewController">
    <children>
-      <Button fx:id="_playButton" layoutX="327.0" layoutY="89.0" mnemonicParsing="false" onAction="#onPlayButtonPressed" text="Play" />
-      <Button fx:id="_saveButton" layoutX="237.0" layoutY="89.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" text="Save" />
+      <Button fx:id="_playButton" layoutX="310.0" layoutY="89.0" mnemonicParsing="false" onAction="#onPlayButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Play" />
+      <Button fx:id="_saveButton" layoutX="224.0" layoutY="89.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Save" />
       <Button fx:id="_cancelButton" layoutX="14.0" layoutY="248.0" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel" />
       <TextArea fx:id="_previewTextArea" layoutX="14.0" layoutY="39.0" prefHeight="200.0" prefWidth="200.0" />
       <ComboBox fx:id="_choiceOfVoice" layoutX="223.0" layoutY="39.0" prefWidth="150.0" promptText="Select a voice" />

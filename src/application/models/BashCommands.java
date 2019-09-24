@@ -11,7 +11,8 @@ public class BashCommands {
     }
 
     public void startBashProcess() {
-        ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-c", _command);
+        System.out.println(_command);
+        ProcessBuilder pb = new ProcessBuilder("bash", "-c", _command);
         try {
             _process = pb.start();
         } catch (IOException e) {
