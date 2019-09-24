@@ -1,17 +1,13 @@
 package application.models;
 
-import application.Main;
+import java.io.IOException;
+
 import application.controllers.CreationSceneController;
-import application.controllers.MainMenuController;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class CompleteWikiSearch implements Runnable {
 
@@ -26,7 +22,6 @@ public class CompleteWikiSearch implements Runnable {
 	@Override
 	public void run() {
 		// error when the search term cannot be found
-		System.out.println(Platform.isFxApplicationThread());
 		if (_result.equals(_term + " not found :^(")) {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("Error");
@@ -34,24 +29,33 @@ public class CompleteWikiSearch implements Runnable {
 			error.showAndWait();
 			return;
 		}
-		else {
-
-			try {
-				FXMLLoader creationSceneControllerLoader = new FXMLLoader(Main.class.getResource("controllers/views/CreationScene.fxml"));
-				Parent creationRoot = (Parent) creationSceneControllerLoader.load();
-				CreationSceneController controller = (CreationSceneController) creationSceneControllerLoader.getController();
-				controller.setScene(new Scene(creationRoot));
-
-				Stage stage = (Stage) Main.get_primaryStage();
-				stage.setScene(controller.get_scene());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-
-		}
-		// reformat result, load creation scene
 		
+		// reformat result, load creation scene
+        _result = _result.replace("  ", "");
+		_result = _result.replace(". ", ".\n"); //Split the text in to lines 
+		String[] splitOutput = _result.split("\n"); //Split the text into an array one sentence each
+
+		int counter = 1;
+		String numLinedWikiOut = "";
+		_result = "";
+		
+		//Add numbers to each sentence
+		for (int i = 0; i < splitOutput.length; i++) {
+			numLinedWikiOut = numLinedWikiOut + counter + " " + splitOutput[i] + "\n";
+			_result = _result + " " + splitOutput[i] + "\n";
+			counter++;
+		}
+		
+		// load creation scene
+		try {
+			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("../controllers/views/CreationScene.fxml"));
+			Parent creationRoot = (Parent) creationSceneLoader.load();
+			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
+			Scene scene = new Scene(creationRoot, 600, 600);
+			controller.setup(numLinedWikiOut, scene);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
