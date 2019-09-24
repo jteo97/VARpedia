@@ -1,5 +1,11 @@
 package application.models;
 
+import java.io.IOException;
+
+import application.controllers.CreationSceneController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -25,7 +31,30 @@ public class CompleteWikiSearch implements Runnable {
 		}
 		
 		// reformat result, load creation scene
+		_result = _result.replace(". ", ".\n"); //Split the text in to lines 
+		String[] splitOutput = _result.split("\n"); //Split the text into an array one sentence each
+
+		int counter = 1;
+		String numLinedWikiOut = "";
+		_result = "";
 		
+		//Add numbers to each sentence
+		for (int i = 0; i < splitOutput.length; i++) {
+			numLinedWikiOut = numLinedWikiOut + counter + " " + splitOutput[i] + "\n";
+			_result = _result + " " + splitOutput[i] + "\n";
+			counter++;
+		}
+		
+		// load creation scene
+		try {
+			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("controllers/views/CreationScene.fxml"));
+			Parent creationRoot = (Parent) creationSceneLoader.load();
+			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
+			Scene scene = new Scene(creationRoot, 400, 400);
+			controller.setup(numLinedWikiOut, scene);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,9 +1,11 @@
 package application.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CreationSceneController {
 
@@ -14,6 +16,8 @@ public class CreationSceneController {
 	@FXML private TextField _inputLine;
 	@FXML private Button _confirmLine;
 	@FXML private Button _cancelCreation;
+	
+	private String _searchResult;
 	
 	@FXML
 	private void onPreviewPressed() {
@@ -38,5 +42,15 @@ public class CreationSceneController {
 	@FXML
 	private void onCancelPressed() {
 		// cancel
+	}
+	
+	public void setup(String result, Scene scene) {
+		_searchResult = result;
+		_searchResultArea.setText(_searchResult);
+		
+		// show window
+		Stage window = new Stage();
+		window.setScene(scene);
+		window.show();
 	}
 }
