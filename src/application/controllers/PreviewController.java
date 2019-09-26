@@ -17,6 +17,9 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,41 +45,18 @@ public class PreviewController {
     }
 
     @FXML
-    private void onPlayButtonPressed() {
+    private void onPlayButtonPressed() throws IOException {
 
 
         System.out.println(Platform.isFxApplicationThread());
         try {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                if (choice.equals("espeak")) {
-                    String command = choice + " " + "\"" + _selectedText + "\"";
-                    PreviewTask tts = new PreviewTask(command);
-                    team.submit(tts);
-                    tts.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            _playButton.setDisable(false);
-                            _saveButton.setDisable(false);
-                        }
-                    });
-                    _playButton.setDisable(true);
-                    _saveButton.setDisable(true);
-                } else if (choice.equals("festival")) {
-                    String command = "echo " + "\"" + _selectedText + "\"" + " | " + choice + " --tts";
-                    PreviewTask tts = new PreviewTask(command);
-                    team.submit(tts);
-                    tts.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            _playButton.setDisable(false);
-                            _saveButton.setDisable(false);
-                        }
-                    });
-                    _playButton.setDisable(true);
-                    _saveButton.setDisable(true);
-                } else {
-                }
+                setUpPreview(choice);
+                
+                // delete scm file
+//                File file = new File(choice + "_preview.scm");
+//                file.delete();
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -87,16 +67,16 @@ public class PreviewController {
     }
 
     @FXML
-    private void onSaveButtonPressed() {
+    private void onSaveButtonPressed() throws IOException {
         try {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                String text = _selectedText;
-                if (choice.equals("espeak")) {
-                    //TODO save the file
+                FileWriter text = new FileWriter("selected.txt");
+                text.write(_selectedText);
+                if (choice.equals("akl_nz_jdt_diphone")) {
                 	try {
                 		// convert text to wav file
-                		BashCommands tts = new BashCommands("espeak -f " + text + " --stdout > audio" + _count.get(0).toString() + ".wav");
+                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_jdt_diphone.scm");
                 		tts.startBashProcess();
                 		tts.getProcess().waitFor();            		        
             		
@@ -114,10 +94,10 @@ public class PreviewController {
                 	} catch (InterruptedException e) {
                 		e.printStackTrace();
                 	}
-                } else if (choice.equals("festival")) {
+                } else if (choice.equals("kal_diphone")) {
                 	try {
                 		// convert text to wav file
-                		BashCommands tts = new BashCommands("echo \"" + text + "\" | text2wave -o audio" + _count.get(0).toString() + ".wav");
+                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval kal_diphone.scm");
                 		tts.startBashProcess();
                 		tts.getProcess().waitFor();
                 		
@@ -138,6 +118,11 @@ public class PreviewController {
                 } else {
 
                 }
+                
+                // delete the text file
+                text.close();
+                File file = new File("selected.txt");
+                file.delete();
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -146,17 +131,15 @@ public class PreviewController {
         }
     }
 
-    public void setup(String selectedtext, Scene scene, List<Integer> count) {
+    public void setup(String selectedtext, Scene scene, List<Integer> count) throws IOException {
     	_count = count;
         _selectedText = selectedtext;
         _previewTextArea.setText(_selectedText);
         _previewTextArea.setEditable(false);
         _previewTextArea.setWrapText(true);
-
-        ObservableList<String> choices = FXCollections.observableArrayList();
-        //TODO add all the voices
-        choices.addAll("espeak", "festival");
-        _choiceOfVoice.setItems(choices);
+        
+        // Add all voices
+        setUpVoices();
 
         // show window
         _window = new Stage();
@@ -164,5 +147,38 @@ public class PreviewController {
         _window.setScene(scene);
         _window.show();
     }
+    
+    private void setUpVoices() throws IOException {
+    	// create scm files for all voices setup
+    	FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm");
+    	fileWriter1.write("(voice_akl_nz_jdt_diphone)");
+    	FileWriter fileWriter2 = new FileWriter("kal_diphone.scm");
+    	fileWriter2.write("(voice_kal_diphone)");
+    	fileWriter1.close();
+    	fileWriter2.close();
+    	
+    	// Add all voices
+    	ObservableList<String> choices = FXCollections.observableArrayList();
+        choices.addAll("akl_nz_jdt_diphone", "kal_diphone");
+        _choiceOfVoice.setItems(choices);
+    }
 
+    private void setUpPreview(String choice) throws IOException {
+    	FileWriter writer = new FileWriter(choice + "_preview.scm");
+    	writer.write("(voice_" + choice + ")\n(SayText \"" + _selectedText + "\")");
+    	writer.close();
+    	
+    	String command = "festival -b " + choice + "_preview.scm";
+        PreviewTask tts = new PreviewTask(command);
+        team.submit(tts);
+        tts.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent workerStateEvent) {
+                _playButton.setDisable(false);
+                _saveButton.setDisable(false);
+            }
+        });
+        _playButton.setDisable(true);
+        _saveButton.setDisable(true);
+    }
 }

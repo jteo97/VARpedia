@@ -227,10 +227,12 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Custom file
 big_buck_bunny_1_minute.mp4
 .idea
 VARpedia.iml
 google.mp4
 build.fxbuild
+*.scm
 
 # End of https://www.gitignore.io/api/java,linux,macos,eclipse,intellij
