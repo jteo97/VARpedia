@@ -96,19 +96,9 @@ public class PreviewController {
                     //TODO save the file
                 	try {
                 		// convert text to wav file
-                		BashCommands tts = new BashCommands("espeak -f " + text + " --stdout > output.wav");
+                		BashCommands tts = new BashCommands("espeak -f " + text + " --stdout > audio" + _count.get(0).toString() + ".wav");
                 		tts.startBashProcess();
-                		tts.getProcess().waitFor();
-            		
-                		// convert wav to mp3
-                		BashCommands toMp3 = new BashCommands("lame output.wav " + "audio" + _count.get(0).toString() + ".mp3");
-                		toMp3.startBashProcess();
-                		toMp3.getProcess().waitFor();
-            		
-                		// delete original wav file
-                		BashCommands delete = new BashCommands("rm -f output.wav");
-                		delete.startBashProcess();
-                		delete.getProcess().waitFor();
+                		tts.getProcess().waitFor();            		        
             		
                 		// update audio count
                 		_count.set(0, _count.get(0) + 1);
@@ -127,23 +117,13 @@ public class PreviewController {
                 } else if (choice.equals("festival")) {
                 	try {
                 		// convert text to wav file
-                		BashCommands tts = new BashCommands("echo \"" + text + "\" | text2wave -o output.wav");
+                		BashCommands tts = new BashCommands("echo \"" + text + "\" | text2wave -o audio" + _count.get(0).toString() + ".wav");
                 		tts.startBashProcess();
                 		tts.getProcess().waitFor();
                 		
-                		// convert wav to mp3
-                		BashCommands toMp3 = new BashCommands("lame output.wav " + "audio" + _count.get(0).toString() + ".mp3");
-                		toMp3.startBashProcess();
-                		toMp3.getProcess().waitFor();
-                		
-                		// delete original wav file
-                		BashCommands delete = new BashCommands("rm -f output.wav");
-                		delete.startBashProcess();
-                		delete.getProcess().waitFor();
-                		
                 		// update audio count
                 		_count.set(0, _count.get(0) + 1);
-                		
+                	                		
                 		// show confirmation box
                 		Alert confirm = new Alert(AlertType.INFORMATION);
                 		confirm.setTitle("Audio saved");

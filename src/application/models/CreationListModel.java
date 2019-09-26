@@ -23,7 +23,7 @@ public class CreationListModel {
 
     public ObservableList<String> delete(String creation) {
     	_creationList.remove(creation);
-    	BashCommands deletion = new BashCommands("rm -f \"" + creation + ".avi\"");
+    	BashCommands deletion = new BashCommands("rm -f \"" + creation + ".mp4\"");
     	deletion.startBashProcess();
     	try {
 			deletion.getProcess().waitFor();

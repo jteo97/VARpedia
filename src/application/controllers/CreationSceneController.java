@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.models.BashCommands;
+
 public class CreationSceneController {
 
     Stage window;
@@ -67,8 +69,23 @@ public class CreationSceneController {
 	}
 	
 	@FXML
-	private void onCombineAudioPressed() {
+	private void onCombineAudioPressed() throws InterruptedException {
 		// do something to combine all generated audio
+		String cmd = "sox";
+		for (int i = 0; i < _audioCount.get(0); i++) {
+			cmd += (" audio" + i + ".wav");
+		}
+		cmd += " combine.wav";
+		BashCommands combine = new BashCommands(cmd);
+		combine.startBashProcess();
+		combine.getProcess().waitFor();
+		
+		// delete all other audio chunk
+		BashCommands delete = new BashCommands("rm -f audio*");
+		delete.startBashProcess();
+		delete.getProcess().waitFor();
+		
+		// TODO continue to download images, create video and combine
 	}
 	
 	@FXML
@@ -78,10 +95,18 @@ public class CreationSceneController {
 	
 	@FXML
 	private void onCancelPressed() {
+		// delete all the saved audio chunk first
+		BashCommands delete = new BashCommands("rm -f *.wav");
+		delete.startBashProcess();
+		try {
+			delete.getProcess().waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		window.close();
 	}
 	
-	public void setup(String result, Scene scene) {
+	public void setup(String result, Scene scene) throws IOException {
 		_searchResult = result;
 		_searchResultArea.setText(_searchResult);
 		_audioCount = new ArrayList<Integer>();
