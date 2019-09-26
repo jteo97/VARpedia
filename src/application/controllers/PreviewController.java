@@ -10,12 +10,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,6 +31,7 @@ public class PreviewController {
     @FXML private Button _stopButton;
 
     private String _selectedText;
+    private List<Integer> _count;
     private Stage _window;
     private ExecutorService team = Executors.newSingleThreadExecutor();
 
@@ -91,8 +94,67 @@ public class PreviewController {
                 String text = _selectedText;
                 if (choice.equals("espeak")) {
                     //TODO save the file
+                	try {
+                		// convert text to wav file
+                		BashCommands tts = new BashCommands("espeak -f " + text + " --stdout > output.wav");
+                		tts.startBashProcess();
+                		tts.getProcess().waitFor();
+            		
+                		// convert wav to mp3
+                		BashCommands toMp3 = new BashCommands("lame output.wav " + "audio" + _count.get(0).toString() + ".mp3");
+                		toMp3.startBashProcess();
+                		toMp3.getProcess().waitFor();
+            		
+                		// delete original wav file
+                		BashCommands delete = new BashCommands("rm -f output.wav");
+                		delete.startBashProcess();
+                		delete.getProcess().waitFor();
+            		
+                		// update audio count
+                		_count.set(0, _count.get(0) + 1);
+                	
+                		// show confirmation box
+                		Alert confirm = new Alert(AlertType.INFORMATION);
+                		confirm.setTitle("Audio saved");
+                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.showAndWait();
+                		if (!confirm.isShowing()) {
+                			_window.close();
+                		}
+                	} catch (InterruptedException e) {
+                		e.printStackTrace();
+                	}
                 } else if (choice.equals("festival")) {
-                    //TODO save the file
+                	try {
+                		// convert text to wav file
+                		BashCommands tts = new BashCommands("echo \"" + text + "\" | text2wave -o output.wav");
+                		tts.startBashProcess();
+                		tts.getProcess().waitFor();
+                		
+                		// convert wav to mp3
+                		BashCommands toMp3 = new BashCommands("lame output.wav " + "audio" + _count.get(0).toString() + ".mp3");
+                		toMp3.startBashProcess();
+                		toMp3.getProcess().waitFor();
+                		
+                		// delete original wav file
+                		BashCommands delete = new BashCommands("rm -f output.wav");
+                		delete.startBashProcess();
+                		delete.getProcess().waitFor();
+                		
+                		// update audio count
+                		_count.set(0, _count.get(0) + 1);
+                		
+                		// show confirmation box
+                		Alert confirm = new Alert(AlertType.INFORMATION);
+                		confirm.setTitle("Audio saved");
+                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.showAndWait();
+                		if (!confirm.isShowing()) {
+                			_window.close();
+                		}
+                	} catch (InterruptedException e) {
+                		e.printStackTrace();
+                	}
                 } else {
 
                 }
@@ -104,7 +166,8 @@ public class PreviewController {
         }
     }
 
-    public void setup(String selectedtext, Scene scene) {
+    public void setup(String selectedtext, Scene scene, List<Integer> count) {
+    	_count = count;
         _selectedText = selectedtext;
         _previewTextArea.setText(_selectedText);
         _previewTextArea.setEditable(false);

@@ -12,6 +12,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreationSceneController {
 
@@ -26,6 +28,7 @@ public class CreationSceneController {
 	@FXML private Button _cancelCreation;
 	
 	private String _searchResult;
+	private List<Integer> _audioCount; // wrapper for count
 	
 	@FXML
 	private void onPreviewPressed() {
@@ -45,7 +48,7 @@ public class CreationSceneController {
 					Parent previewRoot = (Parent) previewSceneLoader.load();
 					PreviewController controller = (PreviewController) previewSceneLoader.getController();
 					Scene scene = new Scene(previewRoot, 400, 300);
-					controller.setup(selectedText, scene);
+					controller.setup(selectedText, scene, _audioCount);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -81,6 +84,8 @@ public class CreationSceneController {
 	public void setup(String result, Scene scene) {
 		_searchResult = result;
 		_searchResultArea.setText(_searchResult);
+		_audioCount = new ArrayList<Integer>();
+		_audioCount.add(0);
 		
 		// show window
 		window = new Stage();
