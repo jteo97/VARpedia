@@ -23,10 +23,8 @@ public class CreationSceneController {
 
 	@FXML private TextArea _searchResultArea;
 	@FXML private Button _previewSpeech;
-	@FXML private Button _saveCurrent;
 	@FXML private Button _combineAudio;
 	@FXML private TextField _inputLine;
-	@FXML private Button _confirmLine;
 	@FXML private Button _cancelCreation;
 	
 	private String _searchResult;
@@ -64,11 +62,6 @@ public class CreationSceneController {
 	}
 	
 	@FXML
-	private void onSaveCurrentPressed() {
-		// do something to save the current selection text into audio
-	}
-	
-	@FXML
 	private void onCombineAudioPressed() throws InterruptedException {
 		// do something to combine all generated audio
 		String cmd = "sox";
@@ -86,11 +79,6 @@ public class CreationSceneController {
 		delete.getProcess().waitFor();
 		
 		// TODO continue to download images, create video and combine
-	}
-	
-	@FXML
-	private void onConfirmLinePressed() {
-		// do something when confirm line number
 	}
 	
 	@FXML
