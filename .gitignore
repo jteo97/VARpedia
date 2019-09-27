@@ -234,5 +234,6 @@ VARpedia.iml
 google.mp4
 build.fxbuild
 *.scm
+creations/
 
 # End of https://www.gitignore.io/api/java,linux,macos,eclipse,intellij

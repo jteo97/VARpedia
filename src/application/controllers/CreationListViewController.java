@@ -30,7 +30,7 @@ public class CreationListViewController {
 	private Scene _nextScene;
 
 	public void setUpModel() {
-		_creationListModel = new CreationListModel();
+		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
 	}
 
@@ -48,7 +48,7 @@ public class CreationListViewController {
 			// wait for user confirmation
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
 			confirmation.setTitle("Deletion");
-			confirmation.setHeaderText("Do you want to delete xxx?");
+			confirmation.setHeaderText("Do you want to delete " + creation + "?");
 			Optional<ButtonType> result = confirmation.showAndWait();
 			
 			// delete the creation if user confirmed
@@ -113,6 +113,11 @@ public class CreationListViewController {
 			Thread th = new Thread(task);
 			th.start();
 		}
+	}
+	
+	public void setView(ObservableList<String> text, int size) {
+		_creationList.getItems().setAll(text);
+		_creationCount.setText("Total number of creations: " + size);
 	}
 	
 	public void setScene(Scene scene) {
