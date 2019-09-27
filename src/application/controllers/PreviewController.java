@@ -73,6 +73,7 @@ public class PreviewController {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 FileWriter text = new FileWriter("selected.txt");
                 text.write(_selectedText);
+                text.close();
                 if (choice.equals("akl_nz_jdt_diphone")) {
                 	try {
                 		// convert text to wav file
@@ -120,7 +121,6 @@ public class PreviewController {
                 }
                 
                 // delete the text file
-                text.close();
                 File file = new File("selected.txt");
                 file.delete();
             }
