@@ -112,6 +112,7 @@ public class CreationListViewController {
 			WikiSearchTask task = new WikiSearchTask(result.get());
 			Thread th = new Thread(task);
 			th.start();
+
 		}
 	}
 	

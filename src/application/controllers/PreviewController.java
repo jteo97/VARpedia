@@ -134,9 +134,11 @@ public class PreviewController {
     public void setup(String selectedtext, Scene scene, List<Integer> count) throws IOException {
     	_count = count;
         _selectedText = selectedtext;
-        _previewTextArea.setText(_selectedText);
+        _previewTextArea.setText(selectedtext);
         _previewTextArea.setEditable(false);
         _previewTextArea.setWrapText(true);
+        _selectedText = _selectedText.replaceAll("\"", ""); //remove all instances of " to prevent code breaking
+
         
         // Add all voices
         setUpVoices();
