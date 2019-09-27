@@ -37,6 +37,7 @@ public class CreationSceneController {
 			String selectedText = _searchResultArea.getSelectedText();
             selectedText = selectedText.trim();
             int numSpaces = selectedText.length() - selectedText.replaceAll(" ", "").length();
+            selectedText = selectedText.replaceAll("\n", " "); // replace new line
             System.out.println(numSpaces);
 			if (numSpaces > 39) {
 				Alert tooMuchTextAlert = new Alert(Alert.AlertType.ERROR);

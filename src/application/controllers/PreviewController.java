@@ -37,10 +37,20 @@ public class PreviewController {
     private List<Integer> _count;
     private Stage _window;
     private ExecutorService team = Executors.newSingleThreadExecutor();
+    private PreviewTask _task;
 
 
     @FXML
-    private void onCancelButtonPressed() {
+    private void onCancelButtonPressed() throws InterruptedException {
+    	// stop playing audio if it is playing
+    	if (_task != null) {
+    		_task.cancel();
+    	}
+    	
+    	// delete scm file
+    	BashCommands delete = new BashCommands("rm -f *.scm");
+    	delete.startBashProcess();
+    	delete.getProcess().waitFor();
         _window.close();
     }
 
@@ -53,10 +63,6 @@ public class PreviewController {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 setUpPreview(choice);
-                
-                // delete scm file
-//                File file = new File(choice + "_preview.scm");
-//                file.delete();
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -170,12 +176,14 @@ public class PreviewController {
     	
     	String command = "festival -b " + choice + "_preview.scm";
         PreviewTask tts = new PreviewTask(command);
+        _task = tts;
         team.submit(tts);
         tts.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent workerStateEvent) {
                 _playButton.setDisable(false);
                 _saveButton.setDisable(false);
+                _task = null; // empty current playing task
             }
         });
         _playButton.setDisable(true);
