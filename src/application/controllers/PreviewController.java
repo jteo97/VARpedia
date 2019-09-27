@@ -122,6 +122,27 @@ public class PreviewController {
                 	} catch (InterruptedException e) {
                 		e.printStackTrace();
                 	}
+                } else if (choice.equals("akl_nz_cw_cg_cg")) {
+                	try {
+                		// convert text to wav file
+                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_cw_cg_cg.scm");
+                		tts.startBashProcess();
+                		tts.getProcess().waitFor();
+                		
+                		// update audio count
+                		_count.set(0, _count.get(0) + 1);
+                	                		
+                		// show confirmation box
+                		Alert confirm = new Alert(AlertType.INFORMATION);
+                		confirm.setTitle("Audio saved");
+                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.showAndWait();
+                		if (!confirm.isShowing()) {
+                			_window.close();
+                		}
+                	} catch (InterruptedException e) {
+                		e.printStackTrace();
+                	} 
                 } else {
 
                 }
@@ -160,12 +181,15 @@ public class PreviewController {
     	fileWriter1.write("(voice_akl_nz_jdt_diphone)");
     	FileWriter fileWriter2 = new FileWriter("kal_diphone.scm");
     	fileWriter2.write("(voice_kal_diphone)");
+    	FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm");
+    	fileWriter3.write("(voice_akl_nz_cw_cg_cg)");
     	fileWriter1.close();
     	fileWriter2.close();
+    	fileWriter3.close();
     	
     	// Add all voices
     	ObservableList<String> choices = FXCollections.observableArrayList();
-        choices.addAll("akl_nz_jdt_diphone", "kal_diphone");
+        choices.addAll("akl_nz_jdt_diphone", "kal_diphone", "akl_nz_cw_cg_cg");
         _choiceOfVoice.setItems(choices);
     }
 
