@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.BashCommands;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
@@ -57,11 +58,12 @@ public class CreationListViewController {
 				ObservableList<String> listAfterDeletion = _creationListModel.delete(creation);
 				_creationList.getItems().setAll(listAfterDeletion);
 				_creationCount.setText("Total number of creations: " + listAfterDeletion.size());
-				
+
 				Alert info = new Alert(AlertType.INFORMATION);
 				info.setTitle("Deletion successful");
 				info.setHeaderText(creation + " has been deleted successfully");
 				info.showAndWait();
+
 			}
 		} else {
 			Alert error = new Alert(AlertType.ERROR);
@@ -124,10 +126,5 @@ public class CreationListViewController {
 	public void setScene(Scene scene) {
 		_nextScene = scene;
 		//Code for updating _CreationList can go in here
-	}
-
-	public void updateList() {
-		//Update the _CreationList
-		_creationList.getItems().add("");
 	}
 }

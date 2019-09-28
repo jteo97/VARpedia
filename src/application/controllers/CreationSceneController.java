@@ -1,7 +1,5 @@
 package application.controllers;
 
-import application.DownloadImagesTask;
-import application.models.WikiSearchTask;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,18 +8,15 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import application.models.BashCommands;
 
 public class CreationSceneController {
 
-    Stage window;
+
 
     @FXML private TextArea _searchResultArea;
     @FXML private Button _previewSpeech;
@@ -32,6 +27,7 @@ public class CreationSceneController {
     private String _wikisearch;
     private String _searchResult;
     private List<Integer> _audioCount; // wrapper for count
+    private Stage _window;
 
     @FXML
     private void onPreviewPressed() {
@@ -67,36 +63,45 @@ public class CreationSceneController {
 
     @FXML
     private void onCombineAudioPressed() throws InterruptedException {
-        // do something to combine all generated audio
-        String cmd = "sox";
-        for (int i = 0; i < _audioCount.get(0); i++) {
-            cmd += (" audio" + i + ".wav");
+        String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
+                " | grep audio | grep .wav";
+        BashCommands checkAudioExists = new BashCommands(checkAudio);
+        checkAudioExists.startBashProcess();
+        checkAudioExists.getProcess().waitFor();
+
+        if (checkAudioExists.getExitStatus() != 0) {
+            Alert noAudioExists = new Alert(Alert.AlertType.ERROR);
+            noAudioExists.setHeaderText("No audio to combine");
+            noAudioExists.setContentText("Use the preview button to create audio");
+            noAudioExists.show();
+        } else {
+            // do something to combine all generated audio
+            String cmd = "sox";
+            for (int i = 0; i < _audioCount.get(0); i++) {
+                cmd += (" audio" + i + ".wav");
+            }
+            cmd += " combine.wav";
+            BashCommands combine = new BashCommands(cmd);
+            combine.startBashProcess();
+            combine.getProcess().waitFor();
+
+            // delete all other audio chunk
+            BashCommands delete = new BashCommands("rm -f audio*");
+            delete.startBashProcess();
+            delete.getProcess().waitFor();
+
+            try {
+                FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("views/VideoCreation.fxml"));
+                Parent videoRoot = (Parent) videoCreationLoader.load();
+                VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
+                Scene scene = new Scene(videoRoot);
+                controller.setScene(scene, _wikisearch);
+                controller.setup(scene);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        cmd += " combine.wav";
-        BashCommands combine = new BashCommands(cmd);
-        combine.startBashProcess();
-        combine.getProcess().waitFor();
-
-        // delete all other audio chunk
-        BashCommands delete = new BashCommands("rm -f audio*");
-        delete.startBashProcess();
-        delete.getProcess().waitFor();
-
-        try {
-            FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("views/VideoCreation.fxml"));
-            Parent videoRoot = (Parent) videoCreationLoader.load();
-            VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
-            Scene scene = new Scene(videoRoot);
-            controller.setScene(scene, _wikisearch);
-            controller.setup(scene);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
     }
 
     @FXML
@@ -109,7 +114,7 @@ public class CreationSceneController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        window.close();
+        _window.close();
     }
 
     public void setup(String result, Scene scene, String wikisearch) throws IOException {
@@ -120,10 +125,10 @@ public class CreationSceneController {
         _wikisearch = wikisearch;
 
         // show window
-        window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setScene(scene);
-        window.show();
+        _window = new Stage();
+        _window.initModality(Modality.APPLICATION_MODAL);
+        _window.setScene(scene);
+        _window.show();
     }
 
     public String get_searchResult() {

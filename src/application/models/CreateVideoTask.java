@@ -45,6 +45,7 @@ public class CreateVideoTask extends Task<Void> {
         tidyUp.startBashProcess();
         tidyUp.getProcess().waitFor();
 
+        System.out.println("DONE WITH TIDY UP");
         return null;
     }
 }
