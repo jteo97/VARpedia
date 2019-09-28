@@ -2,17 +2,17 @@ package application.controllers;
 
 import application.DownloadImagesTask;
 
+import application.models.BashCommands;
 import application.models.CreateVideoTask;
 import application.models.CreationListModel;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,9 +35,11 @@ public class VideoCreationController {
     private Scene _nextScene;
     private CreationListModel _model;
     private Stage _window;
+    private Stage _creationWindow;
     private ExecutorService team1 = Executors.newSingleThreadExecutor();
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
     private String _wikisearch;
+    private ProgressIndicator progressIndicator = new ProgressIndicator();
 
     @FXML
     private void onCancelButtonPressed() {
@@ -55,57 +58,141 @@ public class VideoCreationController {
         String numberstr = _numField.getText();
         String name = _nameField.getText();
         int number = 0;
+        String pathToCreation = System.getProperty("user.dir") + System.getProperty("file.separator") +
+                "creations" + System.getProperty("file.separator") + name + ".mp4";
+        boolean exists = new File(pathToCreation).isFile();
 
-        if (search.equals(null) || search.equals("")) {
-            Alert noSearchTerm = new Alert(Alert.AlertType.ERROR);
-            noSearchTerm.setHeaderText("No search term provided!");
-            noSearchTerm.setContentText("Please provide one before clicking create.");
-            noSearchTerm.show();
-        } else if (numberstr.equals(null) || numberstr.equals("")) {
-            Alert noNumber = new Alert(Alert.AlertType.ERROR);
-            noNumber.setHeaderText("No number provided!");
-            noNumber.setContentText("Please provide one before clicking create.");
-            noNumber.show();
-        } else if (name.equals(null) || name.equals("")) {
-            Alert noName = new Alert(Alert.AlertType.ERROR);
-            noName.setHeaderText("No name provided!");
-            noName.setContentText("Please provide one before clicking create.");
-            noName.show();
-        } else {
-            try {
-                number = Integer.parseInt(numberstr);
-                String pathToCreation = System.getProperty("user.dir") + System.getProperty("file.separator") +
-                        "creations" + System.getProperty("file.separator") + name + ".mp4";
-                System.out.println(pathToCreation);
-                boolean exists = new File(pathToCreation).isFile();
-                if (exists) {
-                    Alert creationExist = new Alert(Alert.AlertType.ERROR);
-                    creationExist.setHeaderText("Creation Exists");
-                    creationExist.setContentText("The creation exists enter a different name");
-                    creationExist.show();
-                } else {
+        try {
+            number = Integer.parseInt(numberstr);
+
+            if (search.equals(null) || search.equals("")) {
+                Alert noSearchTerm = new Alert(Alert.AlertType.ERROR);
+                noSearchTerm.setHeaderText("No search term provided!");
+                noSearchTerm.setContentText("Please provide one before clicking create.");
+                noSearchTerm.show();
+            } else if (numberstr.equals(null) || numberstr.equals("")) {
+                Alert noNumber = new Alert(Alert.AlertType.ERROR);
+                noNumber.setHeaderText("No number provided!");
+                noNumber.setContentText("Please provide one before clicking create.");
+                noNumber.show();
+            } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
+                Alert noName = new Alert(Alert.AlertType.ERROR);
+                noName.setHeaderText("invalid name provided!");
+                noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
+                        " alphanumeric characters and \"_\" and \"-\".");
+                noName.show();
+            } else if (number < 1 || number > 10) {
+                Alert invalidNumber = new Alert(Alert.AlertType.ERROR);
+                invalidNumber.setHeaderText("Invalid number range");
+                invalidNumber.setContentText("You typed a number outside the valid range of 1 - 10");
+                invalidNumber.show();
+            } else if (exists) {
+                // wait for user confirmation
+                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmation.setTitle("File already exists");
+                confirmation.setHeaderText("Do you want to override " + name + ".mp4?");
+                Optional<ButtonType> result = confirmation.showAndWait();
+
+                // delete the creation if user confirmed
+                if (result.get() == ButtonType.OK) {
+                    // delete the conflicting creation
+                    _model.delete(name + ".mp4");
                     _window.close();
+                    Alert downloading = new Alert(Alert.AlertType.INFORMATION);
+                    downloading.setTitle("Creation");
+                    downloading.setHeaderText("Creating... Please Wait...\nOr press cancel to stop the search and return to the menu list");
+                    downloading.setGraphic(progressIndicator);
+                    ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    downloading.getButtonTypes().setAll(cancel);
+
                     DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                     team1.submit(downloadTask);
 
+                    downloadTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
+                        @Override
+                        public void handle(WorkerStateEvent event) {
+                            downloading.showAndWait();
+                            if (!downloading.isShowing()) {
+                                downloadTask.cancel();
+                            }
+                        }
+                    });
+                    downloadTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
+                        @Override
+                        public void handle(WorkerStateEvent event) {
+                            downloading.close();
+                        }
+                    });
                     int finalNumber = number;
                     downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                         @Override
                         public void handle(WorkerStateEvent workerStateEvent) {
                             CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
                             team2.submit(createTask);
+
+                            createTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                                @Override
+                                public void handle(WorkerStateEvent workerStateEvent) {
+                                    downloading.close();
+                                    _creationWindow.close();
+                                }
+                            });
                         }
                     });
                 }
-            } catch (NumberFormatException e) {
-                Alert wrongNumber = new Alert(Alert.AlertType.ERROR);
-                wrongNumber.setHeaderText("Incorrect value supplied to number field!");
-                wrongNumber.setContentText("Please provide a number to the number field before clicking create.");
-                wrongNumber.show();
             }
+            else {
+                _window.close();
 
+                Alert downloading = new Alert(Alert.AlertType.INFORMATION);
+                downloading.setTitle("Creation");
+                downloading.setHeaderText("Creating... Please Wait...\nOr press cancel to stop the search and return to the menu list");
+                downloading.setGraphic(progressIndicator);
+                ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                downloading.getButtonTypes().setAll(cancel);
+
+                DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
+                team1.submit(downloadTask);
+
+                downloadTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
+                    @Override
+                    public void handle(WorkerStateEvent event) {
+                        downloading.showAndWait();
+                        if (!downloading.isShowing()) {
+                            downloadTask.cancel();
+                        }
+                    }
+                });
+                downloadTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
+                    @Override
+                    public void handle(WorkerStateEvent event) {
+                        downloading.close();
+                    }
+                });
+
+                int finalNumber = number;
+                downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                    @Override
+                    public void handle(WorkerStateEvent workerStateEvent) {
+                        CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
+                        team2.submit(createTask);
+
+                        createTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                            @Override
+                            public void handle(WorkerStateEvent workerStateEvent) {
+                                downloading.close();
+                                _creationWindow.close();
+                            }
+                        });
+                    }
+                });
+            }
+        } catch(NumberFormatException e) {
+            Alert wrongNumber=new Alert(Alert.AlertType.ERROR);
+            wrongNumber.setHeaderText("Incorrect value supplied to number field!");
+            wrongNumber.setContentText("Please provide a number to the number field before clicking create.");
+            wrongNumber.show();
         }
-
     }
 
     public void setScene(Scene scene, String wikisearch) {
@@ -113,7 +200,8 @@ public class VideoCreationController {
         this._wikisearch = wikisearch;
     }
 
-    public void setup(Scene scene, CreationListModel model) {
+    public void setup(Scene scene, CreationListModel model, Stage creationWindow) {
+        _creationWindow = creationWindow;
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(scene);

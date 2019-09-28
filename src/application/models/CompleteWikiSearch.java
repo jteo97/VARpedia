@@ -27,7 +27,7 @@ public class CompleteWikiSearch implements Runnable {
 		if (_result.equals(_term + " not found :^(")) {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("Error");
-			error.setHeaderText("Cannot find the input word, returning to the list...");
+			error.setHeaderText("Cannot find results for " + _term +", click OK to return to the menu");
 			error.showAndWait();
 			return;
 		}

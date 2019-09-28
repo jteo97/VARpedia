@@ -135,8 +135,8 @@ public class PreviewController {
                 	                		
                 		// show confirmation box
                 		Alert confirm = new Alert(AlertType.INFORMATION);
-                		confirm.setTitle("Audio saved");
-                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.setTitle("Audio saved!");
+                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu.");
                 		confirm.showAndWait();
                 		if (!confirm.isShowing()) {
                 			_window.close();
@@ -166,6 +166,7 @@ public class PreviewController {
         _previewTextArea.setEditable(false);
         _previewTextArea.setWrapText(true);
         _audioText = _selectedText.replaceAll("[^a-zA-Z' ]", "");
+        _choiceOfVoice.setStyle("-fx-font-size: 1.1em ;");
         
         _audioText = _audioText.replaceAll("\"", ""); //remove all instances of " to prevent code breaking
         

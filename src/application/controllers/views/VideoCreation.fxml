@@ -8,34 +8,52 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoCreationController">
    <children>
       <VBox>
          <children>
-            <HBox spacing="8.0">
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
-                  <Label text="Enter term to search flickr:" />
-                  <TextField fx:id="_searchField" promptText="Type here" />
+                  <Label text="Enter term to search flickr:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <TextField fx:id="_searchField" promptText="Type here">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </padding>
             </HBox>
-            <HBox spacing="8.0">
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
-                  <Label text="Enter number of images to download:" />
-                  <TextField fx:id="_numField" promptText="Type here" />
+                  <Label text="Enter number of images to download:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <TextField fx:id="_numField" promptText="Type here">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </padding>
             </HBox>
-            <HBox spacing="8.0">
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
-                  <Label text="Enter name to call creation:" />
-                  <TextField fx:id="_nameField" promptText="Type here" />
+                  <Label text="Enter name to call creation:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <TextField fx:id="_nameField" promptText="Type here">
+                     <font>
+                        <Font size="15.0" />
+                     </font></TextField>
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -43,8 +61,14 @@
             </HBox>
             <ButtonBar>
               <buttons>
-                  <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel" />
-                <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="Create" />
+                  <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Button>
+                <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="Create">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Button>
               </buttons>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

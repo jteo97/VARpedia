@@ -5,16 +5,25 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.media.MediaView?>
-
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoPlayerController">
    <children>
       <MediaView fx:id="_media" fitHeight="750.0" fitWidth="800.0" />
       <HBox layoutY="750.0" prefHeight="50.0" prefWidth="800.0" spacing="6.0">
          <children>
-            <Button fx:id="_rewind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRewindButtonPressed" prefHeight="50.0" text="&lt;&lt;" HBox.hgrow="ALWAYS" />
-            <Button fx:id="_pausePlay" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPausePlayButtonPressed" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS" />
-            <Button fx:id="_fastForward" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onFastForwardButtonPressed" prefHeight="50.0" text="&gt;&gt;" HBox.hgrow="ALWAYS" />
+            <Button fx:id="_rewind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRewindButtonPressed" prefHeight="50.0" text="&lt;&lt;" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button fx:id="_pausePlay" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPausePlayButtonPressed" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
+            <Button fx:id="_fastForward" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onFastForwardButtonPressed" prefHeight="50.0" text="&gt;&gt;" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="16.0" />
+               </font></Button>
          </children>
          <padding>
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />

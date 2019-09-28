@@ -4,21 +4,22 @@ import application.models.BashCommands;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CreationListViewController {
 	@FXML private Button _createButton;
@@ -29,10 +30,12 @@ public class CreationListViewController {
 
 	private CreationListModel _creationListModel;
 	private Scene _nextScene;
+	private ProgressIndicator progressIndicator = new ProgressIndicator();
 
 	public void setUpModel() {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
+		_creationList.setStyle("-fx-font-size: 1.2em ;");
 	}
 
 	@FXML
@@ -106,14 +109,38 @@ public class CreationListViewController {
 			// set up information box for searching term
 			Alert searching = new Alert(AlertType.INFORMATION);
 			searching.setTitle("Creation");
-			searching.setHeaderText("Searching...Press Cancel to stop the search and return to main list");
+			searching.setHeaderText("Searching...Press cancel to stop the search and return to the menu list.");
+			searching.setGraphic(progressIndicator);
 			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 			searching.getButtonTypes().setAll(cancel);
 		
 			// search the term in background
 			WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel);
-			Thread th = new Thread(task);
-			th.start();
+			ExecutorService team = Executors.newSingleThreadExecutor();
+			team.submit(task);
+
+			task.setOnRunning(new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent event) {
+					searching.showAndWait();
+					if (!searching.isShowing()) {
+						task.cancel();
+					}
+				}
+			});
+			task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent event) {
+					searching.close();
+				}
+			});
+
+			task.setOnCancelled(new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent event) {
+					searching.close();
+				}
+			});
 
 		}
 	}
