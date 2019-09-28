@@ -33,7 +33,8 @@ public class PreviewController {
     @FXML private Button _saveButton;
     @FXML private Button _stopButton;
 
-    private String _selectedText;
+    private String _selectedText; // original selected text
+    private String _audioText; // selected text which punctuation has been removed
     private List<Integer> _count;
     private Stage _window;
     private ExecutorService team = Executors.newSingleThreadExecutor();
@@ -78,7 +79,7 @@ public class PreviewController {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 FileWriter text = new FileWriter("selected.txt");
-                text.write(_selectedText);
+                text.write(_audioText);
                 text.close();
                 if (choice.equals("akl_nz_jdt_diphone")) {
                 	try {
@@ -164,6 +165,9 @@ public class PreviewController {
         _previewTextArea.setText(_selectedText);
         _previewTextArea.setEditable(false);
         _previewTextArea.setWrapText(true);
+        _audioText = selectedtext.replaceAll("[^a-zA-Z' ]", "");
+        
+        System.out.println(_audioText);
         
         // Add all voices
         setUpVoices();
@@ -195,7 +199,7 @@ public class PreviewController {
 
     private void setUpPreview(String choice) throws IOException {
     	FileWriter writer = new FileWriter(choice + "_preview.scm");
-    	writer.write("(voice_" + choice + ")\n(SayText \"" + _selectedText + "\")");
+    	writer.write("(voice_" + choice + ")\n(SayText \"" + _audioText + "\")");
     	writer.close();
     	
     	String command = "festival -b " + choice + "_preview.scm";
