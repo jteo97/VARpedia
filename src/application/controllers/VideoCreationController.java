@@ -1,8 +1,8 @@
 package application.controllers;
 
 import application.DownloadImagesTask;
-import application.models.BashCommands;
 import application.models.CreateVideoTask;
+import application.models.CreationListModel;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -26,6 +26,7 @@ public class VideoCreationController {
     @FXML private TextField _nameField;
 
     private Scene _nextScene;
+    private CreationListModel _model;
     private Stage _window;
     private ExecutorService team1 = Executors.newSingleThreadExecutor();
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
@@ -78,7 +79,7 @@ public class VideoCreationController {
                     downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                         @Override
                         public void handle(WorkerStateEvent workerStateEvent) {
-                            CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch);
+                            CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
                             team2.submit(createTask);
                         }
                     });
@@ -99,10 +100,11 @@ public class VideoCreationController {
         this._wikisearch = wikisearch;
     }
 
-    public void setup(Scene scene) {
+    public void setup(Scene scene, CreationListModel model) {
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(scene);
         _window.show();
+        _model = model;
     }
 }

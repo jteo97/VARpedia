@@ -1,6 +1,7 @@
 package application.models;
 
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 public class CreateVideoTask extends Task<Void> {
@@ -9,13 +10,15 @@ public class CreateVideoTask extends Task<Void> {
     private int _numberOfImages;
     private String _searchTerm;
     private String _wikiSearch;
+    private CreationListModel _model;
 
 
-    public CreateVideoTask(String name, int number, String searchTerm, String wikisearch) {
+    public CreateVideoTask(String name, int number, String searchTerm, String wikisearch, CreationListModel model) {
         this._nameOfCreation = name;
         this._numberOfImages = number;
         this._searchTerm = searchTerm;
         this._wikiSearch = wikisearch;
+        _model = model;
     }
 
     @Override
@@ -44,6 +47,17 @@ public class CreateVideoTask extends Task<Void> {
         BashCommands tidyUp = new BashCommands(command);
         tidyUp.startBashProcess();
         tidyUp.getProcess().waitFor();
+        
+        // update model
+        Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				_model.create(_nameOfCreation);
+			}
+        	
+        });
+        
 
         return null;
     }

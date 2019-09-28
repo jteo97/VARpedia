@@ -109,7 +109,7 @@ public class CreationListViewController {
 			searching.getButtonTypes().setAll(cancel);
 		
 			// search the term in background
-			WikiSearchTask task = new WikiSearchTask(result.get());
+			WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel);
 			Thread th = new Thread(task);
 			th.start();
 
@@ -126,8 +126,9 @@ public class CreationListViewController {
 		//Code for updating _CreationList can go in here
 	}
 
-	public void updateList() {
+	public void updateList(ObservableList<String> creations) {
 		//Update the _CreationList
-		_creationList.getItems().add("");
+		_creationList.getItems().setAll(creations);
+		_creationCount.setText("Total number of creations: " + creations.size());
 	}
 }

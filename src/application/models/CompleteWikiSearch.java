@@ -13,10 +13,12 @@ public class CompleteWikiSearch implements Runnable {
 
 	private String _result;
 	private String _term;
+	private CreationListModel _creationListModel;
 	
-	public CompleteWikiSearch(String result, String term) {
+	public CompleteWikiSearch(String result, String term, CreationListModel model) {
 		_result = result;
 		_term = term;
+		_creationListModel = model;
 	}
 
 	@Override
@@ -40,7 +42,7 @@ public class CompleteWikiSearch implements Runnable {
 			Parent creationRoot = (Parent) creationSceneLoader.load();
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
 			Scene scene = new Scene(creationRoot, 600, 600);
-			controller.setup(_result, scene, _term);
+			controller.setup(_result, scene, _term, _creationListModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -10,9 +10,11 @@ import javafx.concurrent.Task;
 public class WikiSearchTask extends Task<Void> {
 
 	private String _term;
+	private CreationListModel _creationListModel;
 	
-	public WikiSearchTask(String term) {
+	public WikiSearchTask(String term, CreationListModel model) {
 		_term = term;
+		_creationListModel = model;
 	}
 	
 	@Override
@@ -28,7 +30,7 @@ public class WikiSearchTask extends Task<Void> {
 		String wikiOutput = stdoutBuffered.readLine(); //Read output of process and store in field
 
 		// send back to GUI thread
-		Platform.runLater(new CompleteWikiSearch(wikiOutput, _term));
+		Platform.runLater(new CompleteWikiSearch(wikiOutput, _term, _creationListModel));
 
 
 		

@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import application.models.BashCommands;
+import application.models.CreationListModel;
 
 public class CreationSceneController {
 
@@ -29,6 +30,7 @@ public class CreationSceneController {
     @FXML private TextField _inputLine;
     @FXML private Button _cancelCreation;
 
+    private CreationListModel _model;
     private String _wikisearch;
     private String _searchResult;
     private List<Integer> _audioCount; // wrapper for count
@@ -88,7 +90,7 @@ public class CreationSceneController {
             VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
             Scene scene = new Scene(videoRoot);
             controller.setScene(scene, _wikisearch);
-            controller.setup(scene);
+            controller.setup(scene, _model);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,12 +114,13 @@ public class CreationSceneController {
         window.close();
     }
 
-    public void setup(String result, Scene scene, String wikisearch) throws IOException {
+    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
         _searchResult = result;
         _searchResultArea.setText(_searchResult);
         _audioCount = new ArrayList<Integer>();
         _audioCount.add(0);
         _wikisearch = wikisearch;
+        _model = model;
 
         // show window
         window = new Stage();

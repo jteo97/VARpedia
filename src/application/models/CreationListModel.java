@@ -74,6 +74,8 @@ public class CreationListModel {
     }
 
     public void create(String creation) {
-
+    	_creationList.add(creation);
+    	_creationList.sort(null);
+    	_controller.updateList(_creationList);
     }
 }
