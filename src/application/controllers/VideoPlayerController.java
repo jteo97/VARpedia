@@ -15,7 +15,7 @@ import java.io.File;
 public class VideoPlayerController {
 
     @FXML private MediaView _media;
-    @FXML private File fileUrl = new File("big_buck_bunny_1_minute.mp4");
+    @FXML private File fileUrl;
 
     @FXML Button _fastForward;
     @FXML Button _rewind;
@@ -26,7 +26,10 @@ public class VideoPlayerController {
 
     @FXML
     public void makeWindow(String fileToOpen) {
-        //fileUrl = new File(fileToOpen);
+        System.out.println(fileToOpen);
+        fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "creations" + System.getProperty("file.separator") + fileToOpen;
+        fileUrl = new File(fileToOpen);
 
         Media video = new Media(fileUrl.toURI().toString());
         _player = new MediaPlayer(video);
@@ -38,6 +41,7 @@ public class VideoPlayerController {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setScene(_nextScene);
         window.setTitle("Play Video");
+
 
 
         window.show();

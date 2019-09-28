@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 
 public class Main extends Application {
 
-    private static Stage _primaryStage;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -32,7 +31,6 @@ public class Main extends Application {
 			listController.setUpModel();
 
 			Scene mainScene = new Scene(menuRoot);
-			_primaryStage = primaryStage;
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("VARpedia");
 			primaryStage.show();
@@ -40,26 +38,9 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-
-	public static String getCreationDirectory() {
-		String pathToCreations = "";
-		try {
-			pathToCreations = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
-			pathToCreations = pathToCreations.substring(0, pathToCreations.lastIndexOf("/"));
-
-			pathToCreations = pathToCreations + "/creations";
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
-		return pathToCreations;
-	}
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-    public static Stage get_primaryStage() {
-        return _primaryStage;
-    }
 }

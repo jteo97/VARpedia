@@ -1,11 +1,14 @@
 package application.controllers;
 
 import application.DownloadImagesTask;
+
 import application.models.CreateVideoTask;
 import application.models.CreationListModel;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,6 +17,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,6 +41,12 @@ public class VideoCreationController {
     @FXML
     private void onCancelButtonPressed() {
         _window.close();
+        try {
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
+                    + "combine.wav"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -72,6 +84,7 @@ public class VideoCreationController {
                     creationExist.setContentText("The creation exists enter a different name");
                     creationExist.show();
                 } else {
+                    _window.close();
                     DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                     team1.submit(downloadTask);
 

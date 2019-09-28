@@ -53,12 +53,13 @@ public class CreateVideoTask extends Task<Void> {
 
 			@Override
 			public void run() {
-				_model.create(_nameOfCreation);
+				_model.create(_nameOfCreation+ ".mp4");
 			}
         	
         });
         
 
+        System.out.println("DONE WITH TIDY UP");
         return null;
     }
 }
