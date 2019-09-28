@@ -1,5 +1,6 @@
 package application.controllers;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,6 +9,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -22,7 +24,8 @@ public class VideoPlayerController {
     @FXML Button _pausePlay;
 
     private Scene _nextScene;
-    MediaPlayer _player;
+    private MediaPlayer _player;
+    private Stage _window;
 
     @FXML
     public void makeWindow(String fileToOpen) {
@@ -36,15 +39,30 @@ public class VideoPlayerController {
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
 
+        //_media.setFitWidth(_window.getMaxWidth());
 
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setScene(_nextScene);
-        window.setTitle("Play Video");
+        _player.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                _window.close();
+            }
+        });
 
+        _window = new Stage();
+        _window.initModality(Modality.APPLICATION_MODAL);
+        _window.setScene(_nextScene);
+        _window.setTitle("Play Video");
 
+        _media.prefWidth(_window.getMaxWidth());
 
-        window.show();
+        _window.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                _player.stop();
+            }
+        });
+
+        _window.show();
 
     }
 

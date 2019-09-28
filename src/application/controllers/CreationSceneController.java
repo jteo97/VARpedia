@@ -24,12 +24,14 @@ public class CreationSceneController {
     @FXML private Button _combineAudio;
     @FXML private TextField _inputLine;
     @FXML private Button _cancelCreation;
+    @FXML private Label _selectedWordCount;
 
     private CreationListModel _model;
     private String _wikisearch;
     private String _searchResult;
     private List<Integer> _audioCount; // wrapper for count
     private Stage _creationWindow;
+
 
     @FXML
     private void onPreviewPressed() {
@@ -83,9 +85,9 @@ public class CreationSceneController {
             String cmd = "sox ";
             String line;
             while ((line = stdoutBuffered.readLine()) != null) {
-                cmd += line;
+                cmd += line + " ";
             }
-            cmd += " combine.wav";
+            cmd += "combine.wav";
             BashCommands combine = new BashCommands(cmd);
             combine.startBashProcess();
             combine.getProcess().waitFor();

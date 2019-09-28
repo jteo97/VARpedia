@@ -88,6 +88,7 @@ public class CreationListViewController {
 			VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
 			controller.setScene(new Scene(videoRoot));
 
+
 			controller.makeWindow(str);
 
 		} catch (IOException e) {
@@ -100,7 +101,7 @@ public class CreationListViewController {
 	private void onCreateButtonPressed() {
 		// Get user input for search term
 		TextInputDialog userInput = new TextInputDialog();
-		userInput.setTitle("VARPedia Creation");
+		userInput.setTitle("VARpedia Creation");
 		userInput.setHeaderText("Which term are you searching?");
 		userInput.setContentText("Please enter the term:");
 		Optional<String> result = userInput.showAndWait();
@@ -141,7 +142,6 @@ public class CreationListViewController {
 					searching.close();
 				}
 			});
-
 		}
 	}
 	
@@ -152,7 +152,7 @@ public class CreationListViewController {
 	
 	public void setScene(Scene scene) {
 		_nextScene = scene;
-		//Code for updating _CreationList can go in here
+
 	}
 
 	public void updateList(ObservableList<String> creations) {
