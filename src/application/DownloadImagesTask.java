@@ -1,96 +1,86 @@
 package application;
 
-import javafx.concurrent.Task;
-
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileReader;
+
+import javax.imageio.ImageIO;
+
+import com.flickr4java.flickr.*;
+import com.flickr4java.flickr.photos.*;
+import javafx.concurrent.Task;
 
 public class DownloadImagesTask extends Task<Void> {
 
-    private String _searchTerm, _creationName;
+    private String _searchImageTerm;
     private int _numImages;
+    private String _destinationFolder;
 
-    private List<String> _imageList;
+    public DownloadImagesTask(String destinationFolder, String searchImageTerm, int numImages) {
+        this._searchImageTerm = searchImageTerm;
+        this._numImages = numImages;
+        this._destinationFolder = destinationFolder;
 
-    public DownloadImagesTask(String wikiSearchTerm, String nameOfCreation, int numImages) {
-        _searchTerm = wikiSearchTerm;
-        _numImages = numImages;
-        _creationName = nameOfCreation;
+    }
+
+    public static String getAPIKey(String key) throws Exception {
+
+        String config = System.getProperty("user.dir")
+                + System.getProperty("file.separator")+ "flickr-api-keys.txt";
+
+        File file = new File(config);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        String line;
+        while ( (line = br.readLine()) != null ) {
+            if (line.trim().startsWith(key)) {
+                br.close();
+                return line.substring(line.indexOf("=")+1).trim();
+            }
+        }
+        br.close();
+        throw new RuntimeException("Couldn't find " + key +" in config file "+file.getName());
     }
 
     @Override
-    protected Void call() {
-        List<String> _imageList = getImages(_numImages);
-        downloadImages(_imageList);
-        return null;
-    }
+    protected Void call() throws Exception {
+        try {
+            String apiKey = getAPIKey("apiKey");
+            String sharedSecret = getAPIKey("sharedSecret");
 
-    private void downloadImages(List<String> urls) {
-        int count = 1;
-        for (String s: urls) {
-            try(InputStream in = new URL(s).openStream()){
-                Files.copy(in, Paths.get(Main.getCreationDirectory() + "/" + _creationName + "/image" + count));
+            Flickr flickr = new Flickr(apiKey, sharedSecret, new REST());
+
+            int page = 0;
+
+            PhotosInterface photos = flickr.getPhotosInterface();
+            SearchParameters params = new SearchParameters();
+            params.setSort(SearchParameters.RELEVANCE);
+            params.setMedia("photos");
+            params.setText(_searchImageTerm);
+
+            PhotoList<Photo> results = photos.search(params, _numImages, page);
+            System.out.println("Retrieving " + results.size()+ " results");
+
+            int count = 0;
+            for (Photo photo: results) {
                 count++;
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    BufferedImage image = photos.getImage(photo,Size.LARGE);
+                    String filename = "image" + count + ".jpg";
+                    File outputFile = new File(_destinationFolder,filename);
+                    ImageIO.write(image, "jpg", outputFile);
+                    System.out.println("Downloaded "+filename);
+                } catch (FlickrException fe) {
+                    System.err.println("Ignoring image " +photo.getId() +": "+ fe.getMessage());
+                }
+
             }
-        }
-    }
-
-    private List<String> getImages(int numImages) {
-        String url = "https://www.flickr.com/search/?text=" + _searchTerm;
-        String html = "";
-        List<String> finalImageList = new ArrayList<String>();
-        try {
-            URL urlObj = new URL(url);
-            BufferedReader input = new BufferedReader((new InputStreamReader(urlObj.openStream())));
-
-            String line;
-            while ((line = input.readLine()) != null) {
-                html += line;
-            }
-            input.close();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (String word: html.split(" ")) {
-            if (word.matches(".*live.staticflickr.com.*") && word.matches("(?i)url.*")) {
-
-                word = word.replace("url(//","http://");
-                word = word.replace(")\"","");
-
-                word = finalURL(word);
-                finalImageList.add(word);
-            }
-        }
-
-        finalImageList = finalImageList.subList(0, numImages);
-        return finalImageList;
-    }
-
-    private String finalURL(String url) {
-        HttpURLConnection con;
-        try {
-            con = (HttpURLConnection) new URL(url).openConnection();
-            con.setInstanceFollowRedirects(false);
-            con.connect();
-            return con.getHeaderField("Location").toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("\nDone");
 
         return null;
     }
