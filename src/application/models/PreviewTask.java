@@ -22,18 +22,15 @@ public class PreviewTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        System.out.println(Platform.isFxApplicationThread());
         BashCommands speaking = new BashCommands(_command);
         speaking.startBashProcess();
         speaking.getProcess().waitFor();
 
         String error = speaking.getStderr();
-        System.out.println(error);
         if (error.contains("SIOD ERROR")) {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("inside error");
                     Alert failedVoice = new Alert(Alert.AlertType.ERROR);
                     failedVoice.setHeaderText("Failed to make audio clip!");
                     failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +

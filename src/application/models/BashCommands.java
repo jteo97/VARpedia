@@ -19,7 +19,6 @@ public class BashCommands {
     }
 
     public void startBashProcess() {
-        System.out.println(_command);
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", _command);
         try {
             _process = pb.start();
@@ -51,7 +50,6 @@ public class BashCommands {
     }
 
     public int getExitStatus() {
-        System.out.println(_process.exitValue());
         return _process.exitValue();
     }
 

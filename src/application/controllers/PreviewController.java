@@ -2,7 +2,6 @@ package application.controllers;
 
 import application.models.BashCommands;
 import application.models.PreviewTask;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
@@ -62,9 +61,6 @@ public class PreviewController {
 
     @FXML
     private void onPlayButtonPressed() throws IOException {
-
-
-        System.out.println(Platform.isFxApplicationThread());
         try {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
@@ -216,7 +212,6 @@ public class PreviewController {
             @Override
             public void handle(WorkerStateEvent workerStateEvent) {
                 _playButton.setDisable(false);
-                //_saveButton.setDisable(false);
                 _task = null; // empty current playing task
             }
         });

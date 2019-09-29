@@ -65,7 +65,6 @@ public class DownloadImagesTask extends Task<Void> {
             params.setText(_searchImageTerm);
 
             PhotoList<Photo> results = photos.search(params, _numImages, page);
-            System.out.println("Retrieving " + results.size()+ " results");
 
             int count = 0;
             for (Photo photo: results) {
@@ -75,17 +74,14 @@ public class DownloadImagesTask extends Task<Void> {
                     String filename = "image" + count + ".jpg";
                     File outputFile = new File(_destinationFolder,filename);
                     ImageIO.write(image, "jpg", outputFile);
-                    System.out.println("Downloaded "+filename);
                 } catch (FlickrException fe) {
-                    System.err.println("Ignoring image " +photo.getId() +": "+ fe.getMessage());
+                	
                 }
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("\nDone");
 
         return null;
     }

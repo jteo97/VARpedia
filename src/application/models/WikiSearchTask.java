@@ -37,8 +37,6 @@ public class WikiSearchTask extends Task<Void> {
 		// send back to GUI thread
 		Platform.runLater(new CompleteWikiSearch(wikiOutput, _term, _creationListModel));
 
-
-		
 		return null;
 	}
 

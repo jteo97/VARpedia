@@ -38,13 +38,11 @@ public class CreationSceneController {
 
     @FXML
     private void onPreviewPressed() {
-        System.out.println(_searchResultArea.getSelectedText());
         if (!_searchResultArea.getSelectedText().equals(null) && !_searchResultArea.getSelectedText().equals("")) {
             String selectedText = _searchResultArea.getSelectedText();
             selectedText = selectedText.trim();
             int numSpaces = selectedText.length() - selectedText.replaceAll(" ", "").length();
             selectedText = selectedText.replaceAll("\n", " "); // replace new line
-            System.out.println(numSpaces);
             if (numSpaces > 39) {
                 Alert tooMuchTextAlert = new Alert(Alert.AlertType.ERROR);
                 tooMuchTextAlert.setContentText("Too much text to handle. Select Less than 40 words.");

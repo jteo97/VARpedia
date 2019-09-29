@@ -34,7 +34,6 @@ public class VideoPlayerController {
 
     @FXML
     public void makeWindow(String fileToOpen) {
-        System.out.println(fileToOpen);
         fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "creations" + System.getProperty("file.separator") + fileToOpen;
         fileUrl = new File(fileToOpen);

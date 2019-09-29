@@ -31,19 +31,13 @@ public class CreateVideoTask extends Task<Void> {
         String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
         String _term = _wikiSearch;
 
-//        String command = "duration=`soxi -D \"" + _path + "/combine.wav\"` ; " +
-//                "ffmpeg -framerate 5/\"$duration\" -f image2 -s 800x600 -i \"" + _path + "/image%01d.jpg\" -vcodec libx264 -crf 25 -pix_fmt yuv420p -vf \"pad=ceil(iw/2)*2:ceil(ih/2)*2\" -r 25 \"" + _path + "/slideshow.mp4\" ; " +
-//                "ffmpeg -y -i \"" + _path + "/slideshow.mp4\" -vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _wikiSearch + "'\" \"" + _path + "/video.mp4\"";
-
         String command = "soxi -D \"" + _path + "combine.wav\"";
         BashCommands findDuration = new BashCommands(command);
         findDuration.startBashProcess();
         findDuration.getProcess().waitFor();
         double duration = Double.parseDouble(findDuration.getStdout());
 
-        System.out.println(duration);
         duration = duration/_numberOfImages;
-        System.out.println(duration);
 
         PrintWriter writer = null;
         try {
@@ -68,24 +62,16 @@ public class CreateVideoTask extends Task<Void> {
         String command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
         String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
 
-        //String command2 = "ffmpeg -y -i "+_pathToCreation+"/"+_nameOfCreation+"/"+"video.mp4 "+ "-vf drawtext=\"fontfile=" + System.getProperty("user.dir") + "/fontfile.ttf: text='" + _term+ "': fontcolor=white: fontsize=30: x=(w-text_w)/2: y=(h-text_h)/2\" -r 25 "+_pathToCreation+_nameOfCreation+".mp4";
-
-        //String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf drawtext=\"fontfile=" + System.getProperty("user.dir") + "/fontfile.ttf: text='" + _term+ "': fontcolor=white: fontsize=30: x=(w-text_w)/2: y=(h-text_h)/2\" -r 25 "+_path+"video.mp4";
-
         command = command1+";"+command2;
 
         BashCommands create = new BashCommands(command);
         create.startBashProcess();
         create.getProcess().waitFor();
 
-        System.out.println("DONE WITH CREATING");
-
         command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
-
-        System.out.println("DONE WITH MERGING");
 
         command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm";
 
@@ -103,8 +89,6 @@ public class CreateVideoTask extends Task<Void> {
         	
         });
         
-
-        System.out.println("DONE WITH TIDY UP");
         return null;
     }
 }
