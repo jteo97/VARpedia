@@ -35,7 +35,7 @@ public class VideoPlayerController {
     @FXML
     public void makeWindow(String fileToOpen) {
         fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
-                + "creations" + System.getProperty("file.separator") + fileToOpen;
+                + "creations" + System.getProperty("file.separator") + fileToOpen + ".mp4";
         fileUrl = new File(fileToOpen);
 
         Media video = new Media(fileUrl.toURI().toString());

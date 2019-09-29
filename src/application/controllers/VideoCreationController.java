@@ -97,14 +97,12 @@ public class VideoCreationController {
                 // delete the creation if user confirmed
                 if (result.get() == ButtonType.OK) {
                     // delete the conflicting creation
-                    _model.delete(name + ".mp4");
+                    _model.delete(name);
                     _window.close();
                     Alert downloading = new Alert(Alert.AlertType.INFORMATION);
                     downloading.setTitle("Creation");
-                    downloading.setHeaderText("Creating... Please Wait...\nOr press cancel to stop the search and return to the menu list");
+                    downloading.setHeaderText("Creating... Please Wait...");
                     downloading.setGraphic(progressIndicator);
-                    ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-                    downloading.getButtonTypes().setAll(cancel);
 
                     DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                     team1.submit(downloadTask);
@@ -113,17 +111,10 @@ public class VideoCreationController {
                         @Override
                         public void handle(WorkerStateEvent event) {
                             downloading.showAndWait();
-                            if (!downloading.isShowing()) {
-                                downloadTask.cancel();
-                            }
+
                         }
                     });
-                    downloadTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent event) {
-                            downloading.close();
-                        }
-                    });
+
                     int finalNumber = number;
                     downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                         @Override
@@ -147,10 +138,8 @@ public class VideoCreationController {
 
                 Alert downloading = new Alert(Alert.AlertType.INFORMATION);
                 downloading.setTitle("Creation");
-                downloading.setHeaderText("Creating... Please Wait...\nOr press cancel to stop the search and return to the menu list");
+                downloading.setHeaderText("Creating... Please Wait...");
                 downloading.setGraphic(progressIndicator);
-                ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-                downloading.getButtonTypes().setAll(cancel);
 
                 DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                 team1.submit(downloadTask);
@@ -159,15 +148,7 @@ public class VideoCreationController {
                     @Override
                     public void handle(WorkerStateEvent event) {
                         downloading.showAndWait();
-                        if (!downloading.isShowing()) {
-                            downloadTask.cancel();
-                        }
-                    }
-                });
-                downloadTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent event) {
-                        downloading.close();
+
                     }
                 });
 
