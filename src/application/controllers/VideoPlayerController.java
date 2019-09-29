@@ -39,21 +39,19 @@ public class VideoPlayerController {
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
 
-        //_media.setFitWidth(_window.getMaxWidth());
-
         _player.setOnEndOfMedia(new Runnable() {
             @Override
             public void run() {
                 _window.close();
             }
         });
-
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(_nextScene);
         _window.setTitle("Play Video");
 
         _media.prefWidth(_window.getMaxWidth());
+        _media.prefHeight(_window.getMaxHeight());
 
         _window.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

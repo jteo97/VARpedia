@@ -34,6 +34,17 @@ public class BashCommands {
         return output;
     }
 
+    public String getStderr() throws IOException {
+        InputStream stderr = _process.getErrorStream();
+        BufferedReader stderrBuffered = new BufferedReader(new InputStreamReader(stderr));
+        String line = "";
+        String output = "";
+        while ((line = stderrBuffered.readLine()) != null) {
+            output += line;
+        }
+        return output;
+    }
+
     public int getExitStatus() {
         System.out.println(_process.exitValue());
         return _process.exitValue();

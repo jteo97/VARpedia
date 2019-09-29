@@ -2,13 +2,17 @@ package application.models;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 
 public class PreviewTask extends Task<Void> {
 
+    private Button _saveButton;
     private String _command;
 
-    public PreviewTask(String command) {
+    public PreviewTask(String command, Button saveButton) {
         this._command = command;
+        this._saveButton = saveButton;
     }
 
     @Override
@@ -17,6 +21,30 @@ public class PreviewTask extends Task<Void> {
         BashCommands speaking = new BashCommands(_command);
         speaking.startBashProcess();
         speaking.getProcess().waitFor();
+
+        String error = speaking.getStderr();
+        System.out.println(error);
+        if (error.contains("SIOD ERROR")) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("inside error");
+                    Alert failedVoice = new Alert(Alert.AlertType.ERROR);
+                    failedVoice.setHeaderText("Failed to make audio clip!");
+                    failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
+                            "Please select a different voice or preview with whole English words in the text only.");
+                    failedVoice.show();
+                    _saveButton.setDisable(true);
+                }
+            });
+        } else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    _saveButton.setDisable(false);
+                }
+            });
+        }
 
         return null;
     }

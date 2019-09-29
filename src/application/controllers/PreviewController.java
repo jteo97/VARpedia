@@ -204,14 +204,14 @@ public class PreviewController {
     	writer.close();
     	
     	String command = "festival -b " + choice + "_preview.scm";
-        PreviewTask tts = new PreviewTask(command);
+        PreviewTask tts = new PreviewTask(command, _saveButton);
         _task = tts;
         team.submit(tts);
         tts.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
             @Override
             public void handle(WorkerStateEvent workerStateEvent) {
                 _playButton.setDisable(false);
-                _saveButton.setDisable(false);
+                //_saveButton.setDisable(false);
                 _task = null; // empty current playing task
             }
         });

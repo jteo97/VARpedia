@@ -67,6 +67,7 @@ public class CreationSceneController {
 
     @FXML
     private void onCombineAudioPressed() throws InterruptedException, IOException {
+
         String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
                 " | grep audio | grep .wav";
         BashCommands checkAudioExists = new BashCommands(checkAudio);
@@ -93,7 +94,7 @@ public class CreationSceneController {
             combine.getProcess().waitFor();
 
             // delete all other audio chunk
-            BashCommands delete = new BashCommands("rm -f audio*");
+            BashCommands delete = new BashCommands("rm -f audio* ; rm -f *.scm");
             delete.startBashProcess();
             delete.getProcess().waitFor();
 
@@ -114,7 +115,7 @@ public class CreationSceneController {
     @FXML
     private void onCancelPressed() {
         // delete all the saved audio chunk first
-        BashCommands delete = new BashCommands("rm -f *.wav");
+        BashCommands delete = new BashCommands("rm -f *.wav ; rm -f *.scm");
         delete.startBashProcess();
         try {
             delete.getProcess().waitFor();

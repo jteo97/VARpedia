@@ -29,7 +29,7 @@ public class CreateVideoTask extends Task<Void> {
     protected Void call() throws Exception {
         String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
         String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
-        String _term = _searchTerm;
+        String _term = _wikiSearch;
 
 //        String command = "duration=`soxi -D \"" + _path + "/combine.wav\"` ; " +
 //                "ffmpeg -framerate 5/\"$duration\" -f image2 -s 800x600 -i \"" + _path + "/image%01d.jpg\" -vcodec libx264 -crf 25 -pix_fmt yuv420p -vf \"pad=ceil(iw/2)*2:ceil(ih/2)*2\" -r 25 \"" + _path + "/slideshow.mp4\" ; " +
@@ -47,7 +47,7 @@ public class CreateVideoTask extends Task<Void> {
 
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(_path+"cmd.txt", "UTF-8");
+            writer = new PrintWriter(_path+"commands.txt", "UTF-8");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -55,9 +55,9 @@ public class CreateVideoTask extends Task<Void> {
         }
         for (int i = 1; i < _numberOfImages+1; i++) {
             if (i==_numberOfImages) {
-                writer.println("file "+_path+"image"+i+".jpg");
-                writer.println("duration "+duration);
-                writer.println("file "+_path+"image"+i+".jpg");
+                writer.println("file " + _path + "image" + i + ".jpg");
+                writer.println("duration " + duration);
+                writer.println("file " + _path + "image" + i + ".jpg");
                 break;
             }
             writer.println("file "+_path+"image"+i+".jpg");
@@ -65,8 +65,13 @@ public class CreateVideoTask extends Task<Void> {
         }
         writer.close();
 
-        String command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"cmd.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
-        String command2 = "ffmpeg -y -i "+_pathToCreation+"/"+_nameOfCreation+"/"+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='"+_term+"'\" "+"-r 25 "+_pathToCreation+"/"+_nameOfCreation+"/"+_nameOfCreation+".mp4";
+        String command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
+        String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
+
+        //String command2 = "ffmpeg -y -i "+_pathToCreation+"/"+_nameOfCreation+"/"+"video.mp4 "+ "-vf drawtext=\"fontfile=" + System.getProperty("user.dir") + "/fontfile.ttf: text='" + _term+ "': fontcolor=white: fontsize=30: x=(w-text_w)/2: y=(h-text_h)/2\" -r 25 "+_pathToCreation+_nameOfCreation+".mp4";
+
+        //String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf drawtext=\"fontfile=" + System.getProperty("user.dir") + "/fontfile.ttf: text='" + _term+ "': fontcolor=white: fontsize=30: x=(w-text_w)/2: y=(h-text_h)/2\" -r 25 "+_path+"video.mp4";
+
         command = command1+";"+command2;
 
         BashCommands create = new BashCommands(command);
@@ -75,14 +80,14 @@ public class CreateVideoTask extends Task<Void> {
 
         System.out.println("DONE WITH CREATING");
 
-        command = "ffmpeg -y -i \"video.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
 
         System.out.println("DONE WITH MERGING");
 
-        command = "rm -f *.jpg ; rm -f *.wav ; rm -f video.mp4 ; rm -f slideshow.mp4 ; rm -f cmd.txt";
+        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt";
         BashCommands tidyUp = new BashCommands(command);
         tidyUp.startBashProcess();
         tidyUp.getProcess().waitFor();
