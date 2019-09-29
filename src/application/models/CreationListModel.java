@@ -71,7 +71,7 @@ public class CreationListModel {
 	public ObservableList<String> delete(String creation) {
 		_creationList.remove(creation);
 		String deleteCreation = "rm -f " + System.getProperty("user.dir")+ System.getProperty("file.separator") +
-				"creations" + System.getProperty("file.separator") + creation;
+				"creations" + System.getProperty("file.separator") + creation + ".mp4";
 		BashCommands deletion = new BashCommands(deleteCreation);
 		deletion.startBashProcess();
 		try {

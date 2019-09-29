@@ -85,7 +85,7 @@ public class VideoCreationController {
             } else if (number < 1 || number > 10) {
                 Alert invalidNumber = new Alert(Alert.AlertType.ERROR);
                 invalidNumber.setHeaderText("Invalid number range");
-                invalidNumber.setContentText("You typed a number outside the valid range of 1 - 10");
+                invalidNumber.setContentText("Please enter a number in the range of 1 - 10");
                 invalidNumber.show();
             } else if (exists) {
                 // wait for user confirmation
