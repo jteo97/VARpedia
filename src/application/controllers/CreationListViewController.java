@@ -1,6 +1,5 @@
 package application.controllers;
 
-import application.models.BashCommands;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
@@ -13,8 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Optional;

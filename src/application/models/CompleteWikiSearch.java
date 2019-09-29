@@ -38,7 +38,7 @@ public class CompleteWikiSearch implements Runnable {
 		
 		// load creation scene
 		try {
-			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("../controllers/views/CreationScene.fxml"));
+			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/controllers/views/CreationScene.fxml"));
 			Parent creationRoot = (Parent) creationSceneLoader.load();
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
 			Scene scene = new Scene(creationRoot, 600, 600);
