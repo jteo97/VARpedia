@@ -26,7 +26,6 @@ public class CreationListViewController {
 	@FXML private ListView<String> _creationList;
 
 	private CreationListModel _creationListModel;
-	private Scene _nextScene;
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
 
 	public void setUpModel() {
@@ -147,11 +146,6 @@ public class CreationListViewController {
 		_creationCount.setText("Total number of creations: " + size);
 	}
 	
-	public void setScene(Scene scene) {
-		_nextScene = scene;
-
-	}
-
 	public void updateList(ObservableList<String> creations) {
 		//Update the _CreationList
 		_creationList.getItems().setAll(creations);
