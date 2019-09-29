@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * A controller class for the preview audio scene
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class PreviewController {
 
     @FXML private TextArea _previewTextArea;

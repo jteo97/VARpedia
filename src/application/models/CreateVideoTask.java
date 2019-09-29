@@ -87,7 +87,8 @@ public class CreateVideoTask extends Task<Void> {
 
         System.out.println("DONE WITH MERGING");
 
-        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt";
+        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm";
+
         BashCommands tidyUp = new BashCommands(command);
         tidyUp.startBashProcess();
         tidyUp.getProcess().waitFor();

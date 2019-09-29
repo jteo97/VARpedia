@@ -2,18 +2,21 @@ package application;
 	
 import application.controllers.CreationListViewController;
 import application.controllers.MainMenuController;
-import application.controllers.VideoPlayerController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
+/**
+ * Main class for the application
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class Main extends Application {
-
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -29,6 +32,17 @@ public class Main extends Application {
 
 			CreationListViewController listController = (CreationListViewController) creationListLoader.getController();
 			listController.setUpModel();
+			
+			// properly exit the application
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+				@Override
+				public void handle(WindowEvent event) {
+					Platform.exit();
+					System.exit(0);
+				}
+				
+			});
 
 			Scene mainScene = new Scene(menuRoot);
 			primaryStage.setScene(mainScene);

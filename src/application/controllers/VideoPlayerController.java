@@ -14,6 +14,11 @@ import javafx.util.Duration;
 
 import java.io.File;
 
+/**
+ * A controller class for the video player scene
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class VideoPlayerController {
 
     @FXML private MediaView _media;

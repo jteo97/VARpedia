@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * A helper class to execute Bash commands more easily
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class BashCommands {
     private Process _process;
     private String _command;

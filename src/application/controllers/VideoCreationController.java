@@ -2,15 +2,11 @@ package application.controllers;
 
 import application.DownloadImagesTask;
 
-import application.models.BashCommands;
 import application.models.CreateVideoTask;
 import application.models.CreationListModel;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
@@ -24,6 +20,11 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * A controller class for the video creation scene
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class VideoCreationController {
 
     @FXML private Button _cancelButton;

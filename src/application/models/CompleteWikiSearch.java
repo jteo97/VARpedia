@@ -9,6 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * The job to be sent back to the GUI thread after searching using wikit
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class CompleteWikiSearch implements Runnable {
 
 	private String _result;
@@ -38,7 +43,7 @@ public class CompleteWikiSearch implements Runnable {
 		
 		// load creation scene
 		try {
-			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("../controllers/views/CreationScene.fxml"));
+			FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/controllers/views/CreationScene.fxml"));
 			Parent creationRoot = (Parent) creationSceneLoader.load();
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
 			Scene scene = new Scene(creationRoot, 600, 600);
