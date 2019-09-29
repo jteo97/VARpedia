@@ -11,6 +11,11 @@ import application.controllers.CreationListViewController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * A model for the creation list
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class CreationListModel {
 
 	private  ObservableList<String> _creationList;

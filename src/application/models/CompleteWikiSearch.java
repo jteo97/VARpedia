@@ -9,6 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * The job to be sent back to the GUI thread after searching using wikit
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class CompleteWikiSearch implements Runnable {
 
 	private String _result;

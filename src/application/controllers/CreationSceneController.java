@@ -15,9 +15,12 @@ import java.util.List;
 import application.models.BashCommands;
 import application.models.CreationListModel;
 
+/**
+ * A controller class for the main creation scene
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class CreationSceneController {
-
-
 
     @FXML private TextArea _searchResultArea;
     @FXML private Button _previewSpeech;

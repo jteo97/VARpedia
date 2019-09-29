@@ -18,6 +18,11 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * A controller class for the main list view menu
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class CreationListViewController {
 	@FXML private Button _createButton;
 	@FXML private Button _playButton;

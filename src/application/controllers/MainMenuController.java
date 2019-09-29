@@ -5,6 +5,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * A controller class for the initial welcome menu
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class MainMenuController {
 	
 	@FXML private Button _launchButton;

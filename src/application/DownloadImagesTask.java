@@ -11,6 +11,11 @@ import com.flickr4java.flickr.*;
 import com.flickr4java.flickr.photos.*;
 import javafx.concurrent.Task;
 
+/**
+ * The task for the worker thread to run in order to download images from Flickr in the background
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class DownloadImagesTask extends Task<Void> {
 
     private String _searchImageTerm;

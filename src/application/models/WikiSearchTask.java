@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
+/**
+ * A task for the background thread to search for the term from Wikipedia
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class WikiSearchTask extends Task<Void> {
 
 	private String _term;

@@ -3,6 +3,11 @@ package application.models;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
+/**
+ * A task for background thread to play the preview audio in the background
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class PreviewTask extends Task<Void> {
 
     private String _command;

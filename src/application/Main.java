@@ -11,8 +11,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
+/**
+ * Main class for the application
+ * @author Tommy Shi and Justin Teo
+ *
+ */
 public class Main extends Application {
-
 
 	@Override
 	public void start(Stage primaryStage) {
