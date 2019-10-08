@@ -68,22 +68,26 @@ public class VideoCreationController {
 
             if (search.equals(null) || search.equals("")) {
                 Alert noSearchTerm = new Alert(Alert.AlertType.ERROR);
+                noSearchTerm.setTitle("No Search Term");
                 noSearchTerm.setHeaderText("No search term provided!");
                 noSearchTerm.setContentText("Please provide one before clicking create.");
                 noSearchTerm.show();
             } else if (numberstr.equals(null) || numberstr.equals("")) {
                 Alert noNumber = new Alert(Alert.AlertType.ERROR);
+                noNumber.setTitle("No Number");
                 noNumber.setHeaderText("No number provided!");
                 noNumber.setContentText("Please provide one before clicking create.");
                 noNumber.show();
             } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
                 Alert noName = new Alert(Alert.AlertType.ERROR);
+                noName.setTitle("Invalid Name");
                 noName.setHeaderText("invalid name provided!");
                 noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
                         " alphanumeric characters and \"_\" and \"-\".");
                 noName.show();
             } else if (number < 1 || number > 10) {
                 Alert invalidNumber = new Alert(Alert.AlertType.ERROR);
+                invalidNumber.setTitle("Invalid Number");
                 invalidNumber.setHeaderText("Invalid number range");
                 invalidNumber.setContentText("Please enter a number in the range of 1 - 10");
                 invalidNumber.show();

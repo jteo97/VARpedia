@@ -30,6 +30,7 @@ public class PreviewTask extends Task<Void> {
         if (error.contains("SIOD ERROR")) {
             Platform.runLater(() -> {
                 Alert failedVoice = new Alert(Alert.AlertType.ERROR);
+                failedVoice.setTitle("Audio Creation Failed");
                 failedVoice.setHeaderText("Failed to make audio clip!");
                 failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
                         "Please select a different voice or preview with whole English words in the text only.");

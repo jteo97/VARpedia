@@ -43,12 +43,7 @@ public class VideoPlayerController {
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
 
-        _player.setOnEndOfMedia(new Runnable() {
-            @Override
-            public void run() {
-                _window.close();
-            }
-        });
+        _player.setOnEndOfMedia(() -> _window.close());
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(_nextScene);

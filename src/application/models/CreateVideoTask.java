@@ -80,14 +80,7 @@ public class CreateVideoTask extends Task<Void> {
         tidyUp.getProcess().waitFor();
         
         // update model
-        Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				_model.create(_nameOfCreation+ ".mp4");
-			}
-        	
-        });
+        Platform.runLater(() -> _model.create(_nameOfCreation+ ".mp4"));
         
         return null;
     }

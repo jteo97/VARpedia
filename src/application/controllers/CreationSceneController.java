@@ -77,6 +77,7 @@ public class CreationSceneController {
 
         if (checkAudioExists.getExitStatus() != 0) {
             Alert noAudioExists = new Alert(Alert.AlertType.ERROR);
+            noAudioExists.setTitle("No Audio");
             noAudioExists.setHeaderText("No audio to combine");
             noAudioExists.setContentText("Use the preview button to create audio");
             noAudioExists.show();
