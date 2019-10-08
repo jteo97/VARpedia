@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
+<BorderPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
    <bottom>
       <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" prefHeight="75.0" text="Launch the Tool" BorderPane.alignment="CENTER">
          <font>
@@ -19,11 +19,11 @@
          <children>
             <Label alignment="CENTER" text="Welcome to Wiki-Speak Authoring Tool!">
                <font>
-                  <Font size="18.0" />
+                  <Font size="24.0" />
                </font></Label>
             <Label alignment="CENTER" text="Press the Button to Start">
                <font>
-                  <Font size="18.0" />
+                  <Font size="24.0" />
                </font></Label>
          </children>
       </VBox>

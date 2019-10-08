@@ -28,24 +28,16 @@ public class PreviewTask extends Task<Void> {
 
         String error = speaking.getStderr();
         if (error.contains("SIOD ERROR")) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    Alert failedVoice = new Alert(Alert.AlertType.ERROR);
-                    failedVoice.setHeaderText("Failed to make audio clip!");
-                    failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
-                            "Please select a different voice or preview with whole English words in the text only.");
-                    failedVoice.show();
-                    _saveButton.setDisable(true);
-                }
+            Platform.runLater(() -> {
+                Alert failedVoice = new Alert(Alert.AlertType.ERROR);
+                failedVoice.setHeaderText("Failed to make audio clip!");
+                failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
+                        "Please select a different voice or preview with whole English words in the text only.");
+                failedVoice.show();
+                _saveButton.setDisable(true);
             });
         } else {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    _saveButton.setDisable(false);
-                }
-            });
+            Platform.runLater(() -> _saveButton.setDisable(false));
         }
 
         return null;
