@@ -121,28 +121,15 @@ public class CreationListViewController {
 			ExecutorService team = Executors.newSingleThreadExecutor();
 			team.submit(task);
 
-			task.setOnRunning(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-					searching.showAndWait();
-					if (!searching.isShowing()) {
-						task.cancel();
-					}
+			task.setOnRunning(event -> {
+				searching.showAndWait();
+				if (!searching.isShowing()) {
+					task.cancel();
 				}
 			});
-			task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-					searching.close();
-				}
-			});
+			task.setOnSucceeded(event -> searching.close());
 
-			task.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-				@Override
-				public void handle(WorkerStateEvent event) {
-					searching.close();
-				}
-			});
+			task.setOnCancelled(event -> searching.close());
 		}
 	}
 	

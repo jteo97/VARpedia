@@ -57,12 +57,7 @@ public class VideoPlayerController {
         _media.prefWidth(_window.getMaxWidth());
         _media.prefHeight(_window.getMaxHeight());
 
-        _window.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                _player.stop();
-            }
-        });
+        _window.setOnCloseRequest(windowEvent -> _player.stop());
 
         _window.show();
 

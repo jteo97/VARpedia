@@ -34,14 +34,9 @@ public class Main extends Application {
 			listController.setUpModel();
 			
 			// properly exit the application
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-				@Override
-				public void handle(WindowEvent event) {
-					Platform.exit();
-					System.exit(0);
-				}
-				
+			primaryStage.setOnCloseRequest(event -> {
+				Platform.exit();
+				System.exit(0);
 			});
 
 			Scene mainScene = new Scene(menuRoot);

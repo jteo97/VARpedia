@@ -107,29 +107,17 @@ public class VideoCreationController {
                     DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                     team1.submit(downloadTask);
 
-                    downloadTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent event) {
-                            downloading.showAndWait();
-
-                        }
-                    });
+                    downloadTask.setOnRunning(event -> downloading.showAndWait());
 
                     int finalNumber = number;
-                    downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                        @Override
-                        public void handle(WorkerStateEvent workerStateEvent) {
-                            CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
-                            team2.submit(createTask);
+                    downloadTask.setOnSucceeded(workerStateEvent -> {
+                        CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
+                        team2.submit(createTask);
 
-                            createTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                                @Override
-                                public void handle(WorkerStateEvent workerStateEvent) {
-                                    downloading.close();
-                                    _creationWindow.close();
-                                }
-                            });
-                        }
+                        createTask.setOnSucceeded(workerStateEvent1 -> {
+                            downloading.close();
+                            _creationWindow.close();
+                        });
                     });
                 }
             }
@@ -144,29 +132,17 @@ public class VideoCreationController {
                 DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
                 team1.submit(downloadTask);
 
-                downloadTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent event) {
-                        downloading.showAndWait();
-
-                    }
-                });
+                downloadTask.setOnRunning(event -> downloading.showAndWait());
 
                 int finalNumber = number;
-                downloadTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerStateEvent) {
-                        CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
-                        team2.submit(createTask);
+                downloadTask.setOnSucceeded(workerStateEvent -> {
+                    CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
+                    team2.submit(createTask);
 
-                        createTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                            @Override
-                            public void handle(WorkerStateEvent workerStateEvent) {
-                                downloading.close();
-                                _creationWindow.close();
-                            }
-                        });
-                    }
+                    createTask.setOnSucceeded(workerStateEvent12 -> {
+                        downloading.close();
+                        _creationWindow.close();
+                    });
                 });
             }
         } catch(NumberFormatException e) {
