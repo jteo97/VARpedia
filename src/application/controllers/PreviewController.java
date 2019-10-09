@@ -64,7 +64,13 @@ public class PreviewController {
         try {
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                setUpPreview(choice);
+                if (choice.equals("Default Machine Voice")) {
+                	setUpPreview("kal_diphone");
+                } else if (choice.equals("Male Voice")) {
+                	setUpPreview("akl_nz_jdt_diphone");
+                } else if (choice.equals("Female Voice")) {
+                	setUpPreview("akl_nz_cw_cg_cg");
+                }
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -82,7 +88,7 @@ public class PreviewController {
                 FileWriter text = new FileWriter("selected.txt");
                 text.write(_audioText);
                 text.close();
-                if (choice.equals("akl_nz_jdt_diphone")) {
+                if (choice.equals("Male Voice")) {
                 	try {
                 		// convert text to wav file
                 		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_jdt_diphone.scm");
@@ -103,7 +109,7 @@ public class PreviewController {
                 	} catch (InterruptedException e) {
                 		e.printStackTrace();
                 	}
-                } else if (choice.equals("kal_diphone")) {
+                } else if (choice.equals("Default Machine Voice")) {
                 	try {
                 		// convert text to wav file
                 		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval kal_diphone.scm");
@@ -124,7 +130,7 @@ public class PreviewController {
                 	} catch (InterruptedException e) {
                 		e.printStackTrace();
                 	}
-                } else if (choice.equals("akl_nz_cw_cg_cg")) {
+                } else if (choice.equals("Female Voice")) {
                 	try {
                 		// convert text to wav file
                 		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_cw_cg_cg.scm");
@@ -195,7 +201,7 @@ public class PreviewController {
     	
     	// Add all voices
     	ObservableList<String> choices = FXCollections.observableArrayList();
-        choices.addAll("akl_nz_jdt_diphone", "kal_diphone", "akl_nz_cw_cg_cg");
+        choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
         _choiceOfVoice.setItems(choices);
     }
 
