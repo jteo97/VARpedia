@@ -9,21 +9,21 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <Label text="Here are the existing creations">
                <font>
-                  <Font size="15.0" />
+                  <Font size="24.0" />
                </font></Label>
             <Label text="Select to play/delete, or create a new creation">
                <font>
-                  <Font size="15.0" />
+                  <Font size="24.0" />
                </font></Label>
             <Label fx:id="_creationCount" text="Total number of creations: 0">
                <font>
-                  <Font size="15.0" />
+                  <Font size="23.0" />
                </font></Label>
          </children>
       </VBox>
@@ -32,23 +32,23 @@
       <ListView fx:id="_creationList" onMouseClicked="#creationIsSelected" prefWidth="384.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <VBox alignment="CENTER" prefHeight="100.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="100.0" spacing="8.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
                <children>
                   <Button fx:id="_playButton" disable="true" mnemonicParsing="false" onAction="#onPlayButtonPressed" text="Play Creation">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="24.0" />
                      </font></Button>
                   <Button fx:id="_deleteButton" disable="true" mnemonicParsing="false" onAction="#onDeleteButtonPressed" text="Delete Creation">
                      <font>
-                        <Font size="16.0" />
+                        <Font size="24.0" />
                      </font></Button>
                </children>
             </HBox>
             <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="New Creation">
                <font>
-                  <Font size="16.0" />
+                  <Font size="24.0" />
                </font></Button>
          </children>
          <padding>

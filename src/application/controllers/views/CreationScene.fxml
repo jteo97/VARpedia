@@ -10,14 +10,17 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationSceneController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationSceneController">
    <center>
       <TextArea fx:id="_searchResultArea" wrapText="true" BorderPane.alignment="CENTER" />
    </center>
    <right>
       <VBox spacing="8.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Max 40 Words for each preview" />
+            <Label text="Max 40 Words for each preview">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
             <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" prefWidth="206.0" text="Preview Speech">
                <font>
                   <Font size="16.0" />
@@ -55,12 +58,12 @@
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here's the search result. You can select text, edit text, preview speech,">
                <font>
-                  <Font size="15.0" />
+                  <Font size="21.0" />
                </font>
             </Text>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="save the speech then combine all speech into creation">
                <font>
-                  <Font size="15.0" />
+                  <Font size="21.0" />
                </font>
             </Text>
          </children>
