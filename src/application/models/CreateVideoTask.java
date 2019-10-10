@@ -60,7 +60,7 @@ public class CreateVideoTask extends Task<Void> {
         writer.close();
 
         String command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
-        String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
+        String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
 
         command = command1+";"+command2;
 

@@ -80,20 +80,28 @@ public class CreationListViewController {
 	@FXML
 	private void onPlayButtonPressed() {
 
-		String str = _creationList.getSelectionModel().getSelectedItem();
+		String creation = _creationList.getSelectionModel().getSelectedItem();
 
-		try {
-			FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
-			Parent videoRoot = (Parent) videoPlayerLoader.load();
+		if (creation != null) {
 
-			VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
-			controller.setScene(new Scene(videoRoot));
+			try {
+				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
+				Parent videoRoot = (Parent) videoPlayerLoader.load();
+
+				VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
+				controller.setScene(new Scene(videoRoot));
 
 
-			controller.makeWindow(str);
+				controller.makeWindow(creation);
 
-		} catch (IOException e) {
-			e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("No creation selected");
+			error.setHeaderText("You have not selected a creation, please select a creation to play");
+			error.showAndWait();
 		}
 
 	}
