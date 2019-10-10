@@ -237,5 +237,6 @@ build.fxbuild
 flickr-api-keys.txt
 creations/
 src/META-INF/
+quiz/
 
 # End of https://www.gitignore.io/api/java,linux,macos,eclipse,intellij
