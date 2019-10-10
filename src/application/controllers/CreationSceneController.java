@@ -105,7 +105,7 @@ public class CreationSceneController {
                 Parent videoRoot = (Parent) videoCreationLoader.load();
                 VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
                 Scene scene = new Scene(videoRoot);
-                controller.setScene(scene, _wikisearch);
+                controller.setScene(scene, _wikisearch, _combineAudio);
                 controller.setup(scene, _model, _creationWindow);
 
             } catch (IOException e) {

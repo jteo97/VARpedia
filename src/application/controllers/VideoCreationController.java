@@ -41,6 +41,7 @@ public class VideoCreationController {
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
     private String _wikisearch;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
+    private Button _combineButton;
 
     @FXML
     private void onCancelButtonPressed() {
@@ -51,6 +52,8 @@ public class VideoCreationController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        _combineButton.setDisable(true);
     }
 
     @FXML
@@ -157,9 +160,10 @@ public class VideoCreationController {
         }
     }
 
-    public void setScene(Scene scene, String wikisearch) {
+    public void setScene(Scene scene, String wikisearch, Button combineButton) {
         this._nextScene = scene;
         this._wikisearch = wikisearch;
+        this._combineButton = combineButton;
     }
 
     public void setup(Scene scene, CreationListModel model, Stage creationWindow) {
