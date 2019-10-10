@@ -32,6 +32,7 @@ public class VideoCreationController {
     @FXML private TextField _searchField;
     @FXML private TextField _numField;
     @FXML private TextField _nameField;
+    @FXML private Label _errorNum;
 
     private Scene _nextScene;
     private CreationListModel _model;
@@ -160,6 +161,21 @@ public class VideoCreationController {
         }
     }
 
+    @FXML
+    private void checkFields() {
+        if (_nameField.getText().equals("") || _numField.getText().equals("") || _nameField.getText().equals("")) {
+            _createButton.setDisable(true);
+        } else {
+            if (_numField.getText().matches("[0-9]")) {
+                _createButton.setDisable(false);
+                _errorNum.setVisible(false);
+            } else {
+                _createButton.setDisable(true);
+                _errorNum.setVisible(true);
+            }
+        }
+    }
+
     public void setScene(Scene scene, String wikisearch, Button combineButton) {
         this._nextScene = scene;
         this._wikisearch = wikisearch;
@@ -173,5 +189,16 @@ public class VideoCreationController {
         _window.setScene(scene);
         _window.show();
         _model = model;
+        _createButton.setDisable(true);
+
+        _window.setOnCloseRequest(windowEvent -> {
+            _combineButton.setDisable(true);
+            try {
+                Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
+                        + "combine.wav"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

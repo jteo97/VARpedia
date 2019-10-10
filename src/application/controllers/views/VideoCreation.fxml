@@ -10,15 +10,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoCreationController">
+<AnchorPane onKeyReleased="#checkFields" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoCreationController">
    <children>
-      <VBox>
+      <VBox spacing="30.0">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
                   <Label text="Enter term to search flickr:">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="18.0" />
                      </font></Label>
                   <TextField fx:id="_searchField" promptText="Type here">
                      <font>
@@ -33,12 +33,13 @@
                <children>
                   <Label text="Enter number of images to download:">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="18.0" />
                      </font></Label>
                   <TextField fx:id="_numField" promptText="Type here">
                      <font>
                         <Font size="15.0" />
-                     </font></TextField>
+                     </font>
+                  </TextField>
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -48,7 +49,7 @@
                <children>
                   <Label text="Enter name to call creation:">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="18.0" />
                      </font></Label>
                   <TextField fx:id="_nameField" promptText="Type here">
                      <font>
@@ -76,5 +77,6 @@
             </ButtonBar>
          </children>
       </VBox>
+      <Label fx:id="_errorNum" layoutX="357.0" layoutY="115.0" text="A number must be typed here" textFill="RED" underline="true" visible="false" />
    </children>
 </AnchorPane>
