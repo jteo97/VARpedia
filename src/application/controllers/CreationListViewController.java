@@ -41,8 +41,10 @@ public class CreationListViewController {
 
 	@FXML
 	private void creationIsSelected() {
-		_playButton.setDisable(false);
-		_deleteButton.setDisable(false);
+		if (_creationList.getSelectionModel().getSelectedItems() != null && !_creationList.getSelectionModel().getSelectedItems().isEmpty()) {
+			_playButton.setDisable(false);
+			_deleteButton.setDisable(false);
+		}
 	}
 
 	@FXML
@@ -69,12 +71,7 @@ public class CreationListViewController {
 				info.showAndWait();
 
 			}
-		} else {
-			Alert error = new Alert(AlertType.ERROR);
-			error.setTitle("No creation selected");
-			error.setHeaderText("You have not selected a creation, please select a creation to delete");
-			error.showAndWait();
-		}
+		} 
 	}
 	
 	@FXML
