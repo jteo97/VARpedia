@@ -29,6 +29,7 @@ public class CreateVideoTask extends Task<Void> {
     protected Void call() throws Exception {
         String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
         String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
+        String _pathToQuiz = _path +"quiz" + System.getProperty("file.separator");
         String _term = _wikiSearch;
 
         String command = "soxi -D \"" + _path + "combine.wav\"";
@@ -70,6 +71,19 @@ public class CreateVideoTask extends Task<Void> {
 
         command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
+        merge.startBashProcess();
+        merge.getProcess().waitFor();
+
+        command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
+        command2 = "ffmpeg -y -i "+_path+"video.mp4 -r 25 "+_path+"good.mp4";
+        command = command1+";"+command2;
+
+        BashCommands createNoTerm = new BashCommands(command);
+        createNoTerm.startBashProcess();
+        createNoTerm.getProcess().waitFor();
+
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToQuiz + _nameOfCreation + "quiz.mp4";
+        merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
 
