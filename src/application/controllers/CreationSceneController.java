@@ -53,7 +53,7 @@ public class CreationSceneController {
                     Parent previewRoot = (Parent) previewSceneLoader.load();
                     PreviewController controller = (PreviewController) previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
-                    controller.setup(selectedText, scene, _audioCount);
+                    controller.setup(selectedText, scene, _audioCount, _combineAudio);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -127,6 +127,18 @@ public class CreationSceneController {
         _creationWindow.close();
     }
 
+    @FXML
+    private void onMouseDrag() {
+        System.out.println(_searchResultArea.getSelectedText());
+        if (!_searchResultArea.getSelectedText().equals("")) {
+            _previewSpeech.setDisable(false);
+        } else {
+            _previewSpeech.setDisable(true);
+        }
+    }
+
+
+
     public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
         _searchResult = result;
         _searchResultArea.setText(_searchResult);
@@ -135,6 +147,8 @@ public class CreationSceneController {
         _wikisearch = wikisearch;
         _model = model;
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
+        _combineAudio.setDisable(true);
+        _previewSpeech.setDisable(true);
 
         // show window
         _creationWindow = new Stage();

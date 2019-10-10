@@ -43,6 +43,7 @@ public class PreviewController {
     private Stage _window;
     private ExecutorService team = Executors.newSingleThreadExecutor();
     private PreviewTask _task;
+    private Button _combineButton;
 
 
     @FXML
@@ -158,6 +159,8 @@ public class PreviewController {
                 // delete the text file
                 File file = new File("selected.txt");
                 file.delete();
+
+                _combineButton.setDisable(false);
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -166,7 +169,7 @@ public class PreviewController {
         }
     }
 
-    public void setup(String selectedtext, Scene scene, List<Integer> count) throws IOException {
+    public void setup(String selectedtext, Scene scene, List<Integer> count, Button combineButton) throws IOException {
     	_count = count;
         _selectedText = selectedtext;
         _previewTextArea.setText(selectedtext);
@@ -174,6 +177,7 @@ public class PreviewController {
         _previewTextArea.setWrapText(true);
         _audioText = _selectedText.replaceAll("[^a-zA-Z' ]", "");
         _choiceOfVoice.setStyle("-fx-font-size: 1.1em ;");
+        _combineButton = combineButton;
         
         _audioText = _audioText.replaceAll("\"", ""); //remove all instances of " to prevent code breaking
         
