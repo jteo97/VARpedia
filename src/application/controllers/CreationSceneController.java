@@ -25,9 +25,8 @@ public class CreationSceneController {
     @FXML private TextArea _searchResultArea;
     @FXML private Button _previewSpeech;
     @FXML private Button _combineAudio;
-    @FXML private TextField _inputLine;
-    @FXML private Button _cancelCreation;
-    @FXML private Label _selectedWordCount;
+    @FXML private Button _playAudio;
+    @FXML private ListView<String> _audiosList;
 
     private CreationListModel _model;
     private String _wikisearch;
@@ -53,7 +52,7 @@ public class CreationSceneController {
                     Parent previewRoot = (Parent) previewSceneLoader.load();
                     PreviewController controller = (PreviewController) previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
-                    controller.setup(selectedText, scene, _audioCount);
+                    controller.setup(selectedText, scene, _audioCount, this);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -127,7 +126,27 @@ public class CreationSceneController {
         _creationWindow.close();
     }
 
-    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
+    @FXML
+    private void onPlayPressed() throws InterruptedException {
+        String selection = _audiosList.getSelectionModel().getSelectedItem();
+        if (selection != null) {
+            int position = _audiosList.getItems().indexOf(selection);
+            String audioFile = "audio" + position + ".wav";
+            BashCommands play = new BashCommands("ffplay -nodisp -autoexit " + audioFile);
+            play.startBashProcess();
+            play.getProcess().waitFor();
+        }
+    }
+
+    @FXML
+    private void onAudioSelected() {
+        String selection = _audiosList.getSelectionModel().getSelectedItem();
+        if (selection != null && !selection.isEmpty()) {
+            _playAudio.setDisable(false);
+        }
+    }
+
+    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) {
         _searchResult = result;
         _searchResultArea.setText(_searchResult);
         _audioCount = new ArrayList<Integer>();
@@ -143,7 +162,7 @@ public class CreationSceneController {
         _creationWindow.show();
     }
 
-    public String get_searchResult() {
-        return _searchResult;
+    public void updateAudio(String audio) {
+        _audiosList.getItems().add(audio);
     }
 }

@@ -37,6 +37,7 @@ public class PreviewController {
     @FXML private Button _saveButton;
     @FXML private Button _stopButton;
 
+    private CreationSceneController _controller;
     private String _selectedText; // original selected text
     private String _audioText; // selected text which punctuation has been removed
     private List<Integer> _count;
@@ -158,6 +159,9 @@ public class PreviewController {
                 // delete the text file
                 File file = new File("selected.txt");
                 file.delete();
+
+                // update audio list
+                _controller.updateAudio(_selectedText);
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -166,7 +170,8 @@ public class PreviewController {
         }
     }
 
-    public void setup(String selectedtext, Scene scene, List<Integer> count) throws IOException {
+    public void setup(String selectedtext, Scene scene, List<Integer> count, CreationSceneController controller) throws IOException {
+        _controller = controller;
     	_count = count;
         _selectedText = selectedtext;
         _previewTextArea.setText(selectedtext);
