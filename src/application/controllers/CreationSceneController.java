@@ -26,6 +26,7 @@ public class CreationSceneController {
     @FXML private Button _previewSpeech;
     @FXML private Button _combineAudio;
     @FXML private Button _playAudio;
+    @FXML private Button _cancelButton;
     @FXML private ListView<String> _audiosList;
 
     private CreationListModel _model;
@@ -155,6 +156,12 @@ public class CreationSceneController {
         _wikisearch = wikisearch;
         _model = model;
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
+
+        // set up tool tips for buttons
+        _playAudio.setTooltip(new Tooltip("Play the selected audio"));
+        _cancelButton.setTooltip(new Tooltip("Cancel the current creation process"));
+        _combineAudio.setTooltip(new Tooltip("Combine all the existing audios and proceed to video creation"));
+        _previewSpeech.setTooltip(new Tooltip("Preview the current selected text"));
 
         // show window
         _creationWindow = new Stage();

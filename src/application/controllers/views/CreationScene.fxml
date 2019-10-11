@@ -91,7 +91,7 @@
       </VBox>
    </left>
    <bottom>
-      <Button mnemonicParsing="false" onAction="#onCancelPressed" text="Cancel Creation" BorderPane.alignment="CENTER">
+      <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelPressed" text="Cancel Creation" BorderPane.alignment="CENTER">
          <font>
             <Font size="17.0" />
          </font>

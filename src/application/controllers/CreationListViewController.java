@@ -3,15 +3,13 @@ package application.controllers;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -33,10 +31,15 @@ public class CreationListViewController {
 	private CreationListModel _creationListModel;
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
 
-	public void setUpModel() {
+	public void setup() {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
 		_creationList.setStyle("-fx-font-size: 1.2em ;");
+
+		// set up tool tips for buttons
+		_createButton.setTooltip(new Tooltip("Create a new creation"));
+		_playButton.setTooltip(new Tooltip("Play the selected creation"));
+		_deleteButton.setTooltip(new Tooltip("Delete the selected creation"));
 	}
 
 	@FXML

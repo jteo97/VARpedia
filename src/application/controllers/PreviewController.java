@@ -4,15 +4,10 @@ import application.models.BashCommands;
 import application.models.PreviewTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -36,7 +31,6 @@ public class PreviewController {
     @FXML private Button _cancelButton;
     @FXML private Button _playButton;
     @FXML private Button _saveButton;
-    @FXML private Button _stopButton;
 
     private CreationSceneController _controller;
     private String _selectedText; // original selected text
@@ -196,6 +190,11 @@ public class PreviewController {
         
         // Add all voices
         setUpVoices();
+
+        // set up tool tips for buttons
+        _playButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
+        _cancelButton.setTooltip(new Tooltip("Cancel this preview"));
+        _saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
 
         // show window
         _window = new Stage();
