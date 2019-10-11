@@ -98,6 +98,7 @@ public class CreationSceneController {
             BashCommands delete = new BashCommands("rm -f audio* ; rm -f *.scm");
             delete.startBashProcess();
             delete.getProcess().waitFor();
+            _audiosList.getItems().clear();
 
             try {
                 FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("views/VideoCreation.fxml"));

@@ -45,6 +45,10 @@ public class PreviewController {
     private ExecutorService team = Executors.newSingleThreadExecutor();
     private PreviewTask _task;
 
+    @FXML
+    private void onVoiceOptionChanged() {
+        _saveButton.setDisable(true);
+    }
 
     @FXML
     private void onCancelButtonPressed() throws InterruptedException {
