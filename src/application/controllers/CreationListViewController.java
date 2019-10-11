@@ -29,6 +29,7 @@ public class CreationListViewController {
 	@FXML private Button _deleteButton;
 	@FXML private Label _creationCount;
 	@FXML private ListView<String> _creationList;
+	@FXML private Button _testButton;
 
 	private CreationListModel _creationListModel;
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -44,6 +45,25 @@ public class CreationListViewController {
 		_playButton.setDisable(false);
 		_deleteButton.setDisable(false);
 	}
+
+	@FXML
+	private void onTestButtonPressed() {
+
+		try {
+			FXMLLoader testLoader = new FXMLLoader(getClass().getResource("views/Test.fxml"));
+			Parent testRoot = (Parent) testLoader.load();
+
+			TestController controller = (TestController) testLoader.getController();
+			controller.setScene(new Scene(testRoot));
+
+			controller.makeWindow();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 
 	@FXML
 	private void onDeleteButtonPressed() {

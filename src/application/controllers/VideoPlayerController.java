@@ -24,9 +24,9 @@ public class VideoPlayerController {
     @FXML private MediaView _media;
     @FXML private File fileUrl;
 
-    @FXML Button _fastForward;
-    @FXML Button _rewind;
-    @FXML Button _pausePlay;
+    @FXML private Button _fastForward;
+    @FXML private Button _rewind;
+    @FXML private Button _pausePlay;
 
     private Scene _nextScene;
     private MediaPlayer _player;

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane dividerPositions="0.7725752508361204" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.TestController">
+   <items>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="800.0">
+         <children>
+            <MediaView fx:id="_media" fitHeight="450.0" fitWidth="800.0" preserveRatio="false">
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </MediaView>
+         </children>
+      </AnchorPane>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="798.0">
+         <children>
+            <VBox prefHeight="150.0" prefWidth="800.0">
+               <children>
+                  <HBox prefWidth="798.0" spacing="6.0">
+                     <children>
+                        <Button fx:id="_rewind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRewindButtonPressed" prefHeight="50.0" text="&lt;&lt;" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="_pausePlay" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPausePlayButtonPressed" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="_fastForward" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onFastForwardButtonPressed" prefHeight="50.0" text="&gt;&gt;" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="71.0" prefWidth="800.0" spacing="8.0">
+                     <children>
+                        <Label text="What is the term being displayed?">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="_answer" prefHeight="32.0" prefWidth="254.0" promptText="Answer">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#onCheckButtonPressed" text="Check">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="_wrong" text="WRONG!!" textFill="RED" visible="false">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+   </items>
+</SplitPane>

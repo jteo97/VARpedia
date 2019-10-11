@@ -82,7 +82,7 @@ public class CreateVideoTask extends Task<Void> {
         createNoTerm.startBashProcess();
         createNoTerm.getProcess().waitFor();
 
-        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToQuiz + _nameOfCreation + "quiz.mp4";
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToQuiz + _term + "quiz.mp4";
         merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
