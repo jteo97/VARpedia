@@ -9,11 +9,11 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.PreviewController">
    <children>
-      <Button fx:id="_playButton" layoutX="312.0" layoutY="102.0" mnemonicParsing="false" onAction="#onPlayButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Play">
+      <Button fx:id="_playButton" layoutX="312.0" layoutY="118.0" mnemonicParsing="false" onAction="#onPlayButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Play">
          <font>
             <Font size="16.0" />
          </font></Button>
-      <Button fx:id="_saveButton" disable="true" layoutX="225.0" layoutY="102.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Save">
+      <Button fx:id="_saveButton" disable="true" layoutX="225.0" layoutY="118.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Save">
          <font>
             <Font size="16.0" />
          </font></Button>
@@ -31,5 +31,6 @@
             <Font size="15.0" />
          </font></Label>
       <Label alignment="CENTER" layoutX="225.0" layoutY="198.0" prefHeight="84.0" prefWidth="150.0" text="Note: To combine multiple audio files you must save each preview individually" wrapText="true" />
+      <ComboBox fx:id="_choiceOfSpeed" layoutX="225.0" layoutY="76.0" prefWidth="150.0" promptText="Select Speed" />
    </children>
 </AnchorPane>

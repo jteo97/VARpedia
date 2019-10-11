@@ -32,6 +32,7 @@ public class PreviewController {
 
     @FXML private TextArea _previewTextArea;
     @FXML private ComboBox<String> _choiceOfVoice;
+    @FXML private ComboBox<String> _choiceOfSpeed;
     @FXML private Button _cancelButton;
     @FXML private Button _playButton;
     @FXML private Button _saveButton;
@@ -67,14 +68,17 @@ public class PreviewController {
     @FXML
     private void onPlayButtonPressed() throws IOException {
         try {
+            // determine the factor to resize the audio
+            double factor = determineFactor();
+
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 if (choice.equals("Default Machine Voice")) {
-                	setUpPreview("kal_diphone");
+                	setUpPreview("kal_diphone", factor);
                 } else if (choice.equals("Male Voice")) {
-                	setUpPreview("akl_nz_jdt_diphone");
+                	setUpPreview("akl_nz_jdt_diphone", factor);
                 } else if (choice.equals("Female Voice")) {
-                	setUpPreview("akl_nz_cw_cg_cg");
+                	setUpPreview("akl_nz_cw_cg_cg", factor);
                 }
             }
         } catch (NullPointerException e) {
@@ -88,6 +92,10 @@ public class PreviewController {
     @FXML
     private void onSaveButtonPressed() throws IOException {
         try {
+            // determine the factor to resize the audio
+            double factor = determineFactor();
+            setSpeed(factor);
+
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 FileWriter text = new FileWriter("selected.txt");
@@ -212,11 +220,16 @@ public class PreviewController {
     	ObservableList<String> choices = FXCollections.observableArrayList();
         choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
         _choiceOfVoice.setItems(choices);
+
+        // Add all common speeds
+        ObservableList<String> speedChoice = FXCollections.observableArrayList();
+        speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
+        _choiceOfSpeed.setItems(speedChoice);
     }
 
-    private void setUpPreview(String choice) throws IOException {
+    private void setUpPreview(String choice, double speed) throws IOException {
     	FileWriter writer = new FileWriter(choice + "_preview.scm");
-    	writer.write("(voice_" + choice + ")\n(SayText \"" + _audioText + "\")");
+    	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")\n(SayText \"" + _audioText + "\")");
     	writer.close();
     	
     	String command = "festival -b " + choice + "_preview.scm";
@@ -229,5 +242,30 @@ public class PreviewController {
         });
         _playButton.setDisable(true);
         _saveButton.setDisable(true);
+    }
+
+    private void setSpeed(double speed) throws IOException {
+        if (speed != 1.0) {
+            FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm", true);
+            fileWriter1.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            FileWriter fileWriter2 = new FileWriter("kal_diphone.scm", true);
+            fileWriter2.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm", true);
+            fileWriter3.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            fileWriter1.close();
+            fileWriter2.close();
+            fileWriter3.close();
+        }
+    }
+
+    private double determineFactor() {
+        double factor;
+        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+        if (speed.equals("Normal")) {
+            factor = 1.0;
+        } else {
+            factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
+        }
+        return factor;
     }
 }
