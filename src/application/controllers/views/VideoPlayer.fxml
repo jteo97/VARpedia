@@ -13,7 +13,7 @@
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
-            <MediaView fx:id="_media" fitHeight="550.0" fitWidth="800.0" preserveRatio="false">
+            <MediaView fx:id="_media" fitHeight="521.0" fitWidth="800.0" preserveRatio="false">
                <viewport>
                   <Rectangle2D />
                </viewport></MediaView>
