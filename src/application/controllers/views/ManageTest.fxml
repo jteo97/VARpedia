@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.ManageTestController">
    <top>
       <StackPane alignment="TOP_LEFT" prefWidth="800.0" BorderPane.alignment="CENTER">
@@ -23,7 +22,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Button mnemonicParsing="false" onAction="#onBackButtonPressed" text="Back">
+            <Button fx:id="_backButton" mnemonicParsing="false" onAction="#onBackButtonPressed" text="Back">
                <font>
                   <Font size="16.0" />
                </font>
@@ -34,7 +33,7 @@
    <bottom>
       <StackPane prefHeight="100.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#onDeleteButtonPressed" prefHeight="100.0" prefWidth="800.0" text="Delete">
+            <Button fx:id="_deleteButton" mnemonicParsing="false" onAction="#onDeleteButtonPressed" prefHeight="100.0" prefWidth="800.0" text="Delete">
                <font>
                   <Font size="20.0" />
                </font>

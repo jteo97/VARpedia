@@ -5,9 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -22,6 +20,8 @@ import java.util.Optional;
 public class ManageTestController {
 
     @FXML private ListView<String> _testList;
+    @FXML private Button _deleteButton;
+    @FXML private Button _backButton;
 
     private Scene _currentscene;
     private Scene _prevScene;
@@ -109,5 +109,8 @@ public class ManageTestController {
         // set up
         _testList.getItems().addAll(outputList);
         _testList.setStyle("-fx-font-size: 1.2em ;");
+
+        _backButton.setTooltip(new Tooltip("go back to creation list"));
+        _deleteButton.setTooltip(new Tooltip("Delete the currently selected test video"));
     }
 }

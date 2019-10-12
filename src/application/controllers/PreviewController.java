@@ -155,6 +155,10 @@ public class PreviewController {
                 } else {
 
                 }
+
+                FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
+                subtitle.write(_audioText);
+                subtitle.close();
                 
                 // delete the text file
                 File file = new File("selected.txt");

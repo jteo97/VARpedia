@@ -41,6 +41,9 @@ public class CreationListViewController {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
 		_creationList.setStyle("-fx-font-size: 1.2em ;");
+
+		_testButton.setTooltip(new Tooltip("Test yourself on a random creation"));
+		_manageButton.setTooltip(new Tooltip("Manage test videos"));
 	}
 
 	@FXML

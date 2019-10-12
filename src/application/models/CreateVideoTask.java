@@ -69,10 +69,16 @@ public class CreateVideoTask extends Task<Void> {
         create.startBashProcess();
         create.getProcess().waitFor();
 
-        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+//        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
+
+        command = "ffmpeg -i " + _nameOfCreation + ".mp4 -vf subtitles=subtitles.srt " + _pathToCreation + _nameOfCreation + ".mp4";
+        BashCommands subtitles = new BashCommands(command);
+        subtitles.startBashProcess();
+        subtitles.getProcess().waitFor();
 
         command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
         command2 = "ffmpeg -y -i "+_path+"video.mp4 -r 25 "+_path+"good.mp4";
@@ -87,7 +93,7 @@ public class CreateVideoTask extends Task<Void> {
         merge.startBashProcess();
         merge.getProcess().waitFor();
 
-        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm";
+        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm ; rm -f subtitles.srt";
 
         BashCommands tidyUp = new BashCommands(command);
         tidyUp.startBashProcess();
