@@ -43,7 +43,20 @@ public class PreviewController {
 
     @FXML
     private void onVoiceOptionChanged() {
-        _saveButton.setDisable(true);
+        String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+        if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
+            _playButton.setDisable(false);
+            _saveButton.setDisable(true);
+        }    }
+
+    @FXML
+    private void onSpeedChanged() {
+        String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+        if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
+            _playButton.setDisable(false);
+        }
     }
 
     @FXML
