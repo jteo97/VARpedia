@@ -1,6 +1,8 @@
 package application.controllers;
 
-import javafx.beans.property.DoubleProperty;
+import application.models.BashCommands;
+import application.models.CreationListModel;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,9 +15,8 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import application.models.BashCommands;
-import application.models.CreationListModel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A controller class for the main creation scene
@@ -194,14 +195,28 @@ public class CreationSceneController {
 
 
     @FXML
-    private void onPlayPressed() throws InterruptedException {
+    private void onPlayPressed() {
         String selection = _audiosList.getSelectionModel().getSelectedItem();
         if (selection != null) {
             int position = _audiosList.getItems().indexOf(selection);
             String audioFile = "audio" + position + ".wav";
             BashCommands play = new BashCommands("ffplay -nodisp -autoexit " + audioFile);
-            play.startBashProcess();
-            play.getProcess().waitFor();
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    play.startBashProcess();
+                    play.getProcess().waitFor();
+                    return null;
+                }
+            };
+            ExecutorService team = Executors.newSingleThreadExecutor();
+            team.submit(task);
+            task.setOnSucceeded(workerStateEvent -> {
+                _combineAudio.setDisable(false);
+                _playAudio.setDisable(false);
+            });
+            _combineAudio.setDisable(true);
+            _playAudio.setDisable(true);
         }
     }
 
