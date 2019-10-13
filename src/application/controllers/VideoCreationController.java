@@ -7,6 +7,8 @@ import application.models.CreationListModel;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,6 +32,7 @@ public class VideoCreationController {
     @FXML private TextField _searchField;
     @FXML private TextField _numField;
     @FXML private TextField _nameField;
+    @FXML private Label _errorNum;
 
     private Scene _nextScene;
     private CreationListModel _model;
@@ -39,6 +42,7 @@ public class VideoCreationController {
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
     private String _wikisearch;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
+    private Button _combineButton;
 
     @FXML
     private void onCancelButtonPressed() {
@@ -49,6 +53,8 @@ public class VideoCreationController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        _combineButton.setDisable(true);
     }
 
     @FXML
@@ -155,9 +161,27 @@ public class VideoCreationController {
         }
     }
 
-    public void setScene(Scene scene, String wikisearch) {
+    @FXML
+    private void checkFields() {
+        if (_nameField.getText().equals("") || _numField.getText().equals("") || _nameField.getText().equals("")) {
+            _createButton.setDisable(true);
+        } else {
+            if (_numField.getText().matches("[0-9]")) {
+                _createButton.setDisable(false);
+                _errorNum.setVisible(false);
+            } else {
+                _createButton.setDisable(true);
+                _errorNum.setVisible(true);
+            }
+        }
+
+
+    }
+
+    public void setScene(Scene scene, String wikisearch, Button combineButton) {
         this._nextScene = scene;
         this._wikisearch = wikisearch;
+        this._combineButton = combineButton;
     }
 
     public void setup(Scene scene, CreationListModel model, Stage creationWindow) {
@@ -167,6 +191,7 @@ public class VideoCreationController {
         _window.setScene(scene);
         _window.show();
         _model = model;
+
 
         // set up creation name suggestion
         String suggestedName = _wikisearch;
@@ -185,5 +210,18 @@ public class VideoCreationController {
         // set upp tool tips for button
         _cancelButton.setTooltip(new Tooltip("Cancel the video creation, go back to the previous and clear all audios"));
         _createButton.setTooltip(new Tooltip("Create the whole creation based on the inputs"));
+
+        _createButton.setDisable(true);
+
+        _window.setOnCloseRequest(windowEvent -> {
+            _combineButton.setDisable(true);
+            try {
+                Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
+                        + "combine.wav"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 }

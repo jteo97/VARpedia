@@ -9,8 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.ButtonBar.ButtonData;
 
+import javafx.stage.Stage;
+
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -27,6 +32,8 @@ public class CreationListViewController {
 	@FXML private Button _deleteButton;
 	@FXML private Label _creationCount;
 	@FXML private ListView<String> _creationList;
+	@FXML private Button _testButton;
+	@FXML private Button _manageButton;
 
 	private CreationListModel _creationListModel;
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -36,10 +43,15 @@ public class CreationListViewController {
 		_creationListModel.setUp();
 		_creationList.setStyle("-fx-font-size: 1.2em ;");
 
+
 		// set up tool tips for buttons
 		_createButton.setTooltip(new Tooltip("Create a new creation"));
 		_playButton.setTooltip(new Tooltip("Play the selected creation"));
 		_deleteButton.setTooltip(new Tooltip("Delete the selected creation"));
+
+		_testButton.setTooltip(new Tooltip("Test yourself on a random creation"));
+		_manageButton.setTooltip(new Tooltip("Manage test videos"));
+
 	}
 
 	@FXML
@@ -49,6 +61,50 @@ public class CreationListViewController {
 			_deleteButton.setDisable(false);
 		}
 	}
+
+	@FXML
+	private void onManageButtonPressed() {
+
+		try {
+			FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("views/ManageTest.fxml"));
+			Parent manageRoot = (Parent) manageLoader.load();
+
+			ManageTestController controller = (ManageTestController) manageLoader.getController();
+			controller.setScene((Stage) _manageButton.getScene().getWindow(), new Scene(manageRoot), _manageButton.getScene());
+			controller.setUp();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void onTestButtonPressed() {
+		File quizDir = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator"));
+		if (quizDir.isDirectory() && quizDir.list().length == 0) {
+			Alert noTest = new Alert(AlertType.ERROR);
+			noTest.setTitle("NO Tests");
+			noTest.setHeaderText("No test videos!");
+			noTest.setContentText("There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.");
+			noTest.showAndWait();
+		} else {
+
+			try {
+				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("views/Test.fxml"));
+				Parent testRoot = (Parent) testLoader.load();
+
+				TestController controller = (TestController) testLoader.getController();
+				controller.setScene(new Scene(testRoot));
+
+				controller.makeWindow();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
 
 	@FXML
 	private void onDeleteButtonPressed() {
@@ -80,20 +136,28 @@ public class CreationListViewController {
 	@FXML
 	private void onPlayButtonPressed() {
 
-		String str = _creationList.getSelectionModel().getSelectedItem();
+		String creation = _creationList.getSelectionModel().getSelectedItem();
 
-		try {
-			FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
-			Parent videoRoot = (Parent) videoPlayerLoader.load();
+		if (creation != null) {
 
-			VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
-			controller.setScene(new Scene(videoRoot));
+			try {
+				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
+				Parent videoRoot = (Parent) videoPlayerLoader.load();
+
+				VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
+				controller.setScene(new Scene(videoRoot));
 
 
-			controller.makeWindow(str);
+				controller.makeWindow(creation);
 
-		} catch (IOException e) {
-			e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("No creation selected");
+			error.setHeaderText("You have not selected a creation, please select a creation to play");
+			error.showAndWait();
 		}
 
 	}

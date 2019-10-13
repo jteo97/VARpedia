@@ -62,6 +62,15 @@ public class CreationListModel {
 				_creationList = FXCollections.observableArrayList();
 			}
 
+			BashCommands checkQuizDir = new BashCommands("test -d quiz");
+			checkQuizDir.startBashProcess();
+			checkQuizDir.getProcess().waitFor();
+			exitValue = checkQuizDir.getProcess().exitValue();
+			if (exitValue == 1) {
+				File dir = new File("quiz");
+				dir.mkdir();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

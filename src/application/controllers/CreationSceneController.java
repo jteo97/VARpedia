@@ -1,5 +1,6 @@
 package application.controllers;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +55,9 @@ public class CreationSceneController {
                     Parent previewRoot = (Parent) previewSceneLoader.load();
                     PreviewController controller = (PreviewController) previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
-                    controller.setup(selectedText, scene, _audioCount, this);
+
+                    controller.setup(selectedText, scene, _audioCount, this, _combineAudio);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -74,6 +78,9 @@ public class CreationSceneController {
         BashCommands checkAudioExists = new BashCommands(checkAudio);
         checkAudioExists.startBashProcess();
         checkAudioExists.getProcess().waitFor();
+        String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
+
+        PrintWriter writer = new PrintWriter("subtitles.srt", "UTF-8");
 
         if (checkAudioExists.getExitStatus() != 0) {
             Alert noAudioExists = new Alert(Alert.AlertType.ERROR);
@@ -87,9 +94,66 @@ public class CreationSceneController {
             BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
             String cmd = "sox ";
             String line;
+            int subtitleSection = 1;
+            String old = null;
             while ((line = stdoutBuffered.readLine()) != null) {
                 cmd += line + " ";
+
+                writer.println(subtitleSection);
+                String command = "soxi -D \"" + _path + line + "\"";
+                BashCommands findDuration = new BashCommands(command);
+                findDuration.startBashProcess();
+                findDuration.getProcess().waitFor();
+                double duration = Double.parseDouble(findDuration.getStdout());
+                duration += 0.1;
+                DecimalFormat df = new DecimalFormat("##.##");
+                String formattedDur = df.format(duration);
+                formattedDur = formattedDur.replaceFirst("[.]", ",");
+
+                System.out.println(formattedDur);
+                if (subtitleSection == 1) {
+                    if (formattedDur.length() == 4) {
+                        writer.println("00:00:00,50 --> " + "00:00:0" + formattedDur);
+                    } else {
+                        writer.println("00:00:00,50 --> " + "00:00:" + formattedDur);
+                    }
+                } else {
+                    old = old.replaceFirst("[,]", ".");
+                    double temp = Double.parseDouble(old);
+                    formattedDur = formattedDur.replaceFirst("[,]", ".");
+                    double temp2 = Double.parseDouble(formattedDur);
+                    temp2 = temp2 + temp;
+                    old = old.replaceFirst("[.]", ",");
+                    df = new DecimalFormat("##.##");
+                    formattedDur = df.format(temp2);
+                    formattedDur = formattedDur.replaceFirst("[.]", ",");
+                    if (old.length() == 4) {
+                        if (formattedDur.length() == 4) {
+                            writer.println("00:00:0" + old + " --> " + "00:00:0" + formattedDur);
+                        } else {
+                            writer.println("00:00:0" + old + " --> " + "00:00:" + formattedDur);
+                        }
+
+                    } else {
+                        if (formattedDur.length() == 4) {
+                            writer.println("00:00:" + old + " --> " + "00:00:0" + formattedDur);
+                        } else {
+                            writer.println("00:00:" + old + " --> " + "00:00:" + formattedDur);
+                        }
+                    }
+                }
+                line = line.substring(0, line.length() - 4);
+                BufferedReader br = new BufferedReader(new FileReader(line + ".txt"));
+                String subtitle = br.readLine();
+                br.close();
+                writer.println(subtitle);
+                writer.println();
+
+                old = formattedDur;
+                subtitleSection++;
             }
+
+            writer.close();
             cmd += "combine.wav";
             BashCommands combine = new BashCommands(cmd);
             combine.startBashProcess();
@@ -106,7 +170,7 @@ public class CreationSceneController {
                 Parent videoRoot = (Parent) videoCreationLoader.load();
                 VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
                 Scene scene = new Scene(videoRoot);
-                controller.setScene(scene, _wikisearch);
+                controller.setScene(scene, _wikisearch, _combineAudio);
                 controller.setup(scene, _model, _creationWindow);
 
             } catch (IOException e) {
@@ -128,6 +192,7 @@ public class CreationSceneController {
         _creationWindow.close();
     }
 
+
     @FXML
     private void onPlayPressed() throws InterruptedException {
         String selection = _audiosList.getSelectionModel().getSelectedItem();
@@ -148,7 +213,20 @@ public class CreationSceneController {
         }
     }
 
-    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) {
+    @FXML
+    private void onMouseDrag() {
+        System.out.println(_searchResultArea.getSelectedText());
+        if (!_searchResultArea.getSelectedText().equals("")) {
+            _previewSpeech.setDisable(false);
+        } else {
+            _previewSpeech.setDisable(true);
+        }
+    }
+
+
+
+    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
+
         _searchResult = result;
         _searchResultArea.setText(_searchResult);
         _audioCount = new ArrayList<Integer>();
@@ -156,6 +234,8 @@ public class CreationSceneController {
         _wikisearch = wikisearch;
         _model = model;
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
+        _combineAudio.setDisable(true);
+        _previewSpeech.setDisable(true);
 
         // set up tool tips for buttons
         _playAudio.setTooltip(new Tooltip("Play the selected audio"));

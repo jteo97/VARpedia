@@ -29,6 +29,7 @@ public class CreateVideoTask extends Task<Void> {
     protected Void call() throws Exception {
         String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
         String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
+        String _pathToQuiz = _path +"quiz" + System.getProperty("file.separator");
         String _term = _wikiSearch;
 
         String command = "soxi -D \"" + _path + "combine.wav\"";
@@ -60,7 +61,7 @@ public class CreateVideoTask extends Task<Void> {
         writer.close();
 
         String command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
-        String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=30:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
+        String command2 = "ffmpeg -y -i "+_path+"video.mp4 "+ "-vf \"drawtext=fontfile=:fontsize=50:fontcolor=white:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _term + "'\" "+"-r 25 "+_path+"good.mp4";
 
         command = command1+";"+command2;
 
@@ -68,12 +69,31 @@ public class CreateVideoTask extends Task<Void> {
         create.startBashProcess();
         create.getProcess().waitFor();
 
-        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+//        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
         merge.startBashProcess();
         merge.getProcess().waitFor();
 
-        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm";
+        command = "ffmpeg -i " + _nameOfCreation + ".mp4 -vf subtitles=subtitles.srt " + _pathToCreation + _nameOfCreation + ".mp4";
+        BashCommands subtitles = new BashCommands(command);
+        subtitles.startBashProcess();
+        subtitles.getProcess().waitFor();
+
+        command1 = "ffmpeg -y -f concat -safe 0 -i "+_path+"commands.txt"+ " -pix_fmt yuv420p -r 25 -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' " +_path+"video.mp4";
+        command2 = "ffmpeg -y -i "+_path+"video.mp4 -r 25 "+_path+"good.mp4";
+        command = command1+";"+command2;
+
+        BashCommands createNoTerm = new BashCommands(command);
+        createNoTerm.startBashProcess();
+        createNoTerm.getProcess().waitFor();
+
+        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToQuiz + _term + "quiz.mp4";
+        merge = new BashCommands(command);
+        merge.startBashProcess();
+        merge.getProcess().waitFor();
+
+        command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm ; rm -f subtitles.srt";
 
         BashCommands tidyUp = new BashCommands(command);
         tidyUp.startBashProcess();

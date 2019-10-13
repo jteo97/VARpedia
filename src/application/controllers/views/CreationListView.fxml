@@ -6,27 +6,37 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
+
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
    <top>
-      <VBox BorderPane.alignment="CENTER">
+      <StackPane BorderPane.alignment="CENTER">
          <children>
-            <Label text="Here are the existing creations">
-               <font>
-                  <Font size="24.0" />
-               </font></Label>
-            <Label text="Select to play/delete, or create a new creation">
-               <font>
-                  <Font size="24.0" />
-               </font></Label>
-            <Label fx:id="_creationCount" text="Total number of creations: 0">
-               <font>
-                  <Font size="23.0" />
-               </font></Label>
+            <VBox>
+               <children>
+                  <Label text="Here are the existing creations">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Select to play/delete, or create a new creation">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="_creationCount" text="Total number of creations: 0">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Button fx:id="_manageButton" mnemonicParsing="false" onAction="#onManageButtonPressed" text="Manage Test Videos" StackPane.alignment="BOTTOM_RIGHT" />
          </children>
-      </VBox>
+      </StackPane>
    </top>
    <center>
       <ListView fx:id="_creationList" onMouseClicked="#creationIsSelected" prefWidth="384.0" BorderPane.alignment="CENTER" />
@@ -36,20 +46,32 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
                <children>
-                  <Button fx:id="_playButton" disable="true" mnemonicParsing="false" onAction="#onPlayButtonPressed" text="Play Creation">
+                  <Button fx:id="_playButton" disable="true" mnemonicParsing="false" onAction="#onPlayButtonPressed" prefWidth="195.0" text="Play Creation">
                      <font>
                         <Font size="24.0" />
-                     </font></Button>
+                     </font>
+                  </Button>
                   <Button fx:id="_deleteButton" disable="true" mnemonicParsing="false" onAction="#onDeleteButtonPressed" text="Delete Creation">
                      <font>
                         <Font size="24.0" />
-                     </font></Button>
+                     </font>
+                  </Button>
                </children>
             </HBox>
-            <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="New Creation">
-               <font>
-                  <Font size="24.0" />
-               </font></Button>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
+               <children>
+                  <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="New Creation">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="_testButton" mnemonicParsing="false" onAction="#onTestButtonPressed" prefWidth="221.0" text="Take Test">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
          </children>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
