@@ -3,76 +3,98 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationSceneController">
-   <center>
-      <TextArea fx:id="_searchResultArea" wrapText="true" BorderPane.alignment="CENTER" />
-   </center>
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationSceneController">
    <right>
-      <VBox spacing="8.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="Max 40 Words for each preview">
-               <font>
-                  <Font size="16.0" />
-               </font></Label>
-            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" prefWidth="206.0" text="Preview Speech">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
-            <Button fx:id="_combineAudio" mnemonicParsing="false" onAction="#onCombineAudioPressed" text="Combine and Continue">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
-            <Button fx:id="_cancelCreation" mnemonicParsing="false" onAction="#onCancelPressed" prefWidth="206.0" text="Cancel Creation">
-               <padding>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </padding>
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Button>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="_selectedWordCount" layoutX="-4.0" layoutY="145.0" />
-               </children>
-            </AnchorPane>
-         </children>
+      <VBox alignment="CENTER" prefHeight="531.0" prefWidth="389.0" spacing="8.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
          </padding>
+         <children>
+            <VBox prefHeight="32.0" prefWidth="373.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here's the saved audio. You can play, " wrappingWidth="345.744140625">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="delete the audios, and combine the audio" wrappingWidth="355.2900390625">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <ListView fx:id="_audiosList" onMouseClicked="#onAudioSelected" prefHeight="450.0" prefWidth="373.0" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Button fx:id="_playAudio" disable="true" mnemonicParsing="false" onAction="#onPlayPressed" text="Play Audio">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="_combineAudio" mnemonicParsing="false" onAction="#onCombineAudioPressed" text="Combine and Continue">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
       </VBox>
    </right>
-   <top>
-      <VBox BorderPane.alignment="CENTER">
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <left>
+      <VBox alignment="CENTER" prefHeight="528.0" prefWidth="404.0" spacing="8.0" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here's the search result. You can select text, edit text, preview speech,">
+            <VBox prefHeight="49.0" prefWidth="388.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here's the search result, You can select text">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Text>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="edit text, preview speech, save the speech">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+            <TextArea fx:id="_searchResultArea" prefHeight="398.0" prefWidth="388.0" wrapText="true" />
+            <Label text="Max 40 Words for each preview">
                <font>
-                  <Font size="21.0" />
+                  <Font size="16.0" />
                </font>
-            </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="save the speech then combine all speech into creation">
+            </Label>
+            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" prefWidth="206.0" text="Preview Speech">
                <font>
-                  <Font size="21.0" />
+                  <Font size="16.0" />
                </font>
-            </Text>
+            </Button>
          </children>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
          </padding>
       </VBox>
-   </top>
-   <padding>
-      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-   </padding>
+   </left>
+   <bottom>
+      <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelPressed" text="Cancel Creation" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+   </bottom>
 </BorderPane>

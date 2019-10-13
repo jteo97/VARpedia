@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -31,6 +32,14 @@ public class VideoPlayerController {
     private Scene _nextScene;
     private MediaPlayer _player;
     private Stage _window;
+
+    @FXML
+    public void initialize() {
+        // set up tool tips for button
+        _fastForward.setTooltip(new Tooltip("Fast forward"));
+        _rewind.setTooltip(new Tooltip("Rewind"));
+        _pausePlay.setTooltip(new Tooltip("Pause the video"));
+    }
 
     @FXML
     public void makeWindow(String fileToOpen) {
@@ -69,9 +78,11 @@ public class VideoPlayerController {
         if (_player.getStatus() == MediaPlayer.Status.PLAYING) {
             _player.pause();
             _pausePlay.setText("Play");
+            _pausePlay.setTooltip(new Tooltip("Resume playing the video"));
         } else {
             _player.play();
             _pausePlay.setText("Pause");
+            _pausePlay.setTooltip(new Tooltip("Pause the video"));
         }
     }
 

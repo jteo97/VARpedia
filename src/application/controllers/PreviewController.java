@@ -4,15 +4,10 @@ import application.models.BashCommands;
 import application.models.PreviewTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -32,11 +27,12 @@ public class PreviewController {
 
     @FXML private TextArea _previewTextArea;
     @FXML private ComboBox<String> _choiceOfVoice;
+    @FXML private ComboBox<String> _choiceOfSpeed;
     @FXML private Button _cancelButton;
     @FXML private Button _playButton;
     @FXML private Button _saveButton;
-    @FXML private Button _stopButton;
 
+    private CreationSceneController _controller;
     private String _selectedText; // original selected text
     private String _audioText; // selected text which punctuation has been removed
     private List<Integer> _count;
@@ -44,6 +40,10 @@ public class PreviewController {
     private ExecutorService team = Executors.newSingleThreadExecutor();
     private PreviewTask _task;
 
+    @FXML
+    private void onVoiceOptionChanged() {
+        _saveButton.setDisable(true);
+    }
 
     @FXML
     private void onCancelButtonPressed() throws InterruptedException {
@@ -62,14 +62,17 @@ public class PreviewController {
     @FXML
     private void onPlayButtonPressed() throws IOException {
         try {
+            // determine the factor to resize the audio
+            double factor = determineFactor();
+
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 if (choice.equals("Default Machine Voice")) {
-                	setUpPreview("kal_diphone");
+                	setUpPreview("kal_diphone", factor);
                 } else if (choice.equals("Male Voice")) {
-                	setUpPreview("akl_nz_jdt_diphone");
+                	setUpPreview("akl_nz_jdt_diphone", factor);
                 } else if (choice.equals("Female Voice")) {
-                	setUpPreview("akl_nz_cw_cg_cg");
+                	setUpPreview("akl_nz_cw_cg_cg", factor);
                 }
             }
         } catch (NullPointerException e) {
@@ -83,6 +86,10 @@ public class PreviewController {
     @FXML
     private void onSaveButtonPressed() throws IOException {
         try {
+            // determine the factor to resize the audio
+            double factor = determineFactor();
+            setSpeed(factor);
+
             if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
                 String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
                 FileWriter text = new FileWriter("selected.txt");
@@ -158,6 +165,9 @@ public class PreviewController {
                 // delete the text file
                 File file = new File("selected.txt");
                 file.delete();
+
+                // update audio list
+                _controller.updateAudio(_selectedText);
             }
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
@@ -166,7 +176,8 @@ public class PreviewController {
         }
     }
 
-    public void setup(String selectedtext, Scene scene, List<Integer> count) throws IOException {
+    public void setup(String selectedtext, Scene scene, List<Integer> count, CreationSceneController controller) throws IOException {
+        _controller = controller;
     	_count = count;
         _selectedText = selectedtext;
         _previewTextArea.setText(selectedtext);
@@ -179,6 +190,11 @@ public class PreviewController {
         
         // Add all voices
         setUpVoices();
+
+        // set up tool tips for buttons
+        _playButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
+        _cancelButton.setTooltip(new Tooltip("Cancel this preview"));
+        _saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
 
         // show window
         _window = new Stage();
@@ -203,11 +219,16 @@ public class PreviewController {
     	ObservableList<String> choices = FXCollections.observableArrayList();
         choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
         _choiceOfVoice.setItems(choices);
+
+        // Add all common speeds
+        ObservableList<String> speedChoice = FXCollections.observableArrayList();
+        speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
+        _choiceOfSpeed.setItems(speedChoice);
     }
 
-    private void setUpPreview(String choice) throws IOException {
+    private void setUpPreview(String choice, double speed) throws IOException {
     	FileWriter writer = new FileWriter(choice + "_preview.scm");
-    	writer.write("(voice_" + choice + ")\n(SayText \"" + _audioText + "\")");
+    	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")\n(SayText \"" + _audioText + "\")");
     	writer.close();
     	
     	String command = "festival -b " + choice + "_preview.scm";
@@ -220,5 +241,30 @@ public class PreviewController {
         });
         _playButton.setDisable(true);
         _saveButton.setDisable(true);
+    }
+
+    private void setSpeed(double speed) throws IOException {
+        if (speed != 1.0) {
+            FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm", true);
+            fileWriter1.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            FileWriter fileWriter2 = new FileWriter("kal_diphone.scm", true);
+            fileWriter2.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm", true);
+            fileWriter3.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+            fileWriter1.close();
+            fileWriter2.close();
+            fileWriter3.close();
+        }
+    }
+
+    private double determineFactor() {
+        double factor;
+        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+        if (speed.equals("Normal")) {
+            factor = 1.0;
+        } else {
+            factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
+        }
+        return factor;
     }
 }

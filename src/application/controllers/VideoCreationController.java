@@ -4,8 +4,6 @@ import application.DownloadImagesTask;
 
 import application.models.CreateVideoTask;
 import application.models.CreationListModel;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -169,5 +167,23 @@ public class VideoCreationController {
         _window.setScene(scene);
         _window.show();
         _model = model;
+
+        // set up creation name suggestion
+        String suggestedName = _wikisearch;
+        int count = 0;
+        File creation = new File("creations/" + suggestedName + ".mp4");
+        while (creation.exists()) {
+            count++;
+            suggestedName = _wikisearch + "-" + count;
+            creation = new File("creations/" + suggestedName + ".mp4");
+        }
+        _nameField.setText(suggestedName);
+
+        // set up flickr search term suggestion
+        _searchField.setText(_wikisearch);
+
+        // set upp tool tips for button
+        _cancelButton.setTooltip(new Tooltip("Cancel the video creation, go back to the previous and clear all audios"));
+        _createButton.setTooltip(new Tooltip("Create the whole creation based on the inputs"));
     }
 }

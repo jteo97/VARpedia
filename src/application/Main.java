@@ -4,9 +4,7 @@ import application.controllers.CreationListViewController;
 import application.controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +29,7 @@ public class Main extends Application {
 			controller.setScene(new Scene(listRoot));
 
 			CreationListViewController listController = (CreationListViewController) creationListLoader.getController();
-			listController.setUpModel();
+			listController.setup();
 			
 			// properly exit the application
 			primaryStage.setOnCloseRequest(event -> {
