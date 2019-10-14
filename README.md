@@ -1,5 +1,5 @@
 # VARpedia - SOFTENG 206
-# Assignment 3 Version
+# Beta Version
 
 ## Author
 Tommy Shi and Justin Teo
