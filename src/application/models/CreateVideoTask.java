@@ -4,6 +4,7 @@ package application.models;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -14,15 +15,17 @@ public class CreateVideoTask extends Task<Void> {
     private int _numberOfImages;
     private String _searchTerm;
     private String _wikiSearch;
+    private boolean _includeMusic;
     private CreationListModel _model;
 
 
-    public CreateVideoTask(String name, int number, String searchTerm, String wikisearch, CreationListModel model) {
-        this._nameOfCreation = name;
-        this._numberOfImages = number;
-        this._searchTerm = searchTerm;
-        this._wikiSearch = wikisearch;
+    public CreateVideoTask(String name, int number, String searchTerm, String wikisearch, CreationListModel model, boolean includeMusic) {
+        _nameOfCreation = name;
+        _numberOfImages = number;
+        _searchTerm = searchTerm;
+        _wikiSearch = wikisearch;
         _model = model;
+        _includeMusic = includeMusic;
     }
 
     @Override
@@ -69,7 +72,18 @@ public class CreateVideoTask extends Task<Void> {
         create.startBashProcess();
         create.getProcess().waitFor();
 
-//        command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _pathToCreation + _nameOfCreation + ".mp4";
+        if (_includeMusic) {
+            // rename original file so ffmpeg won't get an error
+            File original = new File("combine.wav");
+            File renamed = new File("combine_c.wav");
+            original.renameTo(renamed);
+
+            // add background music to the audio
+            BashCommands addMusic = new BashCommands("ffmpeg -i combine_c.wav -i \"musics/panumoon_-_another_perspective_2.mp3\" -filter_complex amix=inputs=2:duration=first:dropout_transition=0 combine.wav");
+            addMusic.startBashProcess();
+            addMusic.getProcess().waitFor();
+        }
+
         command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _nameOfCreation + ".mp4";
         BashCommands merge = new BashCommands(command);
         merge.startBashProcess();

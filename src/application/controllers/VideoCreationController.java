@@ -7,8 +7,6 @@ import application.models.CreationListModel;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -120,7 +118,12 @@ public class VideoCreationController {
 
                     int finalNumber = number;
                     downloadTask.setOnSucceeded(workerStateEvent -> {
-                        CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
+                        CreateVideoTask createTask;
+                        if (_musicChoice.getValue().equals("Yes")) {
+                            createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, true);
+                        } else {
+                            createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, false);
+                        }
                         team2.submit(createTask);
 
                         createTask.setOnSucceeded(workerStateEvent1 -> {
@@ -145,7 +148,12 @@ public class VideoCreationController {
 
                 int finalNumber = number;
                 downloadTask.setOnSucceeded(workerStateEvent -> {
-                    CreateVideoTask createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model);
+                    CreateVideoTask createTask;
+                    if (_musicChoice.getValue().equals("Yes")) {
+                        createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, true);
+                    } else {
+                        createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, false);
+                    }
                     team2.submit(createTask);
 
                     createTask.setOnSucceeded(workerStateEvent12 -> {
