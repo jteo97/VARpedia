@@ -71,9 +71,11 @@ public class ManageTestController {
     }
 
     public void setScene(Stage window, Scene scene, Scene listScene) {
-        this._currentscene = scene;
-        this._prevScene = listScene;
-        this._window = window;
+        _currentscene = scene;
+        _prevScene = listScene;
+        _window = window;
+
+        _currentscene.getStylesheets().add("resources/style.css");
 
         _window.setScene(scene);
     }

@@ -56,6 +56,7 @@ public class CreationSceneController {
                     Parent previewRoot = (Parent) previewSceneLoader.load();
                     PreviewController controller = (PreviewController) previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
+                    scene.getStylesheets().add("/resources/style.css");
 
                     controller.setup(selectedText, scene, _audioCount, this, _combineAudio);
 
@@ -171,6 +172,7 @@ public class CreationSceneController {
                 Parent videoRoot = (Parent) videoCreationLoader.load();
                 VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
                 Scene scene = new Scene(videoRoot);
+                scene.getStylesheets().add("/resources/style.css");
                 controller.setScene(scene, _wikisearch, _combineAudio);
                 controller.setup(scene, _model, _creationWindow);
 

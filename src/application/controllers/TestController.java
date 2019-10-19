@@ -75,7 +75,8 @@ public class TestController {
     }
 
     public void setScene(Scene scene) {
-        this._currentScene = scene;
+        _currentScene = scene;
+        _currentScene.getStylesheets().add("resources/style.css");
     }
 
     public void makeWindow() {

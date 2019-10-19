@@ -38,6 +38,7 @@ public class Main extends Application {
 			});
 
 			Scene mainScene = new Scene(menuRoot);
+			mainScene.getStylesheets().add("/resources/style.css");
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("VARpedia");
 			primaryStage.show();

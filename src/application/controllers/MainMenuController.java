@@ -24,5 +24,6 @@ public class MainMenuController {
 	
 	public void setScene(Scene scene) {
 		_nextScene = scene;
+		_nextScene.getStylesheets().add("/resources/style.css");
 	}
 }

@@ -47,6 +47,7 @@ public class CompleteWikiSearch implements Runnable {
 			Parent creationRoot = (Parent) creationSceneLoader.load();
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
 			Scene scene = new Scene(creationRoot);
+			scene.getStylesheets().add("/resources/style.css");
 			controller.setup(_result, scene, _term, _creationListModel);
 		} catch (IOException e) {
 			e.printStackTrace();
