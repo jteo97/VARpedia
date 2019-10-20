@@ -12,3 +12,9 @@ java --module-path /home/student/Downloads/openjfx-13-rc+2_linux-x64_bin-sdk/jav
 
 ## Environment
 Please execute the application in the new SOFTENG 206 Virtual Box Image
+
+## Credit for Background Music
+Link: http://ccmixter.org/files/panumoon/60396 \
+Name: another perspective \
+Author: panu \
+License: https://creativecommons.org/licenses/by-nc/3.0/
