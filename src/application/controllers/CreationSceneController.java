@@ -267,7 +267,11 @@ public class CreationSceneController {
 
 
 
-    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
+    public void setup(String result, Scene scene, String wikisearch, CreationListModel model, boolean fav) throws IOException {
+
+        if (fav) {
+            _favourite.setSelected(true);
+        }
 
         _searchResult = result;
         _searchResultArea.setText(_searchResult);

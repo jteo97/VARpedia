@@ -49,7 +49,7 @@ public class CompleteWikiSearch implements Runnable {
 			CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
 			Scene scene = new Scene(creationRoot);
 			scene.getStylesheets().add("/resources/style.css");
-			controller.setup(_result, scene, _term, _creationListModel);
+			controller.setup(_result, scene, _term, _creationListModel, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
