@@ -1,24 +1,36 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
 .root {
-    -fx-background-color: #494CA2;
-    -fx-font-family: 'Montserrat', sans-serif;
+    -fx-background-color: #222831;
 }
 
 .label {
-    -fx-text-fill: #E3E7F1;
-    -fx-font-family: 'Montserrat', sans-serif;
-}
-
-.text {
-    -fx-text-fill: #E3E7F1;
+    -fx-text-fill: #EEEEEE;
 }
 
 .button {
-    -fx-background-color: #E3E7F1;
+    -fx-background-color: #EEEEEE;
     -fx-background-radius: 0;
 }
 
 .button:hover {
-    -fx-background-color: #C6CBEF;
+    -fx-background-color: #00ADB5;
+}
+
+.text-area {
+    text-area-background: #393E46;
+    -fx-text-fill: #EEEEEE;
+}
+
+.text-area .content {
+    -fx-background-color: text-area-background;
+}
+
+.list-view .list-cell {
+    -fx-control-inner-background: #393E46;
+    -fx-text-fill: #EEEEEE;
+    -fx-font-size: 1.2em ;
+}
+
+.list-cell:empty {
+    -fx-background-color: #393E46;
 }

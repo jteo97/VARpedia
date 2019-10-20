@@ -41,8 +41,6 @@ public class CreationListViewController {
 	public void setup() {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
-		_creationList.setStyle("-fx-font-size: 1.2em ;");
-
 
 		// set up tool tips for buttons
 		_createButton.setTooltip(new Tooltip("Create a new creation"));

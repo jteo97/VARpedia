@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.CreationListViewController">
    <top>
       <StackPane BorderPane.alignment="CENTER">
@@ -46,7 +45,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="8.0">
                <children>
-                  <Button fx:id="_playButton" disable="true" mnemonicParsing="false" onAction="#onPlayButtonPressed" prefWidth="195.0" text="Play Creation">
+                  <Button fx:id="_playButton" disable="true" mnemonicParsing="false" onAction="#onPlayButtonPressed" text="Play Creation">
                      <font>
                         <Font size="24.0" />
                      </font>

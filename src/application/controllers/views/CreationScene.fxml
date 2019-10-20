@@ -83,7 +83,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" prefWidth="206.0" text="Preview Speech">
+            <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" text="Preview Speech">
                <font>
                   <Font size="16.0" />
                </font>
