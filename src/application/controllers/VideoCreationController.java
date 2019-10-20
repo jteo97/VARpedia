@@ -30,7 +30,7 @@ public class VideoCreationController {
     @FXML private TextField _searchField;
     @FXML private TextField _numField;
     @FXML private TextField _nameField;
-    @FXML private ChoiceBox<String> _musicChoice;
+    @FXML private ComboBox<String> _musicChoice;
     @FXML private Label _errorNum;
 
     private Scene _nextScene;
