@@ -25,12 +25,11 @@
     -fx-background-color: text-area-background;
 }
 
+.list-view {
+    -fx-background-color: #393E46;
+}
 .list-view .list-cell {
     -fx-control-inner-background: #393E46;
     -fx-text-fill: #EEEEEE;
     -fx-font-size: 1.2em ;
-}
-
-.list-cell:empty {
-    -fx-background-color: #393E46;
 }
