@@ -31,6 +31,7 @@ public class CreationSceneController {
     @FXML private Button _playAudio;
     @FXML private Button _cancelButton;
     @FXML private ListView<String> _audiosList;
+    @FXML private CheckBox _favourite;
 
     private CreationListModel _model;
     private String _wikisearch;
@@ -38,6 +39,28 @@ public class CreationSceneController {
     private List<Integer> _audioCount; // wrapper for count
     private Stage _creationWindow;
 
+    @FXML
+    private void onFavouriteChecked() {
+        if (_favourite.isSelected()) {
+            String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
+                    System.getProperty("file.separator") + _wikisearch;
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(filename);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                printWriter.print(_searchResult);
+                printWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            String delete = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
+                    System.getProperty("file.separator") + _wikisearch;
+            File file = new File(delete);
+            file.delete();
+        }
+    }
 
     @FXML
     private void onPreviewPressed() {

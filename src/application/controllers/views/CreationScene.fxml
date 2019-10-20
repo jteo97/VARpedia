@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
@@ -63,7 +64,7 @@
    <left>
       <VBox alignment="CENTER" prefHeight="551.0" prefWidth="420.0" spacing="8.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="49.0" prefWidth="388.0">
+            <VBox prefHeight="49.0" prefWidth="388.0" spacing="2.0">
                <children>
                   <Label text="Here's the search result, You can select text">
                      <font>
@@ -75,6 +76,11 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="_favourite" mnemonicParsing="false" onAction="#onFavouriteChecked" text="Favourite" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
             <TextArea fx:id="_searchResultArea" onMouseClicked="#onMouseDrag" prefHeight="414.0" prefWidth="420.0" wrapText="true" />
