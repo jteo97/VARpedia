@@ -239,4 +239,5 @@ creations/
 src/META-INF/
 quiz/
 musics/
+.favourites/
 # End of https://www.gitignore.io/api/java,linux,macos,eclipse,intellij
