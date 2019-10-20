@@ -49,6 +49,7 @@ public class CreationSceneController {
             if (numSpaces > 39) {
                 Alert tooMuchTextAlert = new Alert(Alert.AlertType.ERROR);
                 tooMuchTextAlert.setContentText("Too much text to handle. Select Less than 40 words.");
+                tooMuchTextAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
                 tooMuchTextAlert.show();
             } else {
                 try {
@@ -89,6 +90,7 @@ public class CreationSceneController {
             noAudioExists.setTitle("No Audio");
             noAudioExists.setHeaderText("No audio to combine");
             noAudioExists.setContentText("Use the preview button to create audio");
+            noAudioExists.getDialogPane().getStylesheets().add("/resources/alert.css");
             noAudioExists.show();
         } else {
             // do something to combine all generated audio

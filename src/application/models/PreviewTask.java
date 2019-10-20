@@ -34,6 +34,7 @@ public class PreviewTask extends Task<Void> {
                 failedVoice.setHeaderText("Failed to make audio clip!");
                 failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
                         "Please select a different voice or preview with whole English words in the text only.");
+                failedVoice.getDialogPane().getStylesheets().add("/resources/alert.css");
                 failedVoice.show();
                 _saveButton.setDisable(true);
             });

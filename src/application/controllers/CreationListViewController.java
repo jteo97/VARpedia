@@ -84,6 +84,7 @@ public class CreationListViewController {
 			noTest.setTitle("NO Tests");
 			noTest.setHeaderText("No test videos!");
 			noTest.setContentText("There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.");
+			noTest.getDialogPane().getStylesheets().add("/resources/alert.css");
 			noTest.showAndWait();
 		} else {
 
@@ -113,6 +114,7 @@ public class CreationListViewController {
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
 			confirmation.setTitle("Deletion");
 			confirmation.setHeaderText("Do you want to delete " + creation + "?");
+			confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
 			Optional<ButtonType> result = confirmation.showAndWait();
 			
 			// delete the creation if user confirmed
@@ -125,6 +127,7 @@ public class CreationListViewController {
 				Alert info = new Alert(AlertType.INFORMATION);
 				info.setTitle("Deletion successful");
 				info.setHeaderText(creation + " has been deleted successfully");
+				info.getDialogPane().getStylesheets().add("/resources/alert.css");
 				info.showAndWait();
 
 			}
@@ -167,6 +170,7 @@ public class CreationListViewController {
 		userInput.setTitle("VARpedia Creation");
 		userInput.setHeaderText("Which term are you searching?");
 		userInput.setContentText("Please enter the term:");
+		userInput.getDialogPane().getStylesheets().add("/resources/alert.css");
 		Optional<String> result = userInput.showAndWait();
 		
 		if (result.isPresent()) {
@@ -175,6 +179,7 @@ public class CreationListViewController {
 			searching.setTitle("Creation");
 			searching.setHeaderText("Searching...Press cancel to stop the search and return to the menu list.");
 			searching.setGraphic(progressIndicator);
+			searching.getDialogPane().getStylesheets().add("/resources/alert.css");
 			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 			searching.getButtonTypes().setAll(cancel);
 		

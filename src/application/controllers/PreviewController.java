@@ -92,6 +92,7 @@ public class PreviewController {
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
             noVoiceSelectedAlert.setContentText("Pick a voice before playing");
+            noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
             noVoiceSelectedAlert.show();
         }
 
@@ -123,6 +124,7 @@ public class PreviewController {
                 		Alert confirm = new Alert(AlertType.INFORMATION);
                 		confirm.setTitle("Audio saved");
                 		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
                 		confirm.showAndWait();
                 		if (!confirm.isShowing()) {
                 			_window.close();
@@ -144,6 +146,7 @@ public class PreviewController {
                 		Alert confirm = new Alert(AlertType.INFORMATION);
                 		confirm.setTitle("Audio saved");
                 		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
+                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
                 		confirm.showAndWait();
                 		if (!confirm.isShowing()) {
                 			_window.close();
@@ -165,6 +168,7 @@ public class PreviewController {
                 		Alert confirm = new Alert(AlertType.INFORMATION);
                 		confirm.setTitle("Audio saved!");
                 		confirm.setHeaderText("Audio saved successfully, returning to main creation menu.");
+                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
                 		confirm.showAndWait();
                 		if (!confirm.isShowing()) {
                 			_window.close();
@@ -194,6 +198,7 @@ public class PreviewController {
         } catch (NullPointerException e) {
             Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
             noVoiceSelectedAlert.setContentText("Pick a voice before saving");
+            noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
             noVoiceSelectedAlert.show();
         }
     }

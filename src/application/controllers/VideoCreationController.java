@@ -74,12 +74,14 @@ public class VideoCreationController {
                 noSearchTerm.setTitle("No Search Term");
                 noSearchTerm.setHeaderText("No search term provided!");
                 noSearchTerm.setContentText("Please provide one before clicking create.");
+                noSearchTerm.getDialogPane().getStylesheets().add("/resources/alert.css");
                 noSearchTerm.show();
             } else if (numberstr.equals(null) || numberstr.equals("")) {
                 Alert noNumber = new Alert(Alert.AlertType.ERROR);
                 noNumber.setTitle("No Number");
                 noNumber.setHeaderText("No number provided!");
                 noNumber.setContentText("Please provide one before clicking create.");
+                noNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
                 noNumber.show();
             } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
                 Alert noName = new Alert(Alert.AlertType.ERROR);
@@ -87,18 +89,21 @@ public class VideoCreationController {
                 noName.setHeaderText("invalid name provided!");
                 noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
                         " alphanumeric characters and \"_\" and \"-\".");
+                noName.getDialogPane().getStylesheets().add("/resources/alert.css");
                 noName.show();
             } else if (number < 1 || number > 10) {
                 Alert invalidNumber = new Alert(Alert.AlertType.ERROR);
                 invalidNumber.setTitle("Invalid Number");
                 invalidNumber.setHeaderText("Invalid number range");
                 invalidNumber.setContentText("Please enter a number in the range of 1 - 10");
+                invalidNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
                 invalidNumber.show();
             } else if (exists) {
                 // wait for user confirmation
                 Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmation.setTitle("File already exists");
                 confirmation.setHeaderText("Do you want to override " + name + ".mp4?");
+                confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
                 Optional<ButtonType> result = confirmation.showAndWait();
 
                 // delete the creation if user confirmed
@@ -109,6 +114,7 @@ public class VideoCreationController {
                     Alert downloading = new Alert(Alert.AlertType.INFORMATION);
                     downloading.setTitle("Creation");
                     downloading.setHeaderText("Creating... Please Wait...");
+                    downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
                     downloading.setGraphic(progressIndicator);
 
                     DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
@@ -139,6 +145,7 @@ public class VideoCreationController {
                 Alert downloading = new Alert(Alert.AlertType.INFORMATION);
                 downloading.setTitle("Creation");
                 downloading.setHeaderText("Creating... Please Wait...");
+                downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
                 downloading.setGraphic(progressIndicator);
 
                 DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
@@ -166,6 +173,7 @@ public class VideoCreationController {
             Alert wrongNumber=new Alert(Alert.AlertType.ERROR);
             wrongNumber.setHeaderText("Incorrect value supplied to number field!");
             wrongNumber.setContentText("Please provide a number to the number field before clicking create.");
+            wrongNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
             wrongNumber.show();
         }
     }

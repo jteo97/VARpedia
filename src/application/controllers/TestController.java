@@ -44,6 +44,7 @@ public class TestController {
             Alert correctAnswer = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             correctAnswer.setTitle("Well Done");
             correctAnswer.setHeaderText("You got it right!!!");
+            correctAnswer.getDialogPane().getStylesheets().add("/resources/alert.css");
             correctAnswer.showAndWait();
             _window.close();
 

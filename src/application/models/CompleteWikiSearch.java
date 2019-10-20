@@ -33,6 +33,7 @@ public class CompleteWikiSearch implements Runnable {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("No Result Found");
 			error.setHeaderText("Cannot find results for " + _term +", click OK to return to the menu");
+			error.getDialogPane().getStylesheets().add("/resources/alert.css");
 			error.showAndWait();
 			return;
 		}
