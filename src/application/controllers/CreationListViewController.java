@@ -68,7 +68,7 @@ public class CreationListViewController {
 	private void onManageButtonPressed() {
 
 		try {
-			FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("views/ManageTest.fxml"));
+			FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/application/views/ManageTest.fxml"));
 			Parent manageRoot = (Parent) manageLoader.load();
 
 			ManageTestController controller = (ManageTestController) manageLoader.getController();
@@ -93,7 +93,7 @@ public class CreationListViewController {
 		} else {
 
 			try {
-				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("views/Test.fxml"));
+				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("/application/views/Test.fxml"));
 				Parent testRoot = (Parent) testLoader.load();
 
 				TestController controller = (TestController) testLoader.getController();
@@ -152,7 +152,7 @@ public class CreationListViewController {
 		if (creation != null) {
 
 			try {
-				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("views/VideoPlayer.fxml"));
+				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("/application/views/VideoPlayer.fxml"));
 				Parent videoRoot = (Parent) videoPlayerLoader.load();
 
 				VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
@@ -200,7 +200,7 @@ public class CreationListViewController {
 						wikiResults =  wikiResults + sc.nextLine() + "\n";
 					}
 					try {
-						FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/controllers/views/CreationScene.fxml"));
+						FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/views/CreationScene.fxml"));
 						Parent creationRoot = creationSceneLoader.load();
 						CreationSceneController controller = creationSceneLoader.getController();
 						Scene scene = new Scene(creationRoot);

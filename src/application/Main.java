@@ -1,7 +1,5 @@
 package application;
 	
-import application.controllers.CreationListViewController;
-import application.controllers.MainMenuController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -19,7 +17,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("controllers/views/MainMenu.fxml"));
+			FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("views/MainMenu.fxml"));
 			Parent menuRoot = mainMenuLoader.load();
 			
 			// properly exit the application

@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -77,7 +76,7 @@ public class CreationSceneController {
                 tooMuchTextAlert.show();
             } else {
                 try {
-                    FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("views/Preview.fxml"));
+                    FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
                     Parent previewRoot = (Parent) previewSceneLoader.load();
                     PreviewController controller = (PreviewController) previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
@@ -193,7 +192,7 @@ public class CreationSceneController {
             _audiosList.getItems().clear();
 
             try {
-                FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("views/VideoCreation.fxml"));
+                FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
                 Parent videoRoot = (Parent) videoCreationLoader.load();
                 VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
                 Scene scene = new Scene(videoRoot);

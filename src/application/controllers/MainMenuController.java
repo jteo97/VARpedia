@@ -22,7 +22,7 @@ public class MainMenuController {
 	private void onLaunchButtonPressed() throws IOException {
 		Stage stage = (Stage) _launchButton.getScene().getWindow();
 
-		FXMLLoader creationListLoader = new FXMLLoader(getClass().getResource("views/CreationListView.fxml"));
+		FXMLLoader creationListLoader = new FXMLLoader(getClass().getResource("/application/views/CreationListView.fxml"));
 		Parent listRoot = creationListLoader.load();
 
 		CreationListViewController listController = creationListLoader.getController();
