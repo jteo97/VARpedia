@@ -78,7 +78,7 @@
                   </Label>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <CheckBox fx:id="_favourite" mnemonicParsing="false" onAction="#onFavouriteChecked" text="Favourite" />
+                        <CheckBox fx:id="_favourite" mnemonicParsing="false" onAction="#onFavouriteChecked" text="Favourite" textFill="#eeeeee" />
                      </children>
                   </HBox>
                </children>
