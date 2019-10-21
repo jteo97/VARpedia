@@ -1,9 +1,13 @@
 package application.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * A controller class for the initial welcome menu
@@ -13,17 +17,19 @@ import javafx.stage.Stage;
 public class MainMenuController {
 	
 	@FXML private Button _launchButton;
-	
-	private Scene _nextScene;
-	
+
 	@FXML
-	private void onLaunchButtonPressed() {
+	private void onLaunchButtonPressed() throws IOException {
 		Stage stage = (Stage) _launchButton.getScene().getWindow();
-		stage.setScene(_nextScene);
-	}
-	
-	public void setScene(Scene scene) {
-		_nextScene = scene;
-		_nextScene.getStylesheets().add("/resources/style.css");
+
+		FXMLLoader creationListLoader = new FXMLLoader(getClass().getResource("views/CreationListView.fxml"));
+		Parent listRoot = creationListLoader.load();
+
+		CreationListViewController listController = creationListLoader.getController();
+		Scene scene = new Scene(listRoot);
+		scene.getStylesheets().add("/resources/style.css");
+		listController.setup(scene);
+
+		stage.setScene(scene);
 	}
 }

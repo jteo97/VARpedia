@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * A task for the background thread to search for the term from Wikipedia
@@ -16,10 +18,14 @@ public class WikiSearchTask extends Task<Void> {
 
 	private String _term;
 	private CreationListModel _creationListModel;
+	private Scene _prevScene;
+	private Stage _stage;
 	
-	public WikiSearchTask(String term, CreationListModel model) {
+	public WikiSearchTask(String term, CreationListModel model, Scene prevScene, Stage stage) {
 		_term = term;
 		_creationListModel = model;
+		_prevScene = prevScene;
+		_stage = stage;
 	}
 	
 	@Override
@@ -35,7 +41,7 @@ public class WikiSearchTask extends Task<Void> {
 		String wikiOutput = stdoutBuffered.readLine(); //Read output of process and store in field
 
 		// send back to GUI thread
-		Platform.runLater(new CompleteWikiSearch(wikiOutput, _term, _creationListModel));
+		Platform.runLater(new CompleteWikiSearch(wikiOutput, _term, _creationListModel, _prevScene, _stage));
 
 		return null;
 	}

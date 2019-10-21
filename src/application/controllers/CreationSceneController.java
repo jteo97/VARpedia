@@ -37,7 +37,8 @@ public class CreationSceneController {
     private String _wikisearch;
     private String _searchResult;
     private List<Integer> _audioCount; // wrapper for count
-    private Stage _creationWindow;
+    private Scene _scene;
+    private Scene _prevScene;
 
     @FXML
     private void onFavouriteChecked() {
@@ -198,7 +199,8 @@ public class CreationSceneController {
                 Scene scene = new Scene(videoRoot);
                 scene.getStylesheets().add("/resources/style.css");
                 controller.setScene(scene, _wikisearch, _combineAudio);
-                controller.setup(scene, _model, _creationWindow);
+                Stage stage = (Stage) _combineAudio.getScene().getWindow();
+                controller.setup(scene, _model, stage, _prevScene);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -216,7 +218,8 @@ public class CreationSceneController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        _creationWindow.close();
+        Stage stage = (Stage) _cancelButton.getScene().getWindow();
+        stage.setScene(_prevScene);
     }
 
 
@@ -265,15 +268,17 @@ public class CreationSceneController {
 
 
 
-    public void setup(String result, Scene scene, String wikisearch, CreationListModel model, boolean fav) throws IOException {
+    public void setup(String result, Scene scene, Scene prevScene, String wikisearch, CreationListModel model, boolean fav) {
 
         if (fav) {
             _favourite.setSelected(true);
         }
 
+        _scene = scene;
+        _prevScene = prevScene;
         _searchResult = result;
         _searchResultArea.setText(_searchResult);
-        _audioCount = new ArrayList<Integer>();
+        _audioCount = new ArrayList<>();
         _audioCount.add(0);
         _wikisearch = wikisearch;
         _model = model;
@@ -287,11 +292,6 @@ public class CreationSceneController {
         _combineAudio.setTooltip(new Tooltip("Combine all the existing audios and proceed to video creation"));
         _previewSpeech.setTooltip(new Tooltip("Preview the current selected text"));
 
-        // show window
-        _creationWindow = new Stage();
-        _creationWindow.initModality(Modality.APPLICATION_MODAL);
-        _creationWindow.setScene(scene);
-        _creationWindow.show();
     }
 
     public void updateAudio(String audio) {

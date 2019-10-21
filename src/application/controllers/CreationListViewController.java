@@ -39,10 +39,12 @@ public class CreationListViewController {
 
 	private CreationListModel _creationListModel;
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
+	private Scene _scene;
 
-	public void setup() {
+	public void setup(Scene scene) {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
+		_scene = scene;
 
 		// set up tool tips for buttons
 		_createButton.setTooltip(new Tooltip("Create a new creation"));
@@ -137,6 +139,7 @@ public class CreationListViewController {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("No creation selected");
 			error.setHeaderText("You have not selected a creation, please select a creation to delete");
+			error.getDialogPane().getStylesheets().add("/resources/alert.css");
 			error.showAndWait();
 		}
 	}
@@ -165,6 +168,7 @@ public class CreationListViewController {
 			Alert error = new Alert(AlertType.ERROR);
 			error.setTitle("No creation selected");
 			error.setHeaderText("You have not selected a creation, please select a creation to play");
+			error.getDialogPane().getStylesheets().add("/resources/alert.css");
 			error.showAndWait();
 		}
 
@@ -182,12 +186,12 @@ public class CreationListViewController {
 		
 		if (result.isPresent()) {
 			try {
-				String command = "ls .favourites";
+				String command = "ls \".favourites/" + result.get() + "\"";
 				BashCommands checkFavourites = new BashCommands(command);
 				checkFavourites.startBashProcess();
 				checkFavourites.getProcess().waitFor();
-				String contents = checkFavourites.getStdout();
-				if (contents.contains(result.get())) {
+				int isFavourite = checkFavourites.getExitStatus();
+				if (isFavourite == 0) {
 					File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
 							System.getProperty("file.separator") + result.get());
 					Scanner sc = new Scanner(file);
@@ -197,11 +201,13 @@ public class CreationListViewController {
 					}
 					try {
 						FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/controllers/views/CreationScene.fxml"));
-						Parent creationRoot = (Parent) creationSceneLoader.load();
-						CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
+						Parent creationRoot = creationSceneLoader.load();
+						CreationSceneController controller = creationSceneLoader.getController();
 						Scene scene = new Scene(creationRoot);
 						scene.getStylesheets().add("/resources/style.css");
-						controller.setup(wikiResults, scene, result.get(), _creationListModel, true);
+						Stage stage = (Stage) _createButton.getScene().getWindow();
+						controller.setup(wikiResults, scene, _scene, result.get(), _creationListModel, true);
+						stage.setScene(scene);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -216,7 +222,8 @@ public class CreationListViewController {
 					searching.getButtonTypes().setAll(cancel);
 
 					// search the term in background
-					WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel);
+					Stage stage = (Stage) _createButton.getScene().getWindow();
+					WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel, _scene, stage);
 					ExecutorService team = Executors.newSingleThreadExecutor();
 					team.submit(task);
 

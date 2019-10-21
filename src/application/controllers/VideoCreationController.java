@@ -37,6 +37,7 @@ public class VideoCreationController {
     private CreationListModel _model;
     private Stage _window;
     private Stage _creationWindow;
+    private Scene _mainScene;
     private ExecutorService team1 = Executors.newSingleThreadExecutor();
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
     private String _wikisearch;
@@ -165,7 +166,7 @@ public class VideoCreationController {
 
                     createTask.setOnSucceeded(workerStateEvent12 -> {
                         downloading.close();
-                        _creationWindow.close();
+                        _creationWindow.setScene(_mainScene);
                     });
                 });
             }
@@ -201,7 +202,8 @@ public class VideoCreationController {
         this._combineButton = combineButton;
     }
 
-    public void setup(Scene scene, CreationListModel model, Stage creationWindow) {
+    public void setup(Scene scene, CreationListModel model, Stage creationWindow, Scene mainScene) {
+        _mainScene = mainScene;
         _creationWindow = creationWindow;
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);

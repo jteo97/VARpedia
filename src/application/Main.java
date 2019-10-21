@@ -20,16 +20,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("controllers/views/MainMenu.fxml"));
-			Parent menuRoot = (Parent) mainMenuLoader.load();
-			
-			FXMLLoader creationListLoader = new FXMLLoader(getClass().getResource("controllers/views/CreationListView.fxml"));
-			Parent listRoot = (Parent) creationListLoader.load();
-			
-			MainMenuController controller = (MainMenuController) mainMenuLoader.getController();
-			controller.setScene(new Scene(listRoot));
-
-			CreationListViewController listController = (CreationListViewController) creationListLoader.getController();
-			listController.setup();
+			Parent menuRoot = mainMenuLoader.load();
 			
 			// properly exit the application
 			primaryStage.setOnCloseRequest(event -> {
