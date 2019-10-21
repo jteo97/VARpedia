@@ -69,9 +69,9 @@ public class CreationListViewController {
 
 		try {
 			FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/application/views/ManageTest.fxml"));
-			Parent manageRoot = (Parent) manageLoader.load();
+			Parent manageRoot = manageLoader.load();
 
-			ManageTestController controller = (ManageTestController) manageLoader.getController();
+			ManageTestController controller = manageLoader.getController();
 			controller.setScene((Stage) _manageButton.getScene().getWindow(), new Scene(manageRoot), _manageButton.getScene());
 			controller.setUp();
 
@@ -94,9 +94,9 @@ public class CreationListViewController {
 
 			try {
 				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("/application/views/Test.fxml"));
-				Parent testRoot = (Parent) testLoader.load();
+				Parent testRoot = testLoader.load();
 
-				TestController controller = (TestController) testLoader.getController();
+				TestController controller = testLoader.getController();
 				controller.setScene(new Scene(testRoot));
 
 				controller.makeWindow();
@@ -153,9 +153,9 @@ public class CreationListViewController {
 
 			try {
 				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("/application/views/VideoPlayer.fxml"));
-				Parent videoRoot = (Parent) videoPlayerLoader.load();
+				Parent videoRoot = videoPlayerLoader.load();
 
-				VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
+				VideoPlayerController controller = videoPlayerLoader.getController();
 				controller.setScene(new Scene(videoRoot), _scene);
 
                 Stage stage = (Stage) _playButton.getScene().getWindow();

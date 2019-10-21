@@ -50,6 +50,7 @@ public class VideoCreationController {
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
                     + "combine.wav"));
+            Files.deleteIfExists(Paths.get("subtitles.srt"));
         } catch (IOException e) {
             e.printStackTrace();
         }

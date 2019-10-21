@@ -77,8 +77,8 @@ public class CreationSceneController {
             } else {
                 try {
                     FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
-                    Parent previewRoot = (Parent) previewSceneLoader.load();
-                    PreviewController controller = (PreviewController) previewSceneLoader.getController();
+                    Parent previewRoot = previewSceneLoader.load();
+                    PreviewController controller = previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
                     scene.getStylesheets().add("/resources/style.css");
 
@@ -193,8 +193,8 @@ public class CreationSceneController {
 
             try {
                 FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
-                Parent videoRoot = (Parent) videoCreationLoader.load();
-                VideoCreationController controller = (VideoCreationController) videoCreationLoader.getController();
+                Parent videoRoot = videoCreationLoader.load();
+                VideoCreationController controller = videoCreationLoader.getController();
                 Scene scene = new Scene(videoRoot);
                 scene.getStylesheets().add("/resources/style.css");
                 controller.setScene(scene, _wikisearch, _combineAudio);
@@ -210,7 +210,7 @@ public class CreationSceneController {
     @FXML
     private void onCancelPressed() {
         // delete all the saved audio chunk first
-        BashCommands delete = new BashCommands("rm -f *.wav ; rm -f *.scm");
+        BashCommands delete = new BashCommands("rm -f *.wav ; rm -f *.scm ; rm -f audio*");
         delete.startBashProcess();
         try {
             delete.getProcess().waitFor();
