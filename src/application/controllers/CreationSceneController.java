@@ -31,6 +31,7 @@ public class CreationSceneController {
     @FXML private Button _playAudio;
     @FXML private Button _cancelButton;
     @FXML private ListView<String> _audiosList;
+    @FXML private CheckBox _favourite;
 
     private CreationListModel _model;
     private String _wikisearch;
@@ -38,6 +39,28 @@ public class CreationSceneController {
     private List<Integer> _audioCount; // wrapper for count
     private Stage _creationWindow;
 
+    @FXML
+    private void onFavouriteChecked() {
+        if (_favourite.isSelected()) {
+            String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
+                    System.getProperty("file.separator") + _wikisearch;
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(filename);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                printWriter.print(_searchResult);
+                printWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            String delete = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
+                    System.getProperty("file.separator") + _wikisearch;
+            File file = new File(delete);
+            file.delete();
+        }
+    }
 
     @FXML
     private void onPreviewPressed() {
@@ -114,7 +137,6 @@ public class CreationSceneController {
                 String formattedDur = df.format(duration);
                 formattedDur = formattedDur.replaceFirst("[.]", ",");
 
-                System.out.println(formattedDur);
                 if (subtitleSection == 1) {
                     if (formattedDur.length() == 4) {
                         writer.println("00:00:00,50 --> " + "00:00:0" + formattedDur);
@@ -234,7 +256,6 @@ public class CreationSceneController {
 
     @FXML
     private void onMouseDrag() {
-        System.out.println(_searchResultArea.getSelectedText());
         if (!_searchResultArea.getSelectedText().equals("")) {
             _previewSpeech.setDisable(false);
         } else {
@@ -244,7 +265,11 @@ public class CreationSceneController {
 
 
 
-    public void setup(String result, Scene scene, String wikisearch, CreationListModel model) throws IOException {
+    public void setup(String result, Scene scene, String wikisearch, CreationListModel model, boolean fav) throws IOException {
+
+        if (fav) {
+            _favourite.setSelected(true);
+        }
 
         _searchResult = result;
         _searchResultArea.setText(_searchResult);

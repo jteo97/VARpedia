@@ -238,4 +238,6 @@ flickr-api-keys.txt
 creations/
 src/META-INF/
 quiz/
+.favourites/
+>>>>>>> FavAndImagesView
 # End of https://www.gitignore.io/api/java,linux,macos,eclipse,intellij

@@ -1,6 +1,6 @@
 package application.controllers;
 
-import application.DownloadImagesTask;
+import application.models.DownloadImagesTask;
 
 import application.models.CreateVideoTask;
 import application.models.CreationListModel;

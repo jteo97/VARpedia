@@ -71,6 +71,15 @@ public class CreationListModel {
 				dir.mkdir();
 			}
 
+			BashCommands checkFavouritesDir = new BashCommands("test -d .favourites");
+			checkFavouritesDir.startBashProcess();
+			checkFavouritesDir.getProcess().waitFor();
+			exitValue = checkFavouritesDir.getProcess().exitValue();
+			if (exitValue == 1) {
+				File dir = new File(".favourites");
+				dir.mkdir();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

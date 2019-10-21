@@ -1,4 +1,4 @@
-package application;
+package application.models;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;

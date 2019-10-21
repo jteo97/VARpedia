@@ -95,7 +95,6 @@ public class TestController {
         String fileToOpen = null;
         try {
             fileToOpen = listQuiz.getStdout();
-            System.out.println(fileToOpen);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,7 +102,6 @@ public class TestController {
         String[] array = fileToOpen.split(".mp4");
         List<String> listOfCreations = Arrays.asList(array);
         Collections.shuffle(listOfCreations);
-        System.out.println(listOfCreations.get(0).substring(0, listOfCreations.get(0).length()-4));
 
         fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator")
                 + listOfCreations.get(0) + ".mp4";

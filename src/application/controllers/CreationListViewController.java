@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.BashCommands;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -131,7 +133,12 @@ public class CreationListViewController {
 				info.showAndWait();
 
 			}
-		} 
+		} else {
+			Alert error = new Alert(AlertType.ERROR);
+			error.setTitle("No creation selected");
+			error.setHeaderText("You have not selected a creation, please select a creation to delete");
+			error.showAndWait();
+		}
 	}
 	
 	@FXML
@@ -174,29 +181,58 @@ public class CreationListViewController {
 		Optional<String> result = userInput.showAndWait();
 		
 		if (result.isPresent()) {
-			// set up information box for searching term
-			Alert searching = new Alert(AlertType.INFORMATION);
-			searching.setTitle("Creation");
-			searching.setHeaderText("Searching...Press cancel to stop the search and return to the menu list.");
-			searching.setGraphic(progressIndicator);
-			searching.getDialogPane().getStylesheets().add("/resources/alert.css");
-			ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-			searching.getButtonTypes().setAll(cancel);
-		
-			// search the term in background
-			WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel);
-			ExecutorService team = Executors.newSingleThreadExecutor();
-			team.submit(task);
+			try {
+				String command = "ls .favourites";
+				BashCommands checkFavourites = new BashCommands(command);
+				checkFavourites.startBashProcess();
+				checkFavourites.getProcess().waitFor();
+				String contents = checkFavourites.getStdout();
+				if (contents.contains(result.get())) {
+					File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
+							System.getProperty("file.separator") + result.get());
+					Scanner sc = new Scanner(file);
+					String wikiResults = "";
+					while (sc.hasNextLine()) {
+						wikiResults =  wikiResults + sc.nextLine() + "\n";
+					}
+					try {
+						FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/controllers/views/CreationScene.fxml"));
+						Parent creationRoot = (Parent) creationSceneLoader.load();
+						CreationSceneController controller = (CreationSceneController) creationSceneLoader.getController();
+						Scene scene = new Scene(creationRoot);
+						scene.getStylesheets().add("/resources/style.css");
+						controller.setup(wikiResults, scene, result.get(), _creationListModel, true);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					// set up information box for searching term
+					Alert searching = new Alert(AlertType.INFORMATION);
+					searching.setTitle("Creation");
+					searching.setHeaderText("Searching...Press cancel to stop the search and return to the menu list.");
+					searching.setGraphic(progressIndicator);
+					searching.getDialogPane().getStylesheets().add("/resources/alert.css");
+					ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+					searching.getButtonTypes().setAll(cancel);
 
-			task.setOnRunning(event -> {
-				searching.showAndWait();
-				if (!searching.isShowing()) {
-					task.cancel();
+					// search the term in background
+					WikiSearchTask task = new WikiSearchTask(result.get(), _creationListModel);
+					ExecutorService team = Executors.newSingleThreadExecutor();
+					team.submit(task);
+
+					task.setOnRunning(event -> {
+						searching.showAndWait();
+						if (!searching.isShowing()) {
+							task.cancel();
+						}
+					});
+					task.setOnSucceeded(event -> searching.close());
+
+					task.setOnCancelled(event -> searching.close());
 				}
-			});
-			task.setOnSucceeded(event -> searching.close());
-
-			task.setOnCancelled(event -> searching.close());
+			} catch (InterruptedException | IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
