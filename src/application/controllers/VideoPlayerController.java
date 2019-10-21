@@ -30,6 +30,7 @@ public class VideoPlayerController {
     @FXML private Button _pausePlay;
 
     private Scene _nextScene;
+    private Scene _prevScene;
     private MediaPlayer _player;
     private Stage _window;
 
@@ -42,7 +43,7 @@ public class VideoPlayerController {
     }
 
     @FXML
-    public void makeWindow(String fileToOpen) {
+    public void makeWindow(String fileToOpen, Stage stage) {
         fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "creations" + System.getProperty("file.separator") + fileToOpen + ".mp4";
         fileUrl = new File(fileToOpen);
@@ -52,19 +53,13 @@ public class VideoPlayerController {
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
 
-        _player.setOnEndOfMedia(() -> _window.close());
-        _window = new Stage();
-        _window.initModality(Modality.APPLICATION_MODAL);
+        _window = stage;
+        _player.setOnEndOfMedia(() -> _window.setScene(_prevScene));
         _window.setScene(_nextScene);
         _window.setTitle("Play Video");
 
         _media.prefWidth(_window.getMaxWidth());
         _media.prefHeight(_window.getMaxHeight());
-
-        _window.setOnCloseRequest(windowEvent -> _player.stop());
-
-        _window.show();
-
     }
 
     @FXML
@@ -90,8 +85,9 @@ public class VideoPlayerController {
     private void onRewindButtonPressed() {
         _player.seek(_player.getCurrentTime().subtract( Duration.seconds(3)));
     }
-    public void setScene(Scene scene) {
+    public void setScene(Scene scene, Scene prevScene) {
         _nextScene = scene;
         _nextScene.getStylesheets().add("/resources/style.css");
+        _prevScene = prevScene;
     }
 }

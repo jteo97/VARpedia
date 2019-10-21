@@ -156,10 +156,10 @@ public class CreationListViewController {
 				Parent videoRoot = (Parent) videoPlayerLoader.load();
 
 				VideoPlayerController controller = (VideoPlayerController) videoPlayerLoader.getController();
-				controller.setScene(new Scene(videoRoot));
+				controller.setScene(new Scene(videoRoot), _scene);
 
-
-				controller.makeWindow(creation);
+                Stage stage = (Stage) _playButton.getScene().getWindow();
+				controller.makeWindow(creation, stage);
 
 			} catch (IOException e) {
 				e.printStackTrace();
