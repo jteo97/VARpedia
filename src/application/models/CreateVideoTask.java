@@ -79,7 +79,8 @@ public class CreateVideoTask extends Task<Void> {
             original.renameTo(renamed);
 
             // add background music to the audio
-            BashCommands addMusic = new BashCommands("ffmpeg -i combine_c.wav -i \"musics/panumoon_-_another_perspective_2.mp3\" -filter_complex amix=inputs=2:duration=first:dropout_transition=0 combine.wav");
+            BashCommands addMusic = new BashCommands("ffmpeg -i combine_c.wav -i \"musics" +
+                    System.getProperty("file.separator") + "panumoon_-_another_perspective_2.mp3\" -filter_complex amix=inputs=2:duration=first:dropout_transition=0 combine.wav");
             addMusic.startBashProcess();
             addMusic.getProcess().waitFor();
         }
