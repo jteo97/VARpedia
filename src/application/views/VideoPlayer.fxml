@@ -20,7 +20,7 @@
          </children>
       </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
-      <HBox prefHeight="50.0" prefWidth="800.0" spacing="6.0">
+      <HBox spacing="6.0">
          <children>
             <Button fx:id="_rewind" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRewindButtonPressed" prefHeight="50.0" text="&lt;&lt;" HBox.hgrow="ALWAYS">
                <font>
@@ -28,6 +28,11 @@
                </font>
             </Button>
             <Button fx:id="_pausePlay" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPausePlayButtonPressed" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopButtonPressed" prefHeight="50.0" text="Stop" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>

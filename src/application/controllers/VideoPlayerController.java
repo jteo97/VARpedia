@@ -63,6 +63,12 @@ public class VideoPlayerController {
     }
 
     @FXML
+    private void onStopButtonPressed() {
+        _player.stop();
+        _window.setScene(_prevScene);
+    }
+
+    @FXML
     private void onFastForwardButtonPressed() {
         _player.seek(_player.getCurrentTime().add( Duration.seconds(3)));
     }
