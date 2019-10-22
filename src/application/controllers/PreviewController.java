@@ -1,22 +1,19 @@
 package application.controllers;
 
 import application.models.BashCommands;
-import application.models.PreviewTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * A controller class for the preview audio scene
@@ -37,9 +34,8 @@ public class PreviewController {
     private String _audioText; // selected text which punctuation has been removed
     private List<Integer> _count;
     private Stage _window;
-    private ExecutorService team = Executors.newSingleThreadExecutor();
-    private PreviewTask _task;
     private Button _combineButton;
+    private MediaPlayer _mediaPlayer;
 
     @FXML
     private void onVoiceOptionChanged() {
@@ -62,10 +58,10 @@ public class PreviewController {
     @FXML
     private void onCancelButtonPressed() throws InterruptedException {
     	// stop playing audio if it is playing
-    	if (_task != null) {
-    		_task.cancel();
-    	}
-    	
+        if (_mediaPlayer != null) {
+            _mediaPlayer.stop();
+        }
+
     	// delete scm file
     	BashCommands delete = new BashCommands("rm -f *.scm");
     	delete.startBashProcess();
@@ -97,6 +93,8 @@ public class PreviewController {
                 noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
                 noVoiceSelectedAlert.show();
             }
+        } else if (_playStopButton.getText().equals("Stop")) {
+            _mediaPlayer.stop();
         }
     }
 
@@ -259,23 +257,50 @@ public class PreviewController {
     }
 
     private void setUpPreview(String choice, double speed) throws IOException {
+        // Write preview scm file
     	FileWriter writer = new FileWriter(choice + "_preview.scm");
-    	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")\n(SayText \"" + _audioText + "\")");
+    	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")");
     	writer.close();
 
-    	// Generate playing task
-    	String command = "festival -b " + choice + "_preview.scm";
-        PreviewTask tts = new PreviewTask(command, _saveButton);
-        _task = tts;
+    	// Write selected text file
+        FileWriter text = new FileWriter("selected.txt");
+        text.write(_audioText);
+        text.close();
 
-        _playStopButton.setText("Stop");
-        // start the task
-        team.submit(tts);
-        tts.setOnSucceeded(workerStateEvent -> {
-            _playStopButton.setText("Play");
-            _task = null; // empty current playing task
+        // Make temp audio to play
+        BashCommands makeAudio = new BashCommands("text2wave -o temp.wav selected.txt -eval " + choice + "_preview.scm");
+        makeAudio.startBashProcess();
+        try {
+            makeAudio.getProcess().waitFor();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Check if the audio is playable
+        BufferedReader br = new BufferedReader(new FileReader("temp.wav"));
+        if (br.readLine() == null) {
+            tidyUpPreview();
+            _saveButton.setDisable(true);
+            Alert failedVoice = new Alert(Alert.AlertType.ERROR);
+            failedVoice.setTitle("Audio Creation Failed");
+            failedVoice.setHeaderText("Failed to make audio clip!");
+            failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
+                    "Please select a different voice or preview with whole English words in the text only.");
+            failedVoice.getDialogPane().getStylesheets().add("/resources/alert.css");
+            failedVoice.show();
+            return;
+        }
+
+        // set up media player
+        Media sound = new Media(new File("temp.wav").toURI().toString());
+        _mediaPlayer = new MediaPlayer(sound);
+        _mediaPlayer.setOnEndOfMedia(() -> tidyUpPreview());
+        _mediaPlayer.setOnStopped(() -> tidyUpPreview());
+        _mediaPlayer.setOnPlaying(() -> {
+            _playStopButton.setText("Stop");
+            _saveButton.setDisable(true);
         });
-        _saveButton.setDisable(true);
+        _mediaPlayer.play();
     }
 
     private void setSpeed(double speed) throws IOException {
@@ -301,5 +326,15 @@ public class PreviewController {
             factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
         }
         return factor;
+    }
+
+    private void tidyUpPreview() {
+        _playStopButton.setText("Play");
+        _saveButton.setDisable(false);
+        // Delete temp files
+        File tempAudio = new File("temp.wav");
+        File tempText = new File("selected.txt");
+        tempAudio.delete();
+        tempText.delete();
     }
 }
