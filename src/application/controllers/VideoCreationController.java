@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.models.BashCommands;
 import application.models.DownloadImagesTask;
 
 import application.models.CreateVideoTask;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +59,16 @@ public class VideoCreationController {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
                     + "combine.wav"));
             Files.deleteIfExists(Paths.get("subtitles.srt"));
+
+            String command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f audio*.txt ;  rm -f *.scm";
+
+            BashCommands tidyUp = new BashCommands(command);
+            tidyUp.startBashProcess();
+            try {
+                tidyUp.getProcess().waitFor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,6 +187,7 @@ public class VideoCreationController {
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(scene);
+        _window.setResizable(false);
         _window.show();
         _model = model;
         _musicChoice.getItems().setAll("Yes", "No");
@@ -200,6 +213,7 @@ public class VideoCreationController {
             try {
                 Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
                         + "combine.wav"));
+                onCancelButtonPressed();
             } catch (IOException e) {
                 e.printStackTrace();
             }

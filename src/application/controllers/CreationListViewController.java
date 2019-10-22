@@ -14,6 +14,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 import java.io.File;
@@ -182,9 +183,10 @@ public class CreationListViewController {
 		userInput.setHeaderText("Which term are you searching?");
 		userInput.setContentText("Please enter the term:");
 		userInput.getDialogPane().getStylesheets().add("/resources/alert.css");
+		userInput.initStyle(StageStyle.UNDECORATED);
 		Optional<String> result = userInput.showAndWait();
 		
-		if (result.isPresent()) {
+		if (result.isPresent() && !result.get().equals("")) {
 			try {
 				String command = "ls \".favourites/" + result.get() + "\"";
 				BashCommands checkFavourites = new BashCommands(command);
@@ -240,6 +242,16 @@ public class CreationListViewController {
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
+		} else {
+
+			Alert noInput = new Alert(AlertType.INFORMATION);
+			noInput.setTitle("Error!!");
+			noInput.setHeaderText("No input from the user.");
+			noInput.setContentText("Please enter a search term ");
+			noInput.getDialogPane().getStylesheets().add("/resources/alert.css");
+			noInput.show();
+
+
 		}
 	}
 	

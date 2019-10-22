@@ -128,6 +128,8 @@ public class TestController {
 
         _window.setOnCloseRequest(windowEvent -> _player.stop());
 
+        _window.setResizable(false);
+
         _window.show();
     }
 }

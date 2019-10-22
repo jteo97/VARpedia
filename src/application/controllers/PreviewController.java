@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -230,6 +231,16 @@ public class PreviewController {
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(scene);
+        _window.setResizable(false);
+
+        _window.setOnCloseRequest(windowEvent -> {
+            try {
+                onCancelButtonPressed();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
         _window.show();
     }
     
@@ -249,11 +260,13 @@ public class PreviewController {
     	ObservableList<String> choices = FXCollections.observableArrayList();
         choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
         _choiceOfVoice.setItems(choices);
+        _choiceOfVoice.setValue("Default Machine Voice");
 
         // Add all common speeds
         ObservableList<String> speedChoice = FXCollections.observableArrayList();
         speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
         _choiceOfSpeed.setItems(speedChoice);
+        _choiceOfSpeed.setValue("Normal");
     }
 
     private void setUpPreview(String choice, double speed) throws IOException {
