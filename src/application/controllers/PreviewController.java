@@ -29,7 +29,7 @@ public class PreviewController {
     @FXML private ComboBox<String> _choiceOfVoice;
     @FXML private ComboBox<String> _choiceOfSpeed;
     @FXML private Button _cancelButton;
-    @FXML private Button _playButton;
+    @FXML private Button _playStopButton;
     @FXML private Button _saveButton;
 
     private CreationSceneController _controller;
@@ -46,7 +46,7 @@ public class PreviewController {
         String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
         String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
         if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
-            _playButton.setDisable(false);
+            _playStopButton.setDisable(false);
             _saveButton.setDisable(true);
         }    }
 
@@ -55,7 +55,7 @@ public class PreviewController {
         String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
         String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
         if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
-            _playButton.setDisable(false);
+            _playStopButton.setDisable(false);
         }
     }
 
@@ -74,28 +74,30 @@ public class PreviewController {
     }
 
     @FXML
-    private void onPlayButtonPressed() throws IOException {
-        try {
-            // determine the factor to resize the audio
-            double factor = determineFactor();
+    private void onPlayStopButtonPressed() throws IOException {
+        if (_playStopButton.getText().equals("Play")) {
+            try {
+                // determine the factor to resize the audio
+                double factor = determineFactor();
 
-            if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
-                String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                if (choice.equals("Default Machine Voice")) {
-                	setUpPreview("kal_diphone", factor);
-                } else if (choice.equals("Male Voice")) {
-                	setUpPreview("akl_nz_jdt_diphone", factor);
-                } else if (choice.equals("Female Voice")) {
-                	setUpPreview("akl_nz_cw_cg_cg", factor);
+                // set up preview voices and play
+                if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
+                    String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+                    if (choice.equals("Default Machine Voice")) {
+                        setUpPreview("kal_diphone", factor);
+                    } else if (choice.equals("Male Voice")) {
+                        setUpPreview("akl_nz_jdt_diphone", factor);
+                    } else if (choice.equals("Female Voice")) {
+                        setUpPreview("akl_nz_cw_cg_cg", factor);
+                    }
                 }
+            } catch (NullPointerException e) {
+                Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
+                noVoiceSelectedAlert.setContentText("Pick a voice before playing");
+                noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
+                noVoiceSelectedAlert.show();
             }
-        } catch (NullPointerException e) {
-            Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
-            noVoiceSelectedAlert.setContentText("Pick a voice before playing");
-            noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
-            noVoiceSelectedAlert.show();
         }
-
     }
 
     @FXML
@@ -222,7 +224,7 @@ public class PreviewController {
         setUpVoices();
 
         // set up tool tips for buttons
-        _playButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
+        _playStopButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
         _cancelButton.setTooltip(new Tooltip("Cancel this preview"));
         _saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
 
@@ -260,16 +262,19 @@ public class PreviewController {
     	FileWriter writer = new FileWriter(choice + "_preview.scm");
     	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")\n(SayText \"" + _audioText + "\")");
     	writer.close();
-    	
+
+    	// Generate playing task
     	String command = "festival -b " + choice + "_preview.scm";
         PreviewTask tts = new PreviewTask(command, _saveButton);
         _task = tts;
+
+        _playStopButton.setText("Stop");
+        // start the task
         team.submit(tts);
         tts.setOnSucceeded(workerStateEvent -> {
-            _playButton.setDisable(false);
+            _playStopButton.setText("Play");
             _task = null; // empty current playing task
         });
-        _playButton.setDisable(true);
         _saveButton.setDisable(true);
     }
 

@@ -33,7 +33,7 @@
             <ListView fx:id="_audiosList" onMouseClicked="#onAudioSelected" prefHeight="441.0" prefWidth="373.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Button fx:id="_playAudio" disable="true" mnemonicParsing="false" onAction="#onPlayPressed" text="Play Audio">
+                  <Button fx:id="_playStopAudio" disable="true" mnemonicParsing="false" onAction="#onPlayStopPressed" text="Play Audio">
                      <font>
                         <Font size="17.0" />
                      </font>
