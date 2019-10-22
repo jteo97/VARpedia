@@ -3,29 +3,40 @@ package application.models;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.control.CheckBox;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateVideoTask extends Task<Void> {
 
     private String _nameOfCreation;
     private int _numberOfImages;
-    private String _searchTerm;
     private String _wikiSearch;
     private boolean _includeMusic;
     private CreationListModel _model;
+    private List<Integer> imagePositionToInclude = new ArrayList<>();
 
 
-    public CreateVideoTask(String name, int number, String searchTerm, String wikisearch, CreationListModel model, boolean includeMusic) {
+    public CreateVideoTask(String name, ArrayList<CheckBox> checkBoxes, String wikisearch, CreationListModel model, boolean includeMusic) {
         _nameOfCreation = name;
-        _numberOfImages = number;
-        _searchTerm = searchTerm;
         _wikiSearch = wikisearch;
         _model = model;
         _includeMusic = includeMusic;
+
+        int count = 1;
+        for (CheckBox c: checkBoxes) {
+            if (c.isSelected()) {
+                imagePositionToInclude.add(count);
+
+            }
+            count++;
+        }
+        _numberOfImages = imagePositionToInclude.size();
     }
 
     @Override
@@ -51,15 +62,16 @@ public class CreateVideoTask extends Task<Void> {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        for (int i = 1; i < _numberOfImages+1; i++) {
-            if (i==_numberOfImages) {
-                writer.println("file " + _path + "image" + i + ".jpg");
+        System.out.println("setup images");
+        for (int i = 0; i < imagePositionToInclude.size(); i++) {
+            if (i == imagePositionToInclude.size()-1) {
+                writer.println("file " + _path + "image" + imagePositionToInclude.get(i) + ".jpg");
                 writer.println("duration " + duration);
-                writer.println("file " + _path + "image" + i + ".jpg");
+                writer.println("file " + _path + "image" + imagePositionToInclude.get(i) + ".jpg");
                 break;
             }
-            writer.println("file "+_path+"image"+i+".jpg");
-            writer.println("duration "+duration);
+            writer.println("file " + _path + "image" + imagePositionToInclude.get(i) + ".jpg");
+            writer.println("duration " + duration);
         }
         writer.close();
 

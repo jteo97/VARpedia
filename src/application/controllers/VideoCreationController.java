@@ -7,6 +7,8 @@ import application.models.CreationListModel;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -14,6 +16,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,22 +32,23 @@ public class VideoCreationController {
 
     @FXML private Button _cancelButton;
     @FXML private Button _createButton;
-    @FXML private TextField _searchField;
-    @FXML private TextField _numField;
     @FXML private TextField _nameField;
     @FXML private ComboBox<String> _musicChoice;
-    @FXML private Label _errorNum;
+    @FXML private ImageView _img1, _img2, _img3, _img4, _img5, _img6, _img7, _img8, _img9, _img10;
+    @FXML private CheckBox _checkBox1, _checkBox2, _checkBox3, _checkBox4, _checkBox5, _checkBox6, _checkBox7, _checkBox8, _checkBox9, _checkBox10;
 
     private Scene _nextScene;
     private CreationListModel _model;
     private Stage _window;
     private Stage _creationWindow;
     private Scene _mainScene;
-    private ExecutorService team1 = Executors.newSingleThreadExecutor();
     private ExecutorService team2 = Executors.newSingleThreadExecutor();
     private String _wikisearch;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
     private Button _combineButton;
+    private List<Image> _images = new ArrayList<>();
+    private ArrayList<ImageView> _imageViews;
+    private ArrayList<CheckBox> _checkBoxes;
 
     @FXML
     private void onCancelButtonPressed() {
@@ -60,141 +66,101 @@ public class VideoCreationController {
 
     @FXML
     private void onCreateButtonPressed() {
-        String search = _searchField.getText();
-        String numberstr = _numField.getText();
         String name = _nameField.getText();
-        int number = 0;
         String pathToCreation = System.getProperty("user.dir") + System.getProperty("file.separator") +
                 "creations" + System.getProperty("file.separator") + name + ".mp4";
         boolean exists = new File(pathToCreation).isFile();
+        _checkBoxes = new ArrayList<>(Arrays.asList(_checkBox1, _checkBox2, _checkBox3, _checkBox4, _checkBox5,
+                _checkBox6, _checkBox7, _checkBox8, _checkBox9, _checkBox10));
 
-        try {
-            number = Integer.parseInt(numberstr);
+        if (!atLeastOneChecked(_checkBoxes)) {
+            Alert noneChecked = new Alert(Alert.AlertType.ERROR);
+            noneChecked.setTitle("Invalid image selected");
+            noneChecked.setHeaderText("No images selected");
+            noneChecked.setContentText("Please select at least one image before clicking create.");
+            noneChecked.getDialogPane().getStylesheets().add("/resources/alert.css");
+            noneChecked.show();
+        } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
+            Alert noName = new Alert(Alert.AlertType.ERROR);
+            noName.setTitle("Invalid Name");
+            noName.setHeaderText("invalid name provided!");
+            noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
+                    " alphanumeric characters and \"_\" and \"-\".");
+            noName.getDialogPane().getStylesheets().add("/resources/alert.css");
+            noName.show();
+        } else if (exists) {
+            // wait for user confirmation
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("File already exists");
+            confirmation.setHeaderText("Do you want to override " + name + ".mp4?");
+            confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Optional<ButtonType> result = confirmation.showAndWait();
 
-            if (search.equals(null) || search.equals("")) {
-                Alert noSearchTerm = new Alert(Alert.AlertType.ERROR);
-                noSearchTerm.setTitle("No Search Term");
-                noSearchTerm.setHeaderText("No search term provided!");
-                noSearchTerm.setContentText("Please provide one before clicking create.");
-                noSearchTerm.getDialogPane().getStylesheets().add("/resources/alert.css");
-                noSearchTerm.show();
-            } else if (numberstr.equals(null) || numberstr.equals("")) {
-                Alert noNumber = new Alert(Alert.AlertType.ERROR);
-                noNumber.setTitle("No Number");
-                noNumber.setHeaderText("No number provided!");
-                noNumber.setContentText("Please provide one before clicking create.");
-                noNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
-                noNumber.show();
-            } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
-                Alert noName = new Alert(Alert.AlertType.ERROR);
-                noName.setTitle("Invalid Name");
-                noName.setHeaderText("invalid name provided!");
-                noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
-                        " alphanumeric characters and \"_\" and \"-\".");
-                noName.getDialogPane().getStylesheets().add("/resources/alert.css");
-                noName.show();
-            } else if (number < 1 || number > 10) {
-                Alert invalidNumber = new Alert(Alert.AlertType.ERROR);
-                invalidNumber.setTitle("Invalid Number");
-                invalidNumber.setHeaderText("Invalid number range");
-                invalidNumber.setContentText("Please enter a number in the range of 1 - 10");
-                invalidNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
-                invalidNumber.show();
-            } else if (exists) {
-                // wait for user confirmation
-                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                confirmation.setTitle("File already exists");
-                confirmation.setHeaderText("Do you want to override " + name + ".mp4?");
-                confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
-                Optional<ButtonType> result = confirmation.showAndWait();
-
-                // delete the creation if user confirmed
-                if (result.get() == ButtonType.OK) {
-                    // delete the conflicting creation
-                    _model.delete(name);
-                    _window.close();
-                    Alert downloading = new Alert(Alert.AlertType.INFORMATION);
-                    downloading.setTitle("Creation");
-                    downloading.setHeaderText("Creating... Please Wait...");
-                    downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
-                    downloading.setGraphic(progressIndicator);
-
-                    DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
-                    team1.submit(downloadTask);
-
-                    downloadTask.setOnRunning(event -> downloading.showAndWait());
-
-                    int finalNumber = number;
-                    downloadTask.setOnSucceeded(workerStateEvent -> {
-                        CreateVideoTask createTask;
-                        if (_musicChoice.getValue().equals("Yes")) {
-                            createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, true);
-                        } else {
-                            createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, false);
-                        }
-                        team2.submit(createTask);
-
-                        createTask.setOnSucceeded(workerStateEvent1 -> {
-                            downloading.close();
-                            _creationWindow.close();
-                        });
-                    });
-                }
-            }
-            else {
+            // delete the creation if user confirmed
+            if (result.get() == ButtonType.OK) {
+                // delete the conflicting creation
+                _model.delete(name);
                 _window.close();
+                Alert creating = new Alert(Alert.AlertType.INFORMATION);
+                creating.setTitle("Creation");
+                creating.setHeaderText("Creating... Please Wait...");
+                creating.getDialogPane().getStylesheets().add("/resources/alert.css");
+                creating.setGraphic(progressIndicator);
+                creating.show();
 
-                Alert downloading = new Alert(Alert.AlertType.INFORMATION);
-                downloading.setTitle("Creation");
-                downloading.setHeaderText("Creating... Please Wait...");
-                downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
-                downloading.setGraphic(progressIndicator);
+                CreateVideoTask createTask;
+                if (_musicChoice.getValue().equals("Yes")) {
+                    createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, true);
+                } else {
+                    createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, false);
+                }
+                team2.submit(createTask);
 
-                DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), search, number);
-                team1.submit(downloadTask);
-
-                downloadTask.setOnRunning(event -> downloading.showAndWait());
-
-                int finalNumber = number;
-                downloadTask.setOnSucceeded(workerStateEvent -> {
-                    CreateVideoTask createTask;
-                    if (_musicChoice.getValue().equals("Yes")) {
-                        createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, true);
-                    } else {
-                        createTask = new CreateVideoTask(name, finalNumber, search, _wikisearch, _model, false);
-                    }
-                    team2.submit(createTask);
-
-                    createTask.setOnSucceeded(workerStateEvent12 -> {
-                        downloading.close();
-                        _creationWindow.setScene(_mainScene);
-                    });
+                createTask.setOnSucceeded(workerStateEvent1 -> {
+                    creating.close();
+                    _creationWindow.close();
                 });
             }
-        } catch(NumberFormatException e) {
-            Alert wrongNumber=new Alert(Alert.AlertType.ERROR);
-            wrongNumber.setHeaderText("Incorrect value supplied to number field!");
-            wrongNumber.setContentText("Please provide a number to the number field before clicking create.");
-            wrongNumber.getDialogPane().getStylesheets().add("/resources/alert.css");
-            wrongNumber.show();
+        } else {
+            _window.close();
+
+            Alert creating = new Alert(Alert.AlertType.INFORMATION);
+            creating.setTitle("Creation");
+            creating.setHeaderText("Creating... Please Wait...");
+            creating.getDialogPane().getStylesheets().add("/resources/alert.css");
+            creating.setGraphic(progressIndicator);
+            creating.show();
+
+            CreateVideoTask createTask;
+            if (_musicChoice.getValue().equals("Yes")) {
+                createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, true);
+            } else {
+                createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, false);
+            }
+            team2.submit(createTask);
+
+            createTask.setOnSucceeded(workerStateEvent12 -> {
+                creating.close();
+                _creationWindow.setScene(_mainScene);
+            });
+
         }
+    }
+
+    private boolean atLeastOneChecked(ArrayList<CheckBox> checkBoxes) {
+        for (CheckBox c: checkBoxes) {
+            if (c.isSelected()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @FXML
     private void checkFields() {
-        if (_nameField.getText().equals("") || _numField.getText().equals("") || _nameField.getText().equals("")) {
+        if (_nameField.getText().equals("")) {
             _createButton.setDisable(true);
-        } else {
-            if (_numField.getText().matches("[0-9]")) {
-                _createButton.setDisable(false);
-                _errorNum.setVisible(false);
-            } else {
-                _createButton.setDisable(true);
-                _errorNum.setVisible(true);
-            }
         }
-
-
     }
 
     public void setScene(Scene scene, String wikisearch, Button combineButton) {
@@ -225,14 +191,9 @@ public class VideoCreationController {
         }
         _nameField.setText(suggestedName);
 
-        // set up flickr search term suggestion
-        _searchField.setText(_wikisearch);
-
         // set upp tool tips for button
         _cancelButton.setTooltip(new Tooltip("Cancel the video creation, go back to the previous and clear all audios"));
         _createButton.setTooltip(new Tooltip("Create the whole creation based on the inputs"));
-
-        _createButton.setDisable(true);
 
         _window.setOnCloseRequest(windowEvent -> {
             _combineButton.setDisable(true);
@@ -244,5 +205,21 @@ public class VideoCreationController {
             }
         });
 
+        populateImages();
+    }
+
+    private void populateImages() {
+        for (int i = 1; i < 11; i++) {
+            File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "image" + i + ".jpg");
+            Image image = new Image(file.toURI().toString(), 100, 80, false, false);
+            _images.add(image);
+        }
+        _imageViews = new ArrayList<>(Arrays.asList(_img1, _img2, _img3, _img4, _img5, _img6, _img7, _img8, _img9, _img10));
+
+        int count = 0;
+        for (ImageView i: _imageViews) {
+            i.setImage(_images.get(count));
+            count++;
+        }
     }
 }

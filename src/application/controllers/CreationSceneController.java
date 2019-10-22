@@ -2,6 +2,7 @@ package application.controllers;
 
 import application.models.BashCommands;
 import application.models.CreationListModel;
+import application.models.DownloadImagesTask;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,8 @@ public class CreationSceneController {
     private List<Integer> _audioCount; // wrapper for count
     private Scene _scene;
     private Scene _prevScene;
+    private ProgressIndicator progressIndicator = new ProgressIndicator();
+    private ExecutorService team1 = Executors.newSingleThreadExecutor();
 
     @FXML
     private void onFavouriteChecked() {
@@ -139,9 +142,9 @@ public class CreationSceneController {
 
                 if (subtitleSection == 1) {
                     if (formattedDur.length() == 4) {
-                        writer.println("00:00:00,50 --> " + "00:00:0" + formattedDur);
+                        writer.println("00:00:00,00 --> " + "00:00:0" + formattedDur);
                     } else {
-                        writer.println("00:00:00,50 --> " + "00:00:" + formattedDur);
+                        writer.println("00:00:00,00 --> " + "00:00:" + formattedDur);
                     }
                 } else {
                     old = old.replaceFirst("[,]", ".");
@@ -191,19 +194,36 @@ public class CreationSceneController {
             delete.getProcess().waitFor();
             _audiosList.getItems().clear();
 
-            try {
-                FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
-                Parent videoRoot = videoCreationLoader.load();
-                VideoCreationController controller = videoCreationLoader.getController();
-                Scene scene = new Scene(videoRoot);
-                scene.getStylesheets().add("/resources/style.css");
-                controller.setScene(scene, _wikisearch, _combineAudio);
-                Stage stage = (Stage) _combineAudio.getScene().getWindow();
-                controller.setup(scene, _model, stage, _prevScene);
+            Alert downloading = new Alert(Alert.AlertType.INFORMATION);
+            downloading.setTitle("Downloading");
+            downloading.setHeaderText("Downloading images... Please Wait...");
+            downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
+            downloading.setGraphic(progressIndicator);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), _wikisearch, 10);
+            team1.submit(downloadTask);
+
+            downloadTask.setOnRunning(event -> downloading.showAndWait());
+
+            downloadTask.setOnSucceeded(event -> {
+
+                downloading.close();
+
+                try {
+                    FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
+                    Parent videoRoot = videoCreationLoader.load();
+                    VideoCreationController controller = videoCreationLoader.getController();
+                    Scene scene = new Scene(videoRoot);
+                    scene.getStylesheets().add("/resources/style.css");
+                    controller.setScene(scene, _wikisearch, _combineAudio);
+                    Stage stage = (Stage) _combineAudio.getScene().getWindow();
+                    controller.setup(scene, _model, stage, _prevScene);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
         }
     }
 

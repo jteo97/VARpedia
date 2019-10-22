@@ -3,49 +3,23 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane onKeyReleased="#checkFields" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoCreationController">
+<AnchorPane onKeyReleased="#checkFields" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.VideoCreationController">
    <children>
-      <VBox spacing="30.0">
+      <VBox prefHeight="400.0" prefWidth="600.0" spacing="15.0">
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-               <children>
-                  <Label text="Enter term to search flickr:">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Label>
-                  <TextField fx:id="_searchField" promptText="Type here">
-                     <font>
-                        <Font size="15.0" />
-                     </font></TextField>
-               </children>
-               <padding>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="8.0">
-               <children>
-                  <Label text="Enter number of images to download:">
-                     <font>
-                        <Font size="18.0" />
-                     </font></Label>
-                  <TextField fx:id="_numField" promptText="Type here">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </TextField>
-               </children>
-               <padding>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </padding>
-            </HBox>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                <children>
                   <Label text="Enter name to call creation:">
@@ -74,6 +48,80 @@
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </padding>
             </HBox>
+            <VBox prefHeight="220.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <Label text="Pick the images you want:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <GridPane alignment="CENTER" hgap="5.0" prefHeight="190.0" prefWidth="600.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="97.0" minHeight="9.0" prefHeight="78.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="134.0" minHeight="0.0" prefHeight="79.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <CheckBox fx:id="_checkBox1" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0">
+                           <graphic>
+                              <ImageView fx:id="_img1" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox2" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img2" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox6" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.rowIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img6" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox7" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img7" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox3" layoutX="130.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="2">
+                           <graphic>
+                              <ImageView fx:id="_img3" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox8" layoutX="10.0" layoutY="93.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img8" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox4" layoutX="10.0" layoutY="93.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="3">
+                           <graphic>
+                              <ImageView fx:id="_img4" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox5" layoutX="130.0" layoutY="93.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="4">
+                           <graphic>
+                              <ImageView fx:id="_img5" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox9" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img9" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                        <CheckBox fx:id="_checkBox10" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="117.0" prefWidth="116.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <graphic>
+                              <ImageView fx:id="_img10" fitHeight="80.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </CheckBox>
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
             <ButtonBar>
               <buttons>
                   <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel">
