@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.MainMenuController">
    <bottom>
       <Button fx:id="_launchButton" mnemonicParsing="false" onAction="#onLaunchButtonPressed" prefHeight="75.0" text="Launch the Tool" BorderPane.alignment="CENTER">
          <font>
@@ -15,9 +15,9 @@
          </font></Button>
    </bottom>
    <center>
-      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Welcome to VARpedia, a Visual, Aural, Read Encyclopedia!">
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="747.0" text="Welcome to VARpedia, a Visual, Aural, Reading Encyclopedia!">
                <font>
                   <Font size="24.0" />
                </font></Label>

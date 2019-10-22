@@ -28,9 +28,9 @@
       <ComboBox fx:id="_choiceOfVoice" layoutX="225.0" layoutY="45.0" onAction="#onVoiceOptionChanged" prefWidth="150.0" promptText="Select a voice" />
       <Label layoutX="14.0" layoutY="14.0" text="Pick a voice and click play to preview ">
          <font>
-            <Font size="15.0" />
+            <Font size="18.0" />
          </font></Label>
-      <Label alignment="CENTER" layoutX="225.0" layoutY="198.0" prefHeight="84.0" prefWidth="150.0" text="Note: To combine multiple audio files you must save each preview individually" wrapText="true" />
-      <ComboBox fx:id="_choiceOfSpeed" layoutX="225.0" layoutY="76.0" onAction="#onSpeedChanged" prefWidth="150.0" promptText="Select Speed" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="208.0" prefHeight="84.0" prefWidth="150.0" text="Note: To combine multiple audio files you must save each preview individually" wrapText="true" />
+      <ComboBox fx:id="_choiceOfSpeed" layoutX="225.0" layoutY="82.0" onAction="#onSpeedChanged" prefWidth="150.0" promptText="Select Speed" />
    </children>
 </AnchorPane>
