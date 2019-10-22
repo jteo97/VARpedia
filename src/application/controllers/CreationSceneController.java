@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -28,7 +30,7 @@ public class CreationSceneController {
     @FXML private TextArea _searchResultArea;
     @FXML private Button _previewSpeech;
     @FXML private Button _combineAudio;
-    @FXML private Button _playAudio;
+    @FXML private Button _playStopAudio;
     @FXML private Button _cancelButton;
     @FXML private ListView<String> _audiosList;
     @FXML private CheckBox _favourite;
@@ -41,6 +43,7 @@ public class CreationSceneController {
     private Scene _prevScene;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
     private ExecutorService team1 = Executors.newSingleThreadExecutor();
+    private MediaPlayer _mediaPlayer;
 
     @FXML
     private void onFavouriteChecked() {
@@ -229,6 +232,11 @@ public class CreationSceneController {
 
     @FXML
     private void onCancelPressed() {
+        // stop audio playing
+        if (_mediaPlayer != null) {
+            _mediaPlayer.stop();
+        }
+
         // delete all the saved audio chunk first
         BashCommands delete = new BashCommands("rm -f *.wav ; rm -f *.scm ; rm -f audio*");
         delete.startBashProcess();
@@ -243,28 +251,24 @@ public class CreationSceneController {
 
 
     @FXML
-    private void onPlayPressed() {
-        String selection = _audiosList.getSelectionModel().getSelectedItem();
-        if (selection != null) {
-            int position = _audiosList.getItems().indexOf(selection);
-            String audioFile = "audio" + position + ".wav";
-            BashCommands play = new BashCommands("ffplay -nodisp -autoexit " + audioFile);
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    play.startBashProcess();
-                    play.getProcess().waitFor();
-                    return null;
-                }
-            };
-            ExecutorService team = Executors.newSingleThreadExecutor();
-            team.submit(task);
-            task.setOnSucceeded(workerStateEvent -> {
-                _combineAudio.setDisable(false);
-                _playAudio.setDisable(false);
-            });
-            _combineAudio.setDisable(true);
-            _playAudio.setDisable(true);
+    private void onPlayStopPressed() {
+        if (_playStopAudio.getText().equals("Play Audio")) {
+            String selection = _audiosList.getSelectionModel().getSelectedItem();
+            if (selection != null) {
+                int position = _audiosList.getItems().indexOf(selection);
+                String audioFile = "audio" + position + ".wav";
+                Media sound = new Media(new File(audioFile).toURI().toString());
+                _mediaPlayer = new MediaPlayer(sound);
+                _mediaPlayer.setOnEndOfMedia(() -> finishPlaying());
+                _mediaPlayer.setOnStopped(() -> finishPlaying());
+                _mediaPlayer.setOnPlaying(() -> {
+                    _playStopAudio.setText("Stop Audio");
+                    _combineAudio.setDisable(true);
+                });
+                _mediaPlayer.play();
+            }
+        } else if (_playStopAudio.getText().equals("Stop Audio")) {
+            _mediaPlayer.stop();
         }
     }
 
@@ -272,7 +276,7 @@ public class CreationSceneController {
     private void onAudioSelected() {
         String selection = _audiosList.getSelectionModel().getSelectedItem();
         if (selection != null && !selection.isEmpty()) {
-            _playAudio.setDisable(false);
+            _playStopAudio.setDisable(false);
         }
     }
 
@@ -284,8 +288,6 @@ public class CreationSceneController {
             _previewSpeech.setDisable(true);
         }
     }
-
-
 
     public void setup(String result, Scene scene, Scene prevScene, String wikisearch, CreationListModel model, boolean fav) {
 
@@ -306,7 +308,7 @@ public class CreationSceneController {
         _previewSpeech.setDisable(true);
 
         // set up tool tips for buttons
-        _playAudio.setTooltip(new Tooltip("Play the selected audio"));
+        _playStopAudio.setTooltip(new Tooltip("Play the selected audio"));
         _cancelButton.setTooltip(new Tooltip("Cancel the current creation process"));
         _combineAudio.setTooltip(new Tooltip("Combine all the existing audios and proceed to video creation"));
         _previewSpeech.setTooltip(new Tooltip("Preview the current selected text"));
@@ -315,5 +317,10 @@ public class CreationSceneController {
 
     public void updateAudio(String audio) {
         _audiosList.getItems().add(audio);
+    }
+
+    private void finishPlaying() {
+        _combineAudio.setDisable(false);
+        _playStopAudio.setText("Play Audio");
     }
 }
