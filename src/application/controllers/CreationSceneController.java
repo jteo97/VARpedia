@@ -2,20 +2,19 @@ package application.controllers;
 
 import application.models.BashCommands;
 import application.models.CreationListModel;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * A controller class for the main creation scene
@@ -38,6 +37,7 @@ public class CreationSceneController {
     private List<Integer> _audioCount; // wrapper for count
     private Scene _scene;
     private Scene _prevScene;
+    private MediaPlayer _mediaPlayer;
 
     @FXML
     private void onFavouriteChecked() {
@@ -209,6 +209,11 @@ public class CreationSceneController {
 
     @FXML
     private void onCancelPressed() {
+        // stop audio playing
+        if (_mediaPlayer != null) {
+            _mediaPlayer.stop();
+        }
+
         // delete all the saved audio chunk first
         BashCommands delete = new BashCommands("rm -f *.wav ; rm -f *.scm ; rm -f audio*");
         delete.startBashProcess();
@@ -229,24 +234,18 @@ public class CreationSceneController {
             if (selection != null) {
                 int position = _audiosList.getItems().indexOf(selection);
                 String audioFile = "audio" + position + ".wav";
-                BashCommands play = new BashCommands("ffplay -nodisp -autoexit " + audioFile);
-                Task<Void> task = new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        play.startBashProcess();
-                        play.getProcess().waitFor();
-                        return null;
-                    }
-                };
-                _playStopAudio.setText("Stop Audio");
-                ExecutorService team = Executors.newSingleThreadExecutor();
-                team.submit(task);
-                task.setOnSucceeded(workerStateEvent -> {
-                    _combineAudio.setDisable(false);
-                    _playStopAudio.setText("Play Audio");
+                Media sound = new Media(new File(audioFile).toURI().toString());
+                _mediaPlayer = new MediaPlayer(sound);
+                _mediaPlayer.setOnEndOfMedia(() -> finishPlaying());
+                _mediaPlayer.setOnStopped(() -> finishPlaying());
+                _mediaPlayer.setOnPlaying(() -> {
+                    _playStopAudio.setText("Stop Audio");
+                    _combineAudio.setDisable(true);
                 });
-                _combineAudio.setDisable(true);
+                _mediaPlayer.play();
             }
+        } else if (_playStopAudio.getText().equals("Stop Audio")) {
+            _mediaPlayer.stop();
         }
     }
 
@@ -266,8 +265,6 @@ public class CreationSceneController {
             _previewSpeech.setDisable(true);
         }
     }
-
-
 
     public void setup(String result, Scene scene, Scene prevScene, String wikisearch, CreationListModel model, boolean fav) {
 
@@ -297,5 +294,10 @@ public class CreationSceneController {
 
     public void updateAudio(String audio) {
         _audiosList.getItems().add(audio);
+    }
+
+    private void finishPlaying() {
+        _combineAudio.setDisable(false);
+        _playStopAudio.setText("Play Audio");
     }
 }
