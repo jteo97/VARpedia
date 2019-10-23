@@ -154,11 +154,6 @@ public class PreviewController extends Controller {
 		// Add all voices
 		setUpVoices();
 
-		// set up tool tips for buttons
-		_playStopButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
-		_cancelButton.setTooltip(new Tooltip("Cancel this preview"));
-		_saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
-
 		// show window
 		_window = new Stage();
 		_window.initModality(Modality.APPLICATION_MODAL);

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -33,7 +34,10 @@
                   </Label>
                </children>
             </VBox>
-            <Button fx:id="_manageButton" mnemonicParsing="false" onAction="#onManageButtonPressed" text="Manage Test Videos" StackPane.alignment="BOTTOM_RIGHT" />
+            <Button fx:id="_manageButton" mnemonicParsing="false" onAction="#onManageButtonPressed" text="Manage Test Videos" StackPane.alignment="BOTTOM_RIGHT">
+               <tooltip>
+                  <Tooltip text="Manage test videos" />
+               </tooltip></Button>
          </children>
       </StackPane>
    </top>
@@ -49,11 +53,17 @@
                      <font>
                         <Font size="24.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Play the selected creation" />
+                     </tooltip>
                   </Button>
                   <Button fx:id="_deleteButton" disable="true" mnemonicParsing="false" onAction="#onDeleteButtonPressed" text="Delete Creation">
                      <font>
                         <Font size="24.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Delete the selected creation" />
+                     </tooltip>
                   </Button>
                </children>
             </HBox>
@@ -63,11 +73,17 @@
                      <font>
                         <Font size="24.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Create a new creation" />
+                     </tooltip>
                   </Button>
                   <Button fx:id="_testButton" mnemonicParsing="false" onAction="#onTestButtonPressed" prefWidth="221.0" text="Take Test">
                      <font>
                         <Font size="24.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Test yourself on a random creation" />
+                     </tooltip>
                   </Button>
                </children>
             </HBox>

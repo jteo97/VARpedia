@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -37,11 +38,17 @@
                      <font>
                         <Font size="17.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Play the selected audio" />
+                     </tooltip>
                   </Button>
                   <Button fx:id="_combineAudio" mnemonicParsing="false" onAction="#onCombineAudioPressed" text="Combine and Continue">
                      <font>
                         <Font size="16.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="Combine all the existing audios and proceed to video creation" />
+                     </tooltip>
                   </Button>
                </children>
             </HBox>
@@ -83,6 +90,9 @@
                <font>
                   <Font size="16.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="Preview the current selected text" />
+               </tooltip>
             </Button>
          </children>
          <padding>
@@ -95,6 +105,9 @@
          <font>
             <Font size="17.0" />
          </font>
+         <tooltip>
+            <Tooltip text="Cancel the current creation process" />
+         </tooltip>
       </Button>
    </bottom>
 </BorderPane>

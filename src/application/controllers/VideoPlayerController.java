@@ -34,14 +34,6 @@ public class VideoPlayerController extends Controller {
     private Stage _window;
 
     @FXML
-    public void initialize() {
-        // set up tool tips for button
-        _fastForward.setTooltip(new Tooltip("Fast forward"));
-        _rewind.setTooltip(new Tooltip("Rewind"));
-        _pausePlay.setTooltip(new Tooltip("Pause the video"));
-    }
-
-    @FXML
     public void makeWindow(Creation creation, Stage stage) {
         String fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
                 + "creations" + System.getProperty("file.separator") + creation.getVideoName() + ".mp4";

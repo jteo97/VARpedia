@@ -216,13 +216,6 @@ public class CreationSceneController extends Controller{
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
         _combineAudio.setDisable(true);
         _previewSpeech.setDisable(true);
-
-        // set up tool tips for buttons
-        _playStopAudio.setTooltip(new Tooltip("Play the selected audio"));
-        _cancelButton.setTooltip(new Tooltip("Cancel the current creation process"));
-        _combineAudio.setTooltip(new Tooltip("Combine all the existing audios and proceed to video creation"));
-        _previewSpeech.setTooltip(new Tooltip("Preview the current selected text"));
-
     }
 
     public void updateAudio(String audio) {

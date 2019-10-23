@@ -77,7 +77,7 @@ public class TestController extends Controller {
 
     public void setScene(Scene scene) {
         _currentScene = scene;
-        _currentScene.getStylesheets().add("resources/style.css");
+        _currentScene.getStylesheets().add("/resources/style.css");
     }
 
     public void makeWindow() {

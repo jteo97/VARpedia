@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -12,15 +13,24 @@
       <Button fx:id="_playStopButton" layoutX="312.0" layoutY="118.0" mnemonicParsing="false" onAction="#onPlayStopButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Play">
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+         <tooltip>
+            <Tooltip text="Play the speech in this voice setting" />
+         </tooltip></Button>
       <Button fx:id="_saveButton" disable="true" layoutX="225.0" layoutY="118.0" mnemonicParsing="false" onAction="#onSaveButtonPressed" prefHeight="26.0" prefWidth="63.0" text="Save">
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+         <tooltip>
+            <Tooltip text="Save this preview to an audio" />
+         </tooltip></Button>
       <Button fx:id="_cancelButton" layoutX="14.0" layoutY="260.0" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel">
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+         <tooltip>
+            <Tooltip text="Cancel this preview" />
+         </tooltip></Button>
       <TextArea fx:id="_previewTextArea" layoutX="14.0" layoutY="45.0" prefHeight="205.0" prefWidth="200.0" wrapText="true">
          <font>
             <Font size="15.0" />

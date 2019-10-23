@@ -105,8 +105,5 @@ public class ManageTestController extends Controller {
         // set up
         _testList.getItems().addAll(outputList);
         _testList.setStyle("-fx-font-size: 1.2em ;");
-
-        _backButton.setTooltip(new Tooltip("go back to creation list"));
-        _deleteButton.setTooltip(new Tooltip("Delete the currently selected test video"));
     }
 }

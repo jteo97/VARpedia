@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -127,11 +128,17 @@
                   <Button fx:id="_cancelButton" mnemonicParsing="false" onAction="#onCancelButtonPressed" text="Cancel">
                      <font>
                         <Font size="16.0" />
-                     </font></Button>
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Cancel the video creation, go back to the previous and clear all audios" />
+                     </tooltip></Button>
                 <Button fx:id="_createButton" mnemonicParsing="false" onAction="#onCreateButtonPressed" text="Create">
                      <font>
                         <Font size="16.0" />
-                     </font></Button>
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Create the whole creation based on the inputs" />
+                     </tooltip></Button>
               </buttons>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

@@ -4,6 +4,7 @@
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.media.MediaView?>
@@ -26,21 +27,33 @@
                <font>
                   <Font size="16.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="Rewind" />
+               </tooltip>
             </Button>
             <Button fx:id="_pausePlay" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPausePlayButtonPressed" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="Pause the video" />
+               </tooltip>
             </Button>
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onStopButtonPressed" prefHeight="50.0" text="Stop" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="Stop the video and return to the main list" />
+               </tooltip>
             </Button>
             <Button fx:id="_fastForward" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onFastForwardButtonPressed" prefHeight="50.0" text="&gt;&gt;" HBox.hgrow="ALWAYS">
                <font>
                   <Font size="16.0" />
                </font>
+               <tooltip>
+                  <Tooltip text="Fast forward" />
+               </tooltip>
             </Button>
          </children>
          <padding>

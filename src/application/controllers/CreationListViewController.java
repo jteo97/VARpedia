@@ -47,15 +47,6 @@ public class CreationListViewController extends Controller{
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
 		_scene = scene;
-
-		// set up tool tips for buttons
-		_createButton.setTooltip(new Tooltip("Create a new creation"));
-		_playButton.setTooltip(new Tooltip("Play the selected creation"));
-		_deleteButton.setTooltip(new Tooltip("Delete the selected creation"));
-
-		_testButton.setTooltip(new Tooltip("Test yourself on a random creation"));
-		_manageButton.setTooltip(new Tooltip("Manage test videos"));
-
 	}
 
 	@FXML

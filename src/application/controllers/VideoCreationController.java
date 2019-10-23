@@ -169,10 +169,6 @@ public class VideoCreationController extends Controller{
         }
         _nameField.setText(suggestedName);
 
-        // set upp tool tips for button
-        _cancelButton.setTooltip(new Tooltip("Cancel the video creation, go back to the previous and clear all audios"));
-        _createButton.setTooltip(new Tooltip("Create the whole creation based on the inputs"));
-
         _window.setOnCloseRequest(windowEvent -> {
             _combineButton.setDisable(true);
             try {
