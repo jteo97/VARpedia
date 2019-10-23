@@ -13,7 +13,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A controller class for the preview audio scene
@@ -28,6 +30,11 @@ public class PreviewController extends Controller {
 	@FXML private Button _cancelButton;
 	@FXML private Button _playStopButton;
 	@FXML private Button _saveButton;
+
+	private static Map<String, String> VOICES_RECORDS = new HashMap<>(Map.of("Male Voice", "akl_nz_jdt_diphone",
+			"Female Voice", "akl_nz_cw_cg_cg",
+			"Default Machine Voice", "kal_diphone"
+	));
 
 	private CreationSceneController _controller;
 	private String _selectedText; // original selected text
@@ -79,13 +86,7 @@ public class PreviewController extends Controller {
 				// set up preview voices and play
 				if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
 					String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-					if (choice.equals("Default Machine Voice")) {
-						setUpPreview("kal_diphone", factor);
-					} else if (choice.equals("Male Voice")) {
-						setUpPreview("akl_nz_jdt_diphone", factor);
-					} else if (choice.equals("Female Voice")) {
-						setUpPreview("akl_nz_cw_cg_cg", factor);
-					}
+					setUpPreview(VOICES_RECORDS.get(choice), factor);
 				}
 			} catch (NullPointerException e) {
 				Alert noVoiceSelectedAlert = createAlert(Alert.AlertType.ERROR, "No Voice Selected", null, "Pick a voice before playing");
@@ -109,13 +110,7 @@ public class PreviewController extends Controller {
 				FileWriter text = new FileWriter("selected.txt");
 				text.write(_audioText);
 				text.close();
-				if (choice.equals("Male Voice")) {
-					saveAudio("akl_nz_jdt_diphone.scm");
-				} else if (choice.equals("Default Machine Voice")) {				
-					saveAudio("kal_diphone.scm");           					
-				} else if (choice.equals("Female Voice")) {
-					saveAudio("akl_nz_cw_cg_cg.scm");
-				}
+				saveAudio(VOICES_RECORDS.get(choice) + ".scm");
 
 				FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
 				subtitle.write(_audioText);
@@ -173,15 +168,11 @@ public class PreviewController extends Controller {
 
 	private void setUpVoices() throws IOException {
 		// create scm files for all voices setup
-		FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm");
-		fileWriter1.write("(voice_akl_nz_jdt_diphone)");
-		FileWriter fileWriter2 = new FileWriter("kal_diphone.scm");
-		fileWriter2.write("(voice_kal_diphone)");
-		FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm");
-		fileWriter3.write("(voice_akl_nz_cw_cg_cg)");
-		fileWriter1.close();
-		fileWriter2.close();
-		fileWriter3.close();
+		for (String synthesizer : VOICES_RECORDS.values()) {
+			FileWriter fileWriter = new FileWriter(synthesizer + ".scm");
+			fileWriter.write("(voice_" + synthesizer + ")");
+			fileWriter.close();
+		}
 
 		// Add all voices
 		ObservableList<String> choices = FXCollections.observableArrayList();
@@ -261,15 +252,7 @@ public class PreviewController extends Controller {
 
 	private void setSpeed(double speed) throws IOException {
 		if (speed != 1.0) {
-			FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm", true);
-			fileWriter1.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-			FileWriter fileWriter2 = new FileWriter("kal_diphone.scm", true);
-			fileWriter2.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-			FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm", true);
-			fileWriter3.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-			fileWriter1.close();
-			fileWriter2.close();
-			fileWriter3.close();
+			writeToAllSCMFiles("(Parameter.set 'Duration_Stretch " + speed + ")", true);
 		}
 	}
 
@@ -293,5 +276,13 @@ public class PreviewController extends Controller {
 		File tempText = new File("selected.txt");
 		tempAudio.delete();
 		tempText.delete();
+	}
+
+	private void writeToAllSCMFiles(String statement, boolean append) throws IOException {
+		for (String synthesizer : VOICES_RECORDS.values()) {
+			FileWriter fileWriter = new FileWriter(synthesizer + ".scm", append);
+			fileWriter.write(statement);
+			fileWriter.close();
+		}
 	}
 }
