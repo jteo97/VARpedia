@@ -18,7 +18,7 @@ import javafx.collections.ObservableList;
  */
 public class CreationListModel {
 
-	private  ObservableList<Creation> _creationList;
+	private ObservableList<Creation> _creationList;
 
 	private CreationListViewController _controller;
 
@@ -26,10 +26,12 @@ public class CreationListModel {
 		_controller = controller;
 	}
 
+	/**
+	 * set up the model
+	 */
 	public void setUp() {
 		try {
 			// check if the creation directory exists
-
 			BashCommands checkDirectory = new BashCommands("test -d creations");
 			checkDirectory.startBashProcess();
 			checkDirectory.getProcess().waitFor();
@@ -62,6 +64,7 @@ public class CreationListModel {
 				_creationList = FXCollections.observableArrayList();
 			}
 
+			// check quiz folder and create
 			BashCommands checkQuizDir = new BashCommands("test -d quiz");
 			checkQuizDir.startBashProcess();
 			checkQuizDir.getProcess().waitFor();
@@ -71,6 +74,7 @@ public class CreationListModel {
 				dir.mkdir();
 			}
 
+			// check favourite folder and create
 			BashCommands checkFavouritesDir = new BashCommands("test -d .favourites");
 			checkFavouritesDir.startBashProcess();
 			checkFavouritesDir.getProcess().waitFor();
@@ -79,13 +83,16 @@ public class CreationListModel {
 				File dir = new File(".favourites");
 				dir.mkdir();
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
+	/**
+	 * Delete a creation
+	 * @param creation creation to be deleted
+	 * @return the list of creation after deletion
+	 */
 	public ObservableList<Creation> delete(Creation creation) {
 		_creationList.remove(creation);
 		String deleteCreation = "rm -f " + System.getProperty("user.dir")+ System.getProperty("file.separator") +
@@ -100,6 +107,10 @@ public class CreationListModel {
 		return _creationList;
 	}
 
+	/**
+	 * Delete all creation based on name
+	 * @param creationName the name of the creation
+	 */
 	public void delete(String creationName) {
 		for (Creation creation : _creationList) {
 			if (creation.toString().equals(creationName)) {
@@ -110,6 +121,10 @@ public class CreationListModel {
 		}
 	}
 
+	/**
+	 * Create a creation
+	 * @param creation creation to be added
+	 */
 	public void create(Creation creation) {
 		_creationList.add(creation);
 		_creationList.sort(null);

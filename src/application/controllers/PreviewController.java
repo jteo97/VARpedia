@@ -44,6 +44,9 @@ public class PreviewController extends Controller {
 	private Button _combineButton;
 	private MediaPlayer _mediaPlayer;
 
+	/**
+	 * Enable play button when voice has been selected
+	 */
 	@FXML
 	private void onVoiceOptionChanged() {
 		String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
@@ -51,8 +54,12 @@ public class PreviewController extends Controller {
 		if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
 			_playStopButton.setDisable(false);
 			_saveButton.setDisable(true);
-		}    }
+		}
+	}
 
+	/**
+	 * Enable play button when speed has changed
+	 */
 	@FXML
 	private void onSpeedChanged() {
 		String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
@@ -62,6 +69,10 @@ public class PreviewController extends Controller {
 		}
 	}
 
+	/**
+	 * Cancel the preview process
+	 * @throws InterruptedException
+	 */
 	@FXML
 	private void onCancelButtonPressed() throws InterruptedException {
 		// stop playing audio if it is playing
@@ -76,9 +87,13 @@ public class PreviewController extends Controller {
 		_window.close();
 	}
 
+	/**
+	 * Play or stop the selected audio or playing audio
+	 * @throws IOException
+	 */
 	@FXML
 	private void onPlayStopButtonPressed() throws IOException {
-		if (_playStopButton.getText().equals("Play")) {
+		if (_playStopButton.getText().equals("Play")) { // set up preview
 			try {
 				// determine the factor to resize the audio
 				double factor = determineFactor();
@@ -92,11 +107,15 @@ public class PreviewController extends Controller {
 				Alert noVoiceSelectedAlert = createAlert(Alert.AlertType.ERROR, "No Voice Selected", null, "Pick a voice before playing");
 				noVoiceSelectedAlert.show();
 			}
-		} else if (_playStopButton.getText().equals("Stop")) {
+		} else if (_playStopButton.getText().equals("Stop")) { // stop the preview
 			_mediaPlayer.stop();
 		}
 	}
 
+	/**
+	 * Save the previewed audio chunk
+	 * @throws Exception
+	 */
 	@FXML
 	private void onSaveButtonPressed() throws Exception {
 		try {
@@ -106,10 +125,12 @@ public class PreviewController extends Controller {
 
 			// Save audio based on user's choice of voice
 			if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
+				// set up subtitles
 				String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
 				FileWriter text = new FileWriter("selected.txt");
 				text.write(_audioText);
 				text.close();
+
 				saveAudio(VOICES_RECORDS.get(choice) + ".scm");
 
 				FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
@@ -131,10 +152,17 @@ public class PreviewController extends Controller {
 		}
 	}
 
-
+	/**
+	 * Set up the controller
+	 * @param selectedtext the selected text
+	 * @param scene the scene to manage
+	 * @param count the count of audio file
+	 * @param controller the controller from previous creation scene
+	 * @param combineButton the combine button from creation scene
+	 * @throws IOException
+	 */
 	public void setup(String selectedtext, Scene scene, List<Integer> count, CreationSceneController controller, Button combineButton) throws IOException {
 		_controller = controller;
-
 		_count = count;
 		_selectedText = selectedtext;
 		_previewTextArea.setText(selectedtext);
@@ -166,6 +194,10 @@ public class PreviewController extends Controller {
 		_window.show();
 	}
 
+	/**
+	 * Set up the scm files for all voices
+	 * @throws IOException
+	 */
 	private void setUpVoices() throws IOException {
 		// create scm files for all voices setup
 		for (String synthesizer : VOICES_RECORDS.values()) {
@@ -187,6 +219,12 @@ public class PreviewController extends Controller {
 		_choiceOfSpeed.setValue("Normal");
 	}
 
+	/**
+	 * Set up and start the preview audio
+	 * @param choice the choice of voice
+	 * @param speed the speed of the audio
+	 * @throws IOException
+	 */
 	private void setUpPreview(String choice, double speed) throws IOException {
 		// Write preview scm file
 		FileWriter writer = new FileWriter(choice + "_preview.scm");
@@ -233,6 +271,11 @@ public class PreviewController extends Controller {
 		_mediaPlayer.play();
 	}
 
+	/**
+	 * Save the audio based on the selected synthesizer
+	 * @param synthesizer the synthesizer for the audio
+	 * @throws InterruptedException
+	 */
 	private void saveAudio(String synthesizer) throws InterruptedException {
 		// convert text to wav file
 		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval " + synthesizer);
@@ -250,12 +293,21 @@ public class PreviewController extends Controller {
 		}
 	}
 
+	/**
+	 * Set the speed of voice in the scm files
+	 * @param speed speed of the audio
+	 * @throws IOException
+	 */
 	private void setSpeed(double speed) throws IOException {
 		if (speed != 1.0) {
 			writeToAllSCMFiles("(Parameter.set 'Duration_Stretch " + speed + ")", true);
 		}
 	}
 
+	/**
+	 * Determine the ratio to scale the audio from the speed
+	 * @return a ratio to scale the audio
+	 */
 	private double determineFactor() {
 		double factor;
 		String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
@@ -278,6 +330,12 @@ public class PreviewController extends Controller {
 		tempText.delete();
 	}
 
+	/**
+	 * Write the statement to all scm files
+	 * @param statement the statement to be written in
+	 * @param append true if statement is appended to the file, false otherwise
+	 * @throws IOException
+	 */
 	private void writeToAllSCMFiles(String statement, boolean append) throws IOException {
 		for (String synthesizer : VOICES_RECORDS.values()) {
 			FileWriter fileWriter = new FileWriter(synthesizer + ".scm", append);

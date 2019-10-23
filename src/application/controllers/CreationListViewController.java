@@ -43,12 +43,19 @@ public class CreationListViewController extends Controller{
 	private ProgressIndicator progressIndicator = new ProgressIndicator();
 	private Scene _scene;
 
+	/**
+	 * Set up the controller
+	 * @param scene the scene the controller manages
+	 */
 	public void setup(Scene scene) {
 		_creationListModel = new CreationListModel(this);
 		_creationListModel.setUp();
 		_scene = scene;
 	}
 
+	/**
+	 * Enable play and delete button when creation is selected
+	 */
 	@FXML
 	private void creationIsSelected() {
 		if (_creationList.getSelectionModel().getSelectedItems() != null && !_creationList.getSelectionModel().getSelectedItems().isEmpty()) {
@@ -57,6 +64,9 @@ public class CreationListViewController extends Controller{
 		}
 	}
 
+	/**
+	 * Go to the manage test video page
+	 */
 	@FXML
 	private void onManageButtonPressed() {
 		try {
@@ -71,21 +81,24 @@ public class CreationListViewController extends Controller{
 		}
 	}
 
+	/**
+	 * Go to the test page
+	 */
 	@FXML
 	private void onTestButtonPressed() {
+		// check if the test video exists
 		File quizDir = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator"));
 		if (quizDir.isDirectory() && quizDir.list().length == 0) {
 			String content = "There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.";
 			Alert noTest = createAlert(AlertType.ERROR, "NO Tests", "No test videos!", content);
 			noTest.showAndWait();
 		} else {
+			// load the page
 			try {
 				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("/application/views/Test.fxml"));
 				Parent testRoot = testLoader.load();
-
 				TestController controller = testLoader.getController();
 				controller.setScene(new Scene(testRoot));
-
 				controller.makeWindow();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -93,6 +106,9 @@ public class CreationListViewController extends Controller{
 		}
 	}
 
+	/**
+	 * Delete the selected creation
+	 */
 	@FXML
 	private void onDeleteButtonPressed() {
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
@@ -116,7 +132,10 @@ public class CreationListViewController extends Controller{
 			error.showAndWait();
 		}
 	}
-	
+
+	/**
+	 * Play the selected creation
+	 */
 	@FXML
 	private void onPlayButtonPressed() {
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
@@ -124,13 +143,10 @@ public class CreationListViewController extends Controller{
 			try {
 				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("/application/views/VideoPlayer.fxml"));
 				Parent videoRoot = videoPlayerLoader.load();
-
 				VideoPlayerController controller = videoPlayerLoader.getController();
 				controller.setScene(new Scene(videoRoot), _scene);
-
                 Stage stage = (Stage) _playButton.getScene().getWindow();
 				controller.makeWindow(creation, stage);
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -139,7 +155,10 @@ public class CreationListViewController extends Controller{
 			error.showAndWait();
 		}
 	}
-	
+
+	/**
+	 * Create a new creation and get search term
+	 */
 	@FXML
 	private void onCreateButtonPressed() {
 		// Get user input for search term
@@ -150,15 +169,18 @@ public class CreationListViewController extends Controller{
 		userInput.getDialogPane().getStylesheets().add("/resources/alert.css");
 		userInput.initStyle(StageStyle.UNDECORATED);
 		Optional<String> result = userInput.showAndWait();
-		
+
+		// start the search
 		if (result.isPresent() && !result.get().equals("")) {
 			try {
+				// check if the search term is the favourite
 				String command = "ls \".favourites/" + result.get() + "\"";
 				BashCommands checkFavourites = new BashCommands(command);
 				checkFavourites.startBashProcess();
 				checkFavourites.getProcess().waitFor();
 				int isFavourite = checkFavourites.getExitStatus();
 				if (isFavourite == 0) {
+					// get search result directly and load next scene
 					File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
 							System.getProperty("file.separator") + result.get());
 					Scanner sc = new Scanner(file);
@@ -198,7 +220,6 @@ public class CreationListViewController extends Controller{
 						}
 					});
 					task.setOnSucceeded(event -> searching.close());
-
 					task.setOnCancelled(event -> searching.close());
 				}
 			} catch (InterruptedException | IOException e) {
@@ -209,14 +230,22 @@ public class CreationListViewController extends Controller{
 			noInput.show();
 		}
 	}
-	
+
+	/**
+	 * Set up the view of the  scene
+	 * @param text the ist of creation
+	 * @param size the number of creation
+	 */
 	public void setView(ObservableList<Creation> text, int size) {
 		_creationList.getItems().setAll(text);
 		_creationCount.setText("Total number of creations: " + size);
 	}
-	
+
+	/**
+	 * Update the creation list
+	 * @param creations the creation list
+	 */
 	public void updateList(ObservableList<Creation> creations) {
-		//Update the _CreationList
 		_creationList.getItems().setAll(creations);
 		_creationCount.setText("Total number of creations: " + creations.size());
 	}

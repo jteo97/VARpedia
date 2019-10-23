@@ -48,6 +48,9 @@ public class VideoCreationController extends Controller{
     private ArrayList<ImageView> _imageViews;
     private ArrayList<CheckBox> _checkBoxes;
 
+    /**
+     * Cancel the video creation and delete all images and audio chunks
+     */
     @FXML
     private void onCancelButtonPressed() {
         _window.close();
@@ -72,6 +75,9 @@ public class VideoCreationController extends Controller{
         _combineButton.setDisable(true);
     }
 
+    /**
+     * Create the creation based on users input
+     */
     @FXML
     private void onCreateButtonPressed() {
         String name = _nameField.getText();
@@ -124,6 +130,11 @@ public class VideoCreationController extends Controller{
         }
     }
 
+    /**
+     * Check if user selected at least one image
+     * @param checkBoxes The check boxes of images to check
+     * @return true if at least one image is selected, false otherwise
+     */
     private boolean atLeastOneChecked(ArrayList<CheckBox> checkBoxes) {
         for (CheckBox c: checkBoxes) {
             if (c.isSelected()) {
@@ -133,6 +144,9 @@ public class VideoCreationController extends Controller{
         return false;
     }
 
+    /**
+     * Disable create button if user has not enter all inputs
+     */
     @FXML
     private void checkFields() {
         if (_nameField.getText().equals("")) {
@@ -140,11 +154,24 @@ public class VideoCreationController extends Controller{
         }
     }
 
+    /**
+     * Set the scene for the controller to manage
+     * @param scene the scene to be managed
+     * @param combineButton combine button from previous creation scene
+     */
     public void setScene(Scene scene, Button combineButton) {
         _nextScene = scene;
         _combineButton = combineButton;
     }
 
+    /**
+     * Set up the controller
+     * @param scene the current scene
+     * @param creation the creation to be created
+     * @param model the creation llist model
+     * @param creationWindow the main window
+     * @param mainScene the main previous creation scene
+     */
     public void setup(Scene scene, Creation creation, CreationListModel model, Stage creationWindow, Scene mainScene) {
         _mainScene = mainScene;
         _creation = creation;
@@ -183,6 +210,9 @@ public class VideoCreationController extends Controller{
         populateImages();
     }
 
+    /**
+     * Populate all the downloaded images
+     */
     private void populateImages() {
         for (int i = 1; i < 11; i++) {
             File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "image" + i + ".jpg");
@@ -197,7 +227,11 @@ public class VideoCreationController extends Controller{
             count++;
         }
     }
-    
+
+    /**
+     * Get the images that are selected
+     * @return the list of images that are selected
+     */
     private List<Integer> getImageSelections() {
     	List<Integer> positions = new ArrayList<>();
     	int count = 1;

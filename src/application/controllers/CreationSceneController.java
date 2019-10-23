@@ -44,9 +44,12 @@ public class CreationSceneController extends Controller{
     private ExecutorService team1 = Executors.newSingleThreadExecutor();
     private MediaPlayer _mediaPlayer;
 
+    /**
+     * Save the result if user check the term as favourite
+     */
     @FXML
     private void onFavouriteChecked() {
-        if (_favourite.isSelected()) {
+        if (_favourite.isSelected()) { // save the search result
             String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
                     System.getProperty("file.separator") + _creation.getSearchTerm();
             FileWriter fileWriter = null;
@@ -59,7 +62,7 @@ public class CreationSceneController extends Controller{
                 e.printStackTrace();
             }
 
-        } else {
+        } else { // when user uncheck, delete the search result from database
             String delete = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
                     System.getProperty("file.separator") + _creation.getSearchTerm();
             File file = new File(delete);
@@ -67,9 +70,13 @@ public class CreationSceneController extends Controller{
         }
     }
 
+    /**
+     * Start the preview process and load the preview window
+     */
     @FXML
     private void onPreviewPressed() {
         if (!_searchResultArea.getSelectedText().equals(null) && !_searchResultArea.getSelectedText().equals("")) {
+            // Check if the amount of selected text is within limit
             String selectedText = _searchResultArea.getSelectedText();
             selectedText = selectedText.trim();
             int numSpaces = selectedText.length() - selectedText.replaceAll(" ", "").length();
@@ -77,7 +84,7 @@ public class CreationSceneController extends Controller{
             if (numSpaces > 39) {
                 Alert tooMuchTextAlert = createAlert(Alert.AlertType.ERROR, "Too Much Text", null, "Too much text to handle. Select Less than 40 words.");
                 tooMuchTextAlert.show();
-            } else {
+            } else { // load the preview window
                 try {
                     FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
                     Parent previewRoot = previewSceneLoader.load();
@@ -95,8 +102,13 @@ public class CreationSceneController extends Controller{
         }
     }
 
+    /**
+     * Combine all the saved audio chunks
+     * @throws Exception
+     */
     @FXML
     private void onCombineAudioPressed() throws Exception {
+        // get the list of auido chunks
         String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
                 " | grep audio | grep .wav";
         BashCommands checkAudioExists = new BashCommands(checkAudio);
@@ -118,16 +130,16 @@ public class CreationSceneController extends Controller{
             delete.getProcess().waitFor();
             _audiosList.getItems().clear();
 
+            // Start the downloading images process
             Alert downloading = createAlert(Alert.AlertType.INFORMATION, "Downloading", "Downloading images... Please Wait...", null);
             downloading.setGraphic(progressIndicator);
-
             DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), _creation.getSearchTerm(), 10);
             team1.submit(downloadTask);
 
             downloadTask.setOnRunning(event -> downloading.showAndWait());
             downloadTask.setOnSucceeded(event -> {
                 downloading.close();
-                try {
+                try { // load video creation window when finishing download
                     FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
                     Parent videoRoot = videoCreationLoader.load();
                     VideoCreationController controller = videoCreationLoader.getController();
@@ -143,6 +155,9 @@ public class CreationSceneController extends Controller{
         }
     }
 
+    /**
+     * Cancel the current creation process
+     */
     @FXML
     private void onCancelPressed() {
         // stop audio playing
@@ -158,13 +173,17 @@ public class CreationSceneController extends Controller{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         Stage stage = (Stage) _cancelButton.getScene().getWindow();
         stage.setScene(_prevScene);
     }
 
+    /**
+     * Play or stop the selected or playing audio
+     */
     @FXML
     private void onPlayStopPressed() {
-        if (_playStopAudio.getText().equals("Play Audio")) {
+        if (_playStopAudio.getText().equals("Play Audio")) { // play the selected audio
             String selection = _audiosList.getSelectionModel().getSelectedItem();
             if (selection != null) {
                 int position = _audiosList.getItems().indexOf(selection);
@@ -179,11 +198,14 @@ public class CreationSceneController extends Controller{
                 });
                 _mediaPlayer.play();
             }
-        } else if (_playStopAudio.getText().equals("Stop Audio")) {
+        } else if (_playStopAudio.getText().equals("Stop Audio")) { // stop the playing audio
             _mediaPlayer.stop();
         }
     }
 
+    /**
+     * Enable play button when audio is selected
+     */
     @FXML
     private void onAudioSelected() {
         String selection = _audiosList.getSelectionModel().getSelectedItem();
@@ -192,6 +214,9 @@ public class CreationSceneController extends Controller{
         }
     }
 
+    /**
+     * Enable preview button when some text has been selected
+     */
     @FXML
     private void onMouseDrag() {
         if (!_searchResultArea.getSelectedText().equals("")) {
@@ -201,6 +226,15 @@ public class CreationSceneController extends Controller{
         }
     }
 
+    /**
+     * Set up the controller
+     * @param result the wiki search result
+     * @param scene the current scene to manage
+     * @param prevScene the previous scene
+     * @param wikisearch the wiki search term
+     * @param model the model associated with creation list
+     * @param fav true if the search term is favourite, false otherwise
+     */
     public void setup(String result, Scene scene, Scene prevScene, String wikisearch, CreationListModel model, boolean fav) {
         if (fav) {
             _favourite.setSelected(true);
@@ -218,10 +252,17 @@ public class CreationSceneController extends Controller{
         _previewSpeech.setDisable(true);
     }
 
+    /**
+     * Update the audio list
+     * @param audio the audio to be updated
+     */
     public void updateAudio(String audio) {
         _audiosList.getItems().add(audio);
     }
 
+    /**
+     * Disable combine button and reset play button when audio finishes playing
+     */
     private void finishPlaying() {
         _combineAudio.setDisable(false);
         _playStopAudio.setText("Play Audio");

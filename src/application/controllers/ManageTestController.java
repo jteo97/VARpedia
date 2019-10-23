@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A controller class for the managing test videos scene
+ * @author Tommy Shi and Justin Teo
+ */
 public class ManageTestController extends Controller {
 
     @FXML private ListView<String> _testList;
@@ -27,11 +31,17 @@ public class ManageTestController extends Controller {
     private Scene _prevScene;
     private Stage _window;
 
+    /**
+     * Go back to the main list scene
+     */
     @FXML
     private void onBackButtonPressed() {
         _window.setScene(_prevScene);
     }
 
+    /**
+     * Delete the selected test video
+     */
     @FXML
     private void onDeleteButtonPressed() {
         String selected = _testList.getSelectionModel().getSelectedItem();
@@ -44,6 +54,8 @@ public class ManageTestController extends Controller {
             if (result.get() == ButtonType.OK) {
                 // change the view after deletion
                 _testList.getItems().remove(selected);
+
+                // start deleting
                 String command = "rm -f " + System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator")
                         + selected + "quiz.mp4";
                 BashCommands delete = new BashCommands(command);
@@ -64,17 +76,26 @@ public class ManageTestController extends Controller {
         }
     }
 
+    /**
+     * Set the scenes for the controller to manage
+     * @param window the main window
+     * @param scene the current scene
+     * @param listScene the previous creation list scene
+     */
     public void setScene(Stage window, Scene scene, Scene listScene) {
         _currentscene = scene;
         _prevScene = listScene;
         _window = window;
 
         _currentscene.getStylesheets().add("resources/style.css");
-
         _window.setScene(scene);
     }
 
+    /**
+     * Set up the controller
+     */
     public void setUp() {
+        // search for the test videos
         BashCommands listAll = new BashCommands("ls quiz");
         listAll.startBashProcess();
         try {

@@ -29,6 +29,12 @@ public class DownloadImagesTask extends Task<Void> {
 
     }
 
+    /**
+     * Get the API keys for flickr
+     * @param key key to get the API key
+     * @return the API key
+     * @throws Exception
+     */
     public static String getAPIKey(String key) throws Exception {
 
         String config = System.getProperty("user.dir")

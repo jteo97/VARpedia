@@ -33,6 +33,11 @@ public class VideoPlayerController extends Controller {
     private MediaPlayer _player;
     private Stage _window;
 
+    /**
+     * Make the video player window
+     * @param creation the creation to be played
+     * @param stage the main window
+     */
     @FXML
     public void makeWindow(Creation creation, Stage stage) {
         String fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
@@ -53,17 +58,26 @@ public class VideoPlayerController extends Controller {
         _media.prefHeight(_window.getMaxHeight());
     }
 
+    /**
+     * Stop the video player and go back to main scene
+     */
     @FXML
     private void onStopButtonPressed() {
         _player.stop();
         _window.setScene(_prevScene);
     }
 
+    /**
+     * Fast forward the video playing
+     */
     @FXML
     private void onFastForwardButtonPressed() {
         _player.seek(_player.getCurrentTime().add( Duration.seconds(3)));
     }
 
+    /**
+     * Play or pause the video
+     */
     @FXML
     private void onPausePlayButtonPressed() {
 
@@ -78,10 +92,19 @@ public class VideoPlayerController extends Controller {
         }
     }
 
+    /**
+     * Rewind the playing video
+     */
     @FXML
     private void onRewindButtonPressed() {
         _player.seek(_player.getCurrentTime().subtract( Duration.seconds(3)));
     }
+
+    /**
+     * Set the scenes managed by the controller
+     * @param scene the current scene
+     * @param prevScene the previous scene
+     */
     public void setScene(Scene scene, Scene prevScene) {
         _nextScene = scene;
         _nextScene.getStylesheets().add("/resources/style.css");

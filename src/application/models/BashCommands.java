@@ -18,6 +18,9 @@ public class BashCommands {
         _command = command;
     }
 
+    /**
+     * Start the bash process
+     */
     public void startBashProcess() {
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", _command);
         try {
@@ -27,6 +30,11 @@ public class BashCommands {
         }
     }
 
+    /**
+     * Get the standard output of the process
+     * @return the standard output of the process
+     * @throws IOException
+     */
     public String getStdout() throws IOException {
         InputStream stdout = _process.getInputStream();
         BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
@@ -38,6 +46,11 @@ public class BashCommands {
         return output;
     }
 
+    /**
+     * Get the standard error of the process
+     * @return the standard error of the process
+     * @throws IOException
+     */
     public String getStderr() throws IOException {
         InputStream stderr = _process.getErrorStream();
         BufferedReader stderrBuffered = new BufferedReader(new InputStreamReader(stderr));

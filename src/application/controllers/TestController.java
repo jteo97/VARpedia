@@ -19,6 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A controller for the test quiz game
+ * @author Tommy Shi and Justin Teo
+ */
 public class TestController extends Controller {
 
 
@@ -35,11 +39,14 @@ public class TestController extends Controller {
     private MediaPlayer _player;
     private String _video;
 
+    /**
+     * Check if the answer is correct
+     */
     @FXML
     private void onCheckButtonPressed() {
         _wrong.setVisible(false);
         String answer = _answer.getText().toLowerCase();
-        if (answer.equals(_video)) {
+        if (answer.equals(_video)) { // shoe message for correctness
             _player.pause();
             Alert correctAnswer = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             correctAnswer.setTitle("Well Done");
@@ -48,16 +55,22 @@ public class TestController extends Controller {
             correctAnswer.showAndWait();
             _window.close();
 
-        } else {
+        } else { // tell user the answer is incorrect
             _wrong.setVisible(true);
         }
     }
 
+    /**
+     * Fast forward the video
+     */
     @FXML
     private void onFastForwardButtonPressed() {
         _player.seek(_player.getCurrentTime().add( Duration.seconds(3)));
     }
 
+    /**
+     * Pause or play the video
+     */
     @FXML
     private void onPausePlayButtonPressed() {
 
@@ -70,28 +83,38 @@ public class TestController extends Controller {
         }
     }
 
+    /**
+     * Rewind the playing video
+     */
     @FXML
     private void onRewindButtonPressed() {
         _player.seek(_player.getCurrentTime().subtract( Duration.seconds(3)));
     }
 
+    /**
+     * Set the scene that is managed by the controller
+     * @param scene the scene to be managed
+     */
     public void setScene(Scene scene) {
         _currentScene = scene;
         _currentScene.getStylesheets().add("/resources/style.css");
     }
 
+    /**
+     * Make the quiz window
+     */
     public void makeWindow() {
+        // list the quiz
         String command = "ls quiz";
         BashCommands listQuiz = new BashCommands(command);
         listQuiz.startBashProcess();
         try {
-
             listQuiz.getProcess().waitFor();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-
+        // get the quizs output
         String fileToOpen = null;
         try {
             fileToOpen = listQuiz.getStdout();
@@ -99,37 +122,36 @@ public class TestController extends Controller {
             e.printStackTrace();
         }
 
+        // shuffle the quizs
         String[] array = fileToOpen.split(".mp4");
         List<String> listOfCreations = Arrays.asList(array);
         Collections.shuffle(listOfCreations);
 
+        // randomly select the quiz to play
         fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator")
                 + listOfCreations.get(0) + ".mp4";
         _video = listOfCreations.get(0).substring(0, listOfCreations.get(0).length()-4);
-        
+
+        // set up media player
         fileUrl = new File(fileToOpen);
         Media video = new Media(fileUrl.toURI().toString());
         _player = new MediaPlayer(video);
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
-
         _player.setOnEndOfMedia(() -> {
             _player.seek(Duration.ZERO);
             _player.play();
         });
 
+        // set up window
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
         _window.setScene(_currentScene);
         _window.setTitle("TEST");
-
         _media.prefWidth(_window.getMaxWidth());
         _media.prefHeight(_window.getMaxHeight());
-
         _window.setOnCloseRequest(windowEvent -> _player.stop());
-
         _window.setResizable(false);
-
         _window.show();
     }
 }

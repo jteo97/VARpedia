@@ -18,6 +18,10 @@ public class MainMenuController extends Controller {
 	
 	@FXML private Button _launchButton;
 
+	/**
+	 * Launch the application
+	 * @throws IOException
+	 */
 	@FXML
 	private void onLaunchButtonPressed() throws IOException {
 		Stage stage = (Stage) _launchButton.getScene().getWindow();
