@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class CreationListViewController {
+public class CreationListViewController extends Controller{
 	@FXML private Button _createButton;
 	@FXML private Button _playButton;
 	@FXML private Button _deleteButton;

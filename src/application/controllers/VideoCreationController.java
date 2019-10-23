@@ -1,7 +1,6 @@
 package application.controllers;
 
 import application.models.BashCommands;
-import application.models.DownloadImagesTask;
 
 import application.models.CreateVideoTask;
 import application.models.Creation;
@@ -13,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * A controller class for the video creation scene
@@ -46,8 +42,6 @@ public class VideoCreationController {
     private Stage _window;
     private Stage _creationWindow;
     private Scene _mainScene;
-    private ExecutorService team2 = Executors.newSingleThreadExecutor();
-    private String _wikisearch;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
     private Button _combineButton;
     private List<Image> _images = new ArrayList<>();
@@ -90,26 +84,15 @@ public class VideoCreationController {
         List<Integer> positions = getImageSelections();
 
         if (!atLeastOneChecked(_checkBoxes)) {
-            Alert noneChecked = new Alert(Alert.AlertType.ERROR);
-            noneChecked.setTitle("Invalid image selected");
-            noneChecked.setHeaderText("No images selected");
-            noneChecked.setContentText("Please select at least one image before clicking create.");
-            noneChecked.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert noneChecked = createAlert(Alert.AlertType.ERROR, "Invalid image selected", "No images selected", "Please select at least one image before clicking create.");
             noneChecked.show();
         } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
-            Alert noName = new Alert(Alert.AlertType.ERROR);
-            noName.setTitle("Invalid Name");
-            noName.setHeaderText("invalid name provided!");
-            noName.setContentText("Please provide a suitable name before clicking create. \n We only accept" +
-                    " alphanumeric characters and \"_\" and \"-\".");
-            noName.getDialogPane().getStylesheets().add("/resources/alert.css");
+            String content = "Please provide a suitable name before clicking create. \n We only accept alphanumeric characters and \"_\" and \"-\".";
+            Alert noName = createAlert(Alert.AlertType.ERROR, "Invalid Name", "invalid name provided!", content);
             noName.show();
         } else if (exists) {
             // wait for user confirmation
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("File already exists");
-            confirmation.setHeaderText("Do you want to override " + name + ".mp4?");
-            confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert confirmation = createAlert(Alert.AlertType.CONFIRMATION, "File already exists", "Do you want to override " + name + ".mp4?", null);
             Optional<ButtonType> result = confirmation.showAndWait();
 
             // delete the creation if user confirmed
@@ -117,10 +100,7 @@ public class VideoCreationController {
                 // delete the conflicting creation
                 _model.delete(name);
                 _window.close();
-                Alert creating = new Alert(Alert.AlertType.INFORMATION);
-                creating.setTitle("Creation");
-                creating.setHeaderText("Creating... Please Wait...");
-                creating.getDialogPane().getStylesheets().add("/resources/alert.css");
+                Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating... Please Wait...", null);
                 creating.setGraphic(progressIndicator);
                 creating.show();
 
@@ -132,10 +112,7 @@ public class VideoCreationController {
             }
         } else {
             _window.close();
-            Alert creating = new Alert(Alert.AlertType.INFORMATION);
-            creating.setTitle("Creation");
-            creating.setHeaderText("Creating... Please Wait...");
-            creating.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating... Please Wait...", null);
             creating.setGraphic(progressIndicator);
             creating.show();
 
@@ -163,10 +140,9 @@ public class VideoCreationController {
         }
     }
 
-    public void setScene(Scene scene, String wikisearch, Button combineButton) {
-        this._nextScene = scene;
-        this._wikisearch = wikisearch;
-        this._combineButton = combineButton;
+    public void setScene(Scene scene, Button combineButton) {
+        _nextScene = scene;
+        _combineButton = combineButton;
     }
 
     public void setup(Scene scene, Creation creation, CreationListModel model, Stage creationWindow, Scene mainScene) {
@@ -183,12 +159,12 @@ public class VideoCreationController {
         _musicChoice.setValue("No");
 
         // set up creation name suggestion
-        String suggestedName = _wikisearch;
+        String suggestedName = creation.getSearchTerm();
         int count = 0;
         File suggestion = new File("creations/" + suggestedName + ".mp4");
         while (suggestion.exists()) {
             count++;
-            suggestedName = _wikisearch + "-" + count;
+            suggestedName = creation.getSearchTerm() + "-" + count;
             suggestion = new File("creations/" + suggestedName + ".mp4");
         }
         _nameField.setText(suggestedName);
@@ -232,10 +208,22 @@ public class VideoCreationController {
 		for (CheckBox c: _checkBoxes) {
 			if (c.isSelected()) {
 				positions.add(count);
-
 			}
 			count++;
 		}
 		return positions;
+    }
+
+    private Alert createAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        if (header != null) {
+            alert.setHeaderText(header);
+        }
+        if (content != null) {
+            alert.setContentText(content);
+        }
+        alert.getDialogPane().getStylesheets().add("/resources/alert.css");
+        return alert;
     }
 }

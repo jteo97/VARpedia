@@ -14,7 +14,7 @@ import java.io.IOException;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class MainMenuController {
+public class MainMenuController extends Controller {
 	
 	@FXML private Button _launchButton;
 

@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class CreationSceneController {
+public class CreationSceneController extends Controller{
 
     @FXML private TextArea _searchResultArea;
     @FXML private Button _previewSpeech;
@@ -147,7 +147,7 @@ public class CreationSceneController {
                     VideoCreationController controller = videoCreationLoader.getController();
                     Scene scene = new Scene(videoRoot);
                     scene.getStylesheets().add("/resources/style.css");
-                    controller.setScene(scene, _creation.getSearchTerm(), _combineAudio);
+                    controller.setScene(scene, _combineAudio);
                     Stage stage = (Stage) _combineAudio.getScene().getWindow();
                     controller.setup(scene, _creation, _model, stage, _prevScene);
                 } catch (IOException e) {

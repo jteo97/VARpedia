@@ -20,7 +20,7 @@ import java.util.List;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class PreviewController {
+public class PreviewController extends Controller {
 
 	@FXML private TextArea _previewTextArea;
 	@FXML private ComboBox<String> _choiceOfVoice;
@@ -297,18 +297,5 @@ public class PreviewController {
 		File tempText = new File("selected.txt");
 		tempAudio.delete();
 		tempText.delete();
-	}
-
-	private Alert createAlert(AlertType type, String title, String header, String content) {
-		Alert alert = new Alert(type);
-		alert.setTitle(title);
-		if (header != null) {
-			alert.setHeaderText(header);
-		}
-		if (content != null) {
-			alert.setContentText(content);
-		}
-		alert.getDialogPane().getStylesheets().add("/resources/alert.css");
-		return alert;
 	}
 }

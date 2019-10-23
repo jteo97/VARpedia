@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ManageTestController {
+public class ManageTestController extends Controller {
 
     @FXML private ListView<String> _testList;
     @FXML private Button _deleteButton;

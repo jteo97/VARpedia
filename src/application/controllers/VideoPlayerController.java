@@ -19,7 +19,7 @@ import application.models.Creation;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class VideoPlayerController {
+public class VideoPlayerController extends Controller {
 
     @FXML private MediaView _media;
     @FXML private File fileUrl;

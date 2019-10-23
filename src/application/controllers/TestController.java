@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TestController {
+public class TestController extends Controller {
 
 
     @FXML private MediaView _media;
