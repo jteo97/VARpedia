@@ -37,10 +37,7 @@ public class ManageTestController extends Controller {
         String selected = _testList.getSelectionModel().getSelectedItem();
         if (selected != null) {
             // wait for user confirmation
-            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmation.setTitle("Deletion");
-            confirmation.setHeaderText("Do you want to delete " + selected + "?");
-            confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert confirmation = createAlert(Alert.AlertType.CONFIRMATION, "Deletion", "Do you want to delete " + selected + "?", null);
             Optional<ButtonType> result = confirmation.showAndWait();
 
             // delete the creation if user confirmed
@@ -57,18 +54,12 @@ public class ManageTestController extends Controller {
                     e.printStackTrace();
                 }
 
-                Alert info = new Alert(Alert.AlertType.INFORMATION);
-                info.setTitle("Deletion successful");
-                info.setHeaderText(selected + " has been deleted successfully");
-                info.getDialogPane().getStylesheets().add("/resources/alert.css");
+                Alert info = createAlert(Alert.AlertType.INFORMATION, "Deletion successful", selected + " has been deleted successfully", null);
                 info.showAndWait();
 
             }
         } else {
-            Alert error = new Alert(Alert.AlertType.ERROR);
-            error.setTitle("No creation selected");
-            error.setHeaderText("You have not selected a creation, please select a creation to delete");
-            error.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert error = createAlert(Alert.AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to delete", null);
             error.showAndWait();
         }
     }

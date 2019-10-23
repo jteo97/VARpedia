@@ -68,7 +68,6 @@ public class CreationListViewController extends Controller{
 
 	@FXML
 	private void onManageButtonPressed() {
-
 		try {
 			FXMLLoader manageLoader = new FXMLLoader(getClass().getResource("/application/views/ManageTest.fxml"));
 			Parent manageRoot = manageLoader.load();
@@ -76,7 +75,6 @@ public class CreationListViewController extends Controller{
 			ManageTestController controller = manageLoader.getController();
 			controller.setScene((Stage) _manageButton.getScene().getWindow(), new Scene(manageRoot), _manageButton.getScene());
 			controller.setUp();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -86,14 +84,10 @@ public class CreationListViewController extends Controller{
 	private void onTestButtonPressed() {
 		File quizDir = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator"));
 		if (quizDir.isDirectory() && quizDir.list().length == 0) {
-			Alert noTest = new Alert(AlertType.ERROR);
-			noTest.setTitle("NO Tests");
-			noTest.setHeaderText("No test videos!");
-			noTest.setContentText("There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.");
-			noTest.getDialogPane().getStylesheets().add("/resources/alert.css");
+			String content = "There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.";
+			Alert noTest = createAlert(AlertType.ERROR, "NO Tests", "No test videos!", content);
 			noTest.showAndWait();
 		} else {
-
 			try {
 				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("/application/views/Test.fxml"));
 				Parent testRoot = testLoader.load();
@@ -102,25 +96,18 @@ public class CreationListViewController extends Controller{
 				controller.setScene(new Scene(testRoot));
 
 				controller.makeWindow();
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
-
 
 	@FXML
 	private void onDeleteButtonPressed() {
-
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
 		if (creation != null) {
 			// wait for user confirmation
-			Alert confirmation = new Alert(AlertType.CONFIRMATION);
-			confirmation.setTitle("Deletion");
-			confirmation.setHeaderText("Do you want to delete " + creation + "?");
-			confirmation.getDialogPane().getStylesheets().add("/resources/alert.css");
+			Alert confirmation = createAlert(AlertType.CONFIRMATION, "Deletion", "Do you want to delete " + creation + "?", null);
 			Optional<ButtonType> result = confirmation.showAndWait();
 			
 			// delete the creation if user confirmed
@@ -130,29 +117,19 @@ public class CreationListViewController extends Controller{
 				_creationList.getItems().setAll(listAfterDeletion);
 				_creationCount.setText("Total number of creations: " + listAfterDeletion.size());
 
-				Alert info = new Alert(AlertType.INFORMATION);
-				info.setTitle("Deletion successful");
-				info.setHeaderText(creation + " has been deleted successfully");
-				info.getDialogPane().getStylesheets().add("/resources/alert.css");
+				Alert info = createAlert(AlertType.INFORMATION, "Deletion successful", creation + " has been deleted successfully", null);
 				info.showAndWait();
-
 			}
 		} else {
-			Alert error = new Alert(AlertType.ERROR);
-			error.setTitle("No creation selected");
-			error.setHeaderText("You have not selected a creation, please select a creation to delete");
-			error.getDialogPane().getStylesheets().add("/resources/alert.css");
+			Alert error = createAlert(AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to delete", null);
 			error.showAndWait();
 		}
 	}
 	
 	@FXML
 	private void onPlayButtonPressed() {
-
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
-
 		if (creation != null) {
-
 			try {
 				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("/application/views/VideoPlayer.fxml"));
 				Parent videoRoot = videoPlayerLoader.load();
@@ -167,13 +144,9 @@ public class CreationListViewController extends Controller{
 				e.printStackTrace();
 			}
 		} else {
-			Alert error = new Alert(AlertType.ERROR);
-			error.setTitle("No creation selected");
-			error.setHeaderText("You have not selected a creation, please select a creation to play");
-			error.getDialogPane().getStylesheets().add("/resources/alert.css");
+			Alert error = createAlert(AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to play", null);
 			error.showAndWait();
 		}
-
 	}
 	
 	@FXML
@@ -216,11 +189,8 @@ public class CreationListViewController extends Controller{
 					}
 				} else {
 					// set up information box for searching term
-					Alert searching = new Alert(AlertType.INFORMATION);
-					searching.setTitle("Creation");
-					searching.setHeaderText("Searching...Press cancel to stop the search and return to the menu list.");
+					Alert searching = createAlert(AlertType.INFORMATION, "Creation", "Searching...Press cancel to stop the search and return to the menu list.", null);
 					searching.setGraphic(progressIndicator);
-					searching.getDialogPane().getStylesheets().add("/resources/alert.css");
 					ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 					searching.getButtonTypes().setAll(cancel);
 
@@ -244,15 +214,8 @@ public class CreationListViewController extends Controller{
 				e.printStackTrace();
 			}
 		} else {
-
-			Alert noInput = new Alert(AlertType.INFORMATION);
-			noInput.setTitle("Error!!");
-			noInput.setHeaderText("No input from the user.");
-			noInput.setContentText("Please enter a search term ");
-			noInput.getDialogPane().getStylesheets().add("/resources/alert.css");
+			Alert noInput = createAlert(AlertType.INFORMATION, "Error!!", "No input from the user.", "Please enter a search term ");
 			noInput.show();
-
-
 		}
 	}
 	
@@ -266,5 +229,4 @@ public class CreationListViewController extends Controller{
 		_creationList.getItems().setAll(creations);
 		_creationCount.setText("Total number of creations: " + creations.size());
 	}
-
 }

@@ -292,6 +292,7 @@ public class PreviewController extends Controller {
 	private void tidyUpPreview() {
 		_playStopButton.setText("Play");
 		_saveButton.setDisable(false);
+
 		// Delete temp files
 		File tempAudio = new File("temp.wav");
 		File tempText = new File("selected.txt");

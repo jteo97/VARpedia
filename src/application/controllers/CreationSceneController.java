@@ -75,9 +75,7 @@ public class CreationSceneController extends Controller{
             int numSpaces = selectedText.length() - selectedText.replaceAll(" ", "").length();
             selectedText = selectedText.replaceAll("\n", " "); // replace new line
             if (numSpaces > 39) {
-                Alert tooMuchTextAlert = new Alert(Alert.AlertType.ERROR);
-                tooMuchTextAlert.setContentText("Too much text to handle. Select Less than 40 words.");
-                tooMuchTextAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
+                Alert tooMuchTextAlert = createAlert(Alert.AlertType.ERROR, "Too Much Text", null, "Too much text to handle. Select Less than 40 words.");
                 tooMuchTextAlert.show();
             } else {
                 try {
@@ -86,24 +84,19 @@ public class CreationSceneController extends Controller{
                     PreviewController controller = previewSceneLoader.getController();
                     Scene scene = new Scene(previewRoot, 400, 300);
                     scene.getStylesheets().add("/resources/style.css");
-
                     controller.setup(selectedText, scene, _audioCount, this, _combineAudio);
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            Alert noSelectedTextAlert = new Alert(Alert.AlertType.ERROR);
-            noSelectedTextAlert.setContentText("Select some text before trying to preview");
+            Alert noSelectedTextAlert = createAlert(Alert.AlertType.ERROR, "No Text Selected", null, "Select some text before trying to preview");
             noSelectedTextAlert.show();
         }
-
     }
 
     @FXML
     private void onCombineAudioPressed() throws Exception {
-
         String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
                 " | grep audio | grep .wav";
         BashCommands checkAudioExists = new BashCommands(checkAudio);
@@ -112,11 +105,7 @@ public class CreationSceneController extends Controller{
         String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
 
         if (checkAudioExists.getExitStatus() != 0) {
-            Alert noAudioExists = new Alert(Alert.AlertType.ERROR);
-            noAudioExists.setTitle("No Audio");
-            noAudioExists.setHeaderText("No audio to combine");
-            noAudioExists.setContentText("Use the preview button to create audio");
-            noAudioExists.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert noAudioExists = createAlert(Alert.AlertType.ERROR, "No Audio", "No audio to combine", "Use the preview button to create audio");
             noAudioExists.show();
         } else {
             // do something to combine all generated audio
@@ -129,10 +118,7 @@ public class CreationSceneController extends Controller{
             delete.getProcess().waitFor();
             _audiosList.getItems().clear();
 
-            Alert downloading = new Alert(Alert.AlertType.INFORMATION);
-            downloading.setTitle("Downloading");
-            downloading.setHeaderText("Downloading images... Please Wait...");
-            downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
+            Alert downloading = createAlert(Alert.AlertType.INFORMATION, "Downloading", "Downloading images... Please Wait...", null);
             downloading.setGraphic(progressIndicator);
 
             DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), _creation.getSearchTerm(), 10);
@@ -175,7 +161,6 @@ public class CreationSceneController extends Controller{
         Stage stage = (Stage) _cancelButton.getScene().getWindow();
         stage.setScene(_prevScene);
     }
-
 
     @FXML
     private void onPlayStopPressed() {

@@ -27,7 +27,7 @@ import java.util.Optional;
  * @author Tommy Shi and Justin Teo
  *
  */
-public class VideoCreationController {
+public class VideoCreationController extends Controller{
 
     @FXML private Button _cancelButton;
     @FXML private Button _createButton;
@@ -212,18 +212,5 @@ public class VideoCreationController {
 			count++;
 		}
 		return positions;
-    }
-
-    private Alert createAlert(Alert.AlertType type, String title, String header, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        if (header != null) {
-            alert.setHeaderText(header);
-        }
-        if (content != null) {
-            alert.setContentText(content);
-        }
-        alert.getDialogPane().getStylesheets().add("/resources/alert.css");
-        return alert;
     }
 }
