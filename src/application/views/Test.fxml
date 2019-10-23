@@ -66,7 +66,7 @@
                               <Font size="16.0" />
                            </font>
                         </Button>
-                        <Label fx:id="_wrong" text="WRONG!!" textFill="RED" visible="false">
+                        <Label id="wrong-answer-label" fx:id="_wrong" text="WRONG!!" textFill="RED" visible="false">
                            <font>
                               <Font size="15.0" />
                            </font>
