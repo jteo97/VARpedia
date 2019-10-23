@@ -18,7 +18,7 @@ import javafx.collections.ObservableList;
  */
 public class CreationListModel {
 
-	private  ObservableList<String> _creationList;
+	private  ObservableList<Creation> _creationList;
 
 	private CreationListViewController _controller;
 
@@ -42,10 +42,10 @@ public class CreationListModel {
 				// get search output
 				InputStream stdout = listAll.getProcess().getInputStream();
 				BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-				List<String> outputList = new ArrayList<String>();
+				List<Creation> outputList = new ArrayList<>();
 				String output = stdoutBuffered.readLine();
 				while (output != null) {
-					outputList.add(output.substring(0, output.length() - 4));
+					outputList.add(new Creation(output.substring(0, output.length() - 4)));
 					output = stdoutBuffered.readLine();
 				}
 
@@ -86,7 +86,7 @@ public class CreationListModel {
 
 	}
 
-	public ObservableList<String> delete(String creation) {
+	public ObservableList<Creation> delete(Creation creation) {
 		_creationList.remove(creation);
 		String deleteCreation = "rm -f " + System.getProperty("user.dir")+ System.getProperty("file.separator") +
 				"creations" + System.getProperty("file.separator") + creation + ".mp4";
@@ -100,9 +100,18 @@ public class CreationListModel {
 		return _creationList;
 	}
 
+	public void delete(String creationName) {
+		for (Creation creation : _creationList) {
+			if (creation.toString().equals(creationName)) {
+				_creationList.remove(creation);
+				File file = new File("creations/" + creationName + ".mp4");
+				file.delete();
+			}
+		}
+	}
 
-	public void create(String creation) {
-		_creationList.add(creation.substring(0, creation.length() - 4));
+	public void create(Creation creation) {
+		_creationList.add(creation);
 		_creationList.sort(null);
 		_controller.updateList(_creationList);
 	}

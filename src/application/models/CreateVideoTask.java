@@ -14,29 +14,19 @@ import java.util.List;
 
 public class CreateVideoTask extends Task<Void> {
 
-	private String _nameOfCreation;
+	private Creation _creation;
 	private int _numberOfImages;
-	private String _wikiSearch;
 	private boolean _includeMusic;
 	private CreationListModel _model;
-	private List<Integer> imagePositionToInclude = new ArrayList<>();
+	private List<Integer> imagePositionToInclude;
 
 
-	public CreateVideoTask(String name, ArrayList<CheckBox> checkBoxes, String wikisearch, CreationListModel model, boolean includeMusic) {
-		_nameOfCreation = name;
-		_wikiSearch = wikisearch;
+	public CreateVideoTask(Creation creation, CreationListModel model, List<Integer> positions, boolean includeMusic) {
+		_creation = creation;
 		_model = model;
 		_includeMusic = includeMusic;
-
-		int count = 1;
-		for (CheckBox c: checkBoxes) {
-			if (c.isSelected()) {
-				imagePositionToInclude.add(count);
-
-			}
-			count++;
-		}
-		_numberOfImages = imagePositionToInclude.size();
+		imagePositionToInclude = positions;
+		_numberOfImages = positions.size();
 	}
 
 	@Override
@@ -44,7 +34,7 @@ public class CreateVideoTask extends Task<Void> {
 		String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
 		String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
 		String _pathToQuiz = _path +"quiz" + System.getProperty("file.separator");
-		String _term = _wikiSearch;
+		String _term = _creation.getSearchTerm();
 
 		double duration = findDuration(_path);
 		duration = duration/_numberOfImages;
@@ -61,7 +51,7 @@ public class CreateVideoTask extends Task<Void> {
 		tidyup();
 
 		// update model
-		Platform.runLater(() -> _model.create(_nameOfCreation+ ".mp4"));
+		Platform.runLater(() -> _model.create(_creation));
 
 		return null;
 	}
@@ -130,12 +120,12 @@ public class CreateVideoTask extends Task<Void> {
 	}
 	
 	private void makeCreationVideo(String pathToCreation) throws InterruptedException {
-		String command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _nameOfCreation + ".mp4";
+		String command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _creation.getVideoName() + ".mp4";
 		BashCommands merge = new BashCommands(command);
 		merge.startBashProcess();
 		merge.getProcess().waitFor();
 
-		command = "ffmpeg -i " + _nameOfCreation + ".mp4 -vf subtitles=subtitles.srt " + pathToCreation + _nameOfCreation + ".mp4";
+		command = "ffmpeg -i " + _creation.getVideoName() + ".mp4 -vf subtitles=subtitles.srt " + pathToCreation + _creation.getVideoName() + ".mp4";
 		BashCommands subtitles = new BashCommands(command);
 		subtitles.startBashProcess();
 		subtitles.getProcess().waitFor();

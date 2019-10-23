@@ -1,9 +1,9 @@
 package application.controllers;
 
 import application.models.BashCommands;
+import application.models.Creation;
 import application.models.CreationListModel;
 import application.models.DownloadImagesTask;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -36,8 +36,7 @@ public class CreationSceneController {
     @FXML private CheckBox _favourite;
 
     private CreationListModel _model;
-    private String _wikisearch;
-    private String _searchResult;
+    private Creation _creation;
     private List<Integer> _audioCount; // wrapper for count
     private Scene _scene;
     private Scene _prevScene;
@@ -49,12 +48,12 @@ public class CreationSceneController {
     private void onFavouriteChecked() {
         if (_favourite.isSelected()) {
             String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
-                    System.getProperty("file.separator") + _wikisearch;
+                    System.getProperty("file.separator") + _creation.getSearchTerm();
             FileWriter fileWriter = null;
             try {
                 fileWriter = new FileWriter(filename);
                 PrintWriter printWriter = new PrintWriter(fileWriter);
-                printWriter.print(_searchResult);
+                printWriter.print(_creation.getSearchResult());
                 printWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,7 +61,7 @@ public class CreationSceneController {
 
         } else {
             String delete = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
-                    System.getProperty("file.separator") + _wikisearch;
+                    System.getProperty("file.separator") + _creation.getSearchTerm();
             File file = new File(delete);
             file.delete();
         }
@@ -103,7 +102,7 @@ public class CreationSceneController {
     }
 
     @FXML
-    private void onCombineAudioPressed() throws InterruptedException, IOException {
+    private void onCombineAudioPressed() throws Exception {
 
         String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
                 " | grep audio | grep .wav";
@@ -111,8 +110,6 @@ public class CreationSceneController {
         checkAudioExists.startBashProcess();
         checkAudioExists.getProcess().waitFor();
         String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
-
-        PrintWriter writer = new PrintWriter("subtitles.srt", "UTF-8");
 
         if (checkAudioExists.getExitStatus() != 0) {
             Alert noAudioExists = new Alert(Alert.AlertType.ERROR);
@@ -124,72 +121,7 @@ public class CreationSceneController {
         } else {
             // do something to combine all generated audio
             InputStream stdout = checkAudioExists.getProcess().getInputStream();
-            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-            String cmd = "sox ";
-            String line;
-            int subtitleSection = 1;
-            String old = null;
-            while ((line = stdoutBuffered.readLine()) != null) {
-                cmd += line + " ";
-
-                writer.println(subtitleSection);
-                String command = "soxi -D \"" + _path + line + "\"";
-                BashCommands findDuration = new BashCommands(command);
-                findDuration.startBashProcess();
-                findDuration.getProcess().waitFor();
-                double duration = Double.parseDouble(findDuration.getStdout());
-                duration += 0.1;
-                DecimalFormat df = new DecimalFormat("##.##");
-                String formattedDur = df.format(duration);
-                formattedDur = formattedDur.replaceFirst("[.]", ",");
-
-                if (subtitleSection == 1) {
-                    if (formattedDur.length() == 4) {
-                        writer.println("00:00:00,00 --> " + "00:00:0" + formattedDur);
-                    } else {
-                        writer.println("00:00:00,00 --> " + "00:00:" + formattedDur);
-                    }
-                } else {
-                    old = old.replaceFirst("[,]", ".");
-                    double temp = Double.parseDouble(old);
-                    formattedDur = formattedDur.replaceFirst("[,]", ".");
-                    double temp2 = Double.parseDouble(formattedDur);
-                    temp2 = temp2 + temp;
-                    old = old.replaceFirst("[.]", ",");
-                    df = new DecimalFormat("##.##");
-                    formattedDur = df.format(temp2);
-                    formattedDur = formattedDur.replaceFirst("[.]", ",");
-                    if (old.length() == 4) {
-                        if (formattedDur.length() == 4) {
-                            writer.println("00:00:0" + old + " --> " + "00:00:0" + formattedDur);
-                        } else {
-                            writer.println("00:00:0" + old + " --> " + "00:00:" + formattedDur);
-                        }
-
-                    } else {
-                        if (formattedDur.length() == 4) {
-                            writer.println("00:00:" + old + " --> " + "00:00:0" + formattedDur);
-                        } else {
-                            writer.println("00:00:" + old + " --> " + "00:00:" + formattedDur);
-                        }
-                    }
-                }
-                line = line.substring(0, line.length() - 4);
-                BufferedReader br = new BufferedReader(new FileReader(line + ".txt"));
-                String subtitle = br.readLine();
-                br.close();
-                writer.println(subtitle);
-                writer.println();
-
-                old = formattedDur;
-                subtitleSection++;
-            }
-
-            writer.close();
-            cmd += "combine.wav";
-            BashCommands combine = new BashCommands(cmd);
-            combine.startBashProcess();
-            combine.getProcess().waitFor();
+            _creation.combineAudios(stdout, _path);
 
             // delete all other audio chunk
             BashCommands delete = new BashCommands("rm -f audio* ; rm -f *.scm");
@@ -203,30 +135,25 @@ public class CreationSceneController {
             downloading.getDialogPane().getStylesheets().add("/resources/alert.css");
             downloading.setGraphic(progressIndicator);
 
-            DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), _wikisearch, 10);
+            DownloadImagesTask downloadTask = new DownloadImagesTask(System.getProperty("user.dir"), _creation.getSearchTerm(), 10);
             team1.submit(downloadTask);
 
             downloadTask.setOnRunning(event -> downloading.showAndWait());
-
             downloadTask.setOnSucceeded(event -> {
-
                 downloading.close();
-
                 try {
                     FXMLLoader videoCreationLoader = new FXMLLoader(getClass().getResource("/application/views/VideoCreation.fxml"));
                     Parent videoRoot = videoCreationLoader.load();
                     VideoCreationController controller = videoCreationLoader.getController();
                     Scene scene = new Scene(videoRoot);
                     scene.getStylesheets().add("/resources/style.css");
-                    controller.setScene(scene, _wikisearch, _combineAudio);
+                    controller.setScene(scene, _creation.getSearchTerm(), _combineAudio);
                     Stage stage = (Stage) _combineAudio.getScene().getWindow();
-                    controller.setup(scene, _model, stage, _prevScene);
-
+                    controller.setup(scene, _creation, _model, stage, _prevScene);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
-
         }
     }
 
@@ -290,18 +217,16 @@ public class CreationSceneController {
     }
 
     public void setup(String result, Scene scene, Scene prevScene, String wikisearch, CreationListModel model, boolean fav) {
-
         if (fav) {
             _favourite.setSelected(true);
         }
 
+        _creation = new Creation(wikisearch, result);
         _scene = scene;
         _prevScene = prevScene;
-        _searchResult = result;
-        _searchResultArea.setText(_searchResult);
+        _searchResultArea.setText(result);
         _audioCount = new ArrayList<>();
         _audioCount.add(0);
-        _wikisearch = wikisearch;
         _model = model;
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
         _combineAudio.setDisable(true);

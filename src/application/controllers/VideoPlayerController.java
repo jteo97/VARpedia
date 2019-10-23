@@ -12,6 +12,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 
+import application.models.Creation;
+
 /**
  * A controller class for the video player scene
  * @author Tommy Shi and Justin Teo
@@ -40,9 +42,9 @@ public class VideoPlayerController {
     }
 
     @FXML
-    public void makeWindow(String fileToOpen, Stage stage) {
-        fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
-                + "creations" + System.getProperty("file.separator") + fileToOpen + ".mp4";
+    public void makeWindow(Creation creation, Stage stage) {
+        String fileToOpen = System.getProperty("user.dir") + System.getProperty("file.separator")
+                + "creations" + System.getProperty("file.separator") + creation.getVideoName() + ".mp4";
         fileUrl = new File(fileToOpen);
 
         Media video = new Media(fileUrl.toURI().toString());

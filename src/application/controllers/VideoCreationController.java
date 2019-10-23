@@ -4,6 +4,7 @@ import application.models.BashCommands;
 import application.models.DownloadImagesTask;
 
 import application.models.CreateVideoTask;
+import application.models.Creation;
 import application.models.CreationListModel;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -40,6 +41,7 @@ public class VideoCreationController {
     @FXML private CheckBox _checkBox1, _checkBox2, _checkBox3, _checkBox4, _checkBox5, _checkBox6, _checkBox7, _checkBox8, _checkBox9, _checkBox10;
 
     private Scene _nextScene;
+    private Creation _creation;
     private CreationListModel _model;
     private Stage _window;
     private Stage _creationWindow;
@@ -84,6 +86,8 @@ public class VideoCreationController {
         boolean exists = new File(pathToCreation).isFile();
         _checkBoxes = new ArrayList<>(Arrays.asList(_checkBox1, _checkBox2, _checkBox3, _checkBox4, _checkBox5,
                 _checkBox6, _checkBox7, _checkBox8, _checkBox9, _checkBox10));
+        boolean includeMusic = _musicChoice.getValue().equals("Yes");
+        List<Integer> positions = getImageSelections();
 
         if (!atLeastOneChecked(_checkBoxes)) {
             Alert noneChecked = new Alert(Alert.AlertType.ERROR);
@@ -120,14 +124,7 @@ public class VideoCreationController {
                 creating.setGraphic(progressIndicator);
                 creating.show();
 
-                CreateVideoTask createTask;
-                if (_musicChoice.getValue().equals("Yes")) {
-                    createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, true);
-                } else {
-                    createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, false);
-                }
-                team2.submit(createTask);
-
+                CreateVideoTask createTask = _creation.createVideo(name, _model, positions, includeMusic);
                 createTask.setOnSucceeded(workerStateEvent1 -> {
                     creating.close();
                     _creationWindow.close();
@@ -135,7 +132,6 @@ public class VideoCreationController {
             }
         } else {
             _window.close();
-
             Alert creating = new Alert(Alert.AlertType.INFORMATION);
             creating.setTitle("Creation");
             creating.setHeaderText("Creating... Please Wait...");
@@ -143,19 +139,11 @@ public class VideoCreationController {
             creating.setGraphic(progressIndicator);
             creating.show();
 
-            CreateVideoTask createTask;
-            if (_musicChoice.getValue().equals("Yes")) {
-                createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, true);
-            } else {
-                createTask = new CreateVideoTask(name, _checkBoxes, _wikisearch, _model, false);
-            }
-            team2.submit(createTask);
-
+            CreateVideoTask createTask = _creation.createVideo(name, _model, positions, includeMusic);
             createTask.setOnSucceeded(workerStateEvent12 -> {
                 creating.close();
                 _creationWindow.setScene(_mainScene);
             });
-
         }
     }
 
@@ -181,8 +169,9 @@ public class VideoCreationController {
         this._combineButton = combineButton;
     }
 
-    public void setup(Scene scene, CreationListModel model, Stage creationWindow, Scene mainScene) {
+    public void setup(Scene scene, Creation creation, CreationListModel model, Stage creationWindow, Scene mainScene) {
         _mainScene = mainScene;
+        _creation = creation;
         _creationWindow = creationWindow;
         _window = new Stage();
         _window.initModality(Modality.APPLICATION_MODAL);
@@ -196,11 +185,11 @@ public class VideoCreationController {
         // set up creation name suggestion
         String suggestedName = _wikisearch;
         int count = 0;
-        File creation = new File("creations/" + suggestedName + ".mp4");
-        while (creation.exists()) {
+        File suggestion = new File("creations/" + suggestedName + ".mp4");
+        while (suggestion.exists()) {
             count++;
             suggestedName = _wikisearch + "-" + count;
-            creation = new File("creations/" + suggestedName + ".mp4");
+            suggestion = new File("creations/" + suggestedName + ".mp4");
         }
         _nameField.setText(suggestedName);
 
@@ -235,5 +224,18 @@ public class VideoCreationController {
             i.setImage(_images.get(count));
             count++;
         }
+    }
+    
+    private List<Integer> getImageSelections() {
+    	List<Integer> positions = new ArrayList<>();
+    	int count = 1;
+		for (CheckBox c: _checkBoxes) {
+			if (c.isSelected()) {
+				positions.add(count);
+
+			}
+			count++;
+		}
+		return positions;
     }
 }

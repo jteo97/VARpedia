@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.models.BashCommands;
+import application.models.Creation;
 import application.models.CreationListModel;
 import application.models.WikiSearchTask;
 import javafx.collections.ObservableList;
@@ -34,7 +35,7 @@ public class CreationListViewController {
 	@FXML private Button _playButton;
 	@FXML private Button _deleteButton;
 	@FXML private Label _creationCount;
-	@FXML private ListView<String> _creationList;
+	@FXML private ListView<Creation> _creationList;
 	@FXML private Button _testButton;
 	@FXML private Button _manageButton;
 
@@ -113,7 +114,7 @@ public class CreationListViewController {
 	@FXML
 	private void onDeleteButtonPressed() {
 
-		String creation = _creationList.getSelectionModel().getSelectedItem();
+		Creation creation = _creationList.getSelectionModel().getSelectedItem();
 		if (creation != null) {
 			// wait for user confirmation
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
@@ -125,7 +126,7 @@ public class CreationListViewController {
 			// delete the creation if user confirmed
 			if (result.get() == ButtonType.OK) {
 				// change the view after deletion
-				ObservableList<String> listAfterDeletion = _creationListModel.delete(creation);
+				ObservableList<Creation> listAfterDeletion = _creationListModel.delete(creation);
 				_creationList.getItems().setAll(listAfterDeletion);
 				_creationCount.setText("Total number of creations: " + listAfterDeletion.size());
 
@@ -148,7 +149,7 @@ public class CreationListViewController {
 	@FXML
 	private void onPlayButtonPressed() {
 
-		String creation = _creationList.getSelectionModel().getSelectedItem();
+		Creation creation = _creationList.getSelectionModel().getSelectedItem();
 
 		if (creation != null) {
 
@@ -255,12 +256,12 @@ public class CreationListViewController {
 		}
 	}
 	
-	public void setView(ObservableList<String> text, int size) {
+	public void setView(ObservableList<Creation> text, int size) {
 		_creationList.getItems().setAll(text);
 		_creationCount.setText("Total number of creations: " + size);
 	}
 	
-	public void updateList(ObservableList<String> creations) {
+	public void updateList(ObservableList<Creation> creations) {
 		//Update the _CreationList
 		_creationList.getItems().setAll(creations);
 		_creationCount.setText("Total number of creations: " + creations.size());
