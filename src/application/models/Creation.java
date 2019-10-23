@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * This class represents a single creation in VARpedia
  * @author Tommy Shi
  *
  */
@@ -29,7 +30,13 @@ public class Creation {
 		_videoName = videoName;
 	}
 	
-	public void combineAudios(InputStream stdout, String path) throws Exception{
+	/**
+	 * Combine the audios for the creation
+	 * @param stdout the standard output from bash process, listing all the audio clips
+	 * @param path the path to the current working directory
+	 * @throws Exception
+	 */
+	public void combineAudios(InputStream stdout, String path) throws Exception {
 		PrintWriter writer = new PrintWriter("subtitles.srt", "UTF-8");
 		BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
         String cmd = "sox ";
@@ -99,6 +106,14 @@ public class Creation {
         combine.getProcess().waitFor();
 	}
 	
+	/**
+	 * Create the video for the creation
+	 * @param name the name of the video
+	 * @param model the creation list model managing the creations
+	 * @param positions the image selections
+	 * @param includeMusic true if user wants to include music, false otherwise
+	 * @return
+	 */
 	public CreateVideoTask createVideo(String name, CreationListModel model, List<Integer> positions, boolean includeMusic) {
 		_videoName = name;
 		ExecutorService team = Executors.newSingleThreadExecutor();
