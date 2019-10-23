@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
  * @author Tommy Shi
  *
  */
-public class Creation {
+public class Creation implements Comparable<Creation> {
 
 	private String _videoName;
 	private String _searchTerm;
@@ -143,4 +143,9 @@ public class Creation {
 	public String toString() {
 		return _videoName;
 	}
+
+    @Override
+    public int compareTo(Creation o) {
+        return _videoName.compareTo(o._videoName);
+    }
 }
