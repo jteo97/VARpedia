@@ -213,7 +213,7 @@ public class PreviewController {
         _previewTextArea.setText(selectedtext);
         _previewTextArea.setEditable(false);
         _previewTextArea.setWrapText(true);
-        _audioText = _selectedText.replaceAll("[^a-zA-Z' ]", "");
+        _audioText = _selectedText.replaceAll("[^a-zA-Z0-9' ]", "");
         _choiceOfVoice.setStyle("-fx-font-size: 1.1em ;");
         _combineButton = combineButton;
         
