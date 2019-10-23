@@ -11,7 +11,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.*;
 import java.util.List;
@@ -23,331 +22,293 @@ import java.util.List;
  */
 public class PreviewController {
 
-    @FXML private TextArea _previewTextArea;
-    @FXML private ComboBox<String> _choiceOfVoice;
-    @FXML private ComboBox<String> _choiceOfSpeed;
-    @FXML private Button _cancelButton;
-    @FXML private Button _playStopButton;
-    @FXML private Button _saveButton;
+	@FXML private TextArea _previewTextArea;
+	@FXML private ComboBox<String> _choiceOfVoice;
+	@FXML private ComboBox<String> _choiceOfSpeed;
+	@FXML private Button _cancelButton;
+	@FXML private Button _playStopButton;
+	@FXML private Button _saveButton;
 
-    private CreationSceneController _controller;
-    private String _selectedText; // original selected text
-    private String _audioText; // selected text which punctuation has been removed
-    private List<Integer> _count;
-    private Stage _window;
-    private Button _combineButton;
-    private MediaPlayer _mediaPlayer;
+	private CreationSceneController _controller;
+	private String _selectedText; // original selected text
+	private String _audioText; // selected text which punctuation has been removed
+	private List<Integer> _count;
+	private Stage _window;
+	private Button _combineButton;
+	private MediaPlayer _mediaPlayer;
 
-    @FXML
-    private void onVoiceOptionChanged() {
-        String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
-        if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
-            _playStopButton.setDisable(false);
-            _saveButton.setDisable(true);
-        }    }
+	@FXML
+	private void onVoiceOptionChanged() {
+		String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+		String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+		if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
+			_playStopButton.setDisable(false);
+			_saveButton.setDisable(true);
+		}    }
 
-    @FXML
-    private void onSpeedChanged() {
-        String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
-        if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
-            _playStopButton.setDisable(false);
-        }
-    }
+	@FXML
+	private void onSpeedChanged() {
+		String voice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+		String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+		if (voice != null && speed != null && !speed.isEmpty() && !voice.isEmpty()) {
+			_playStopButton.setDisable(false);
+		}
+	}
 
-    @FXML
-    private void onCancelButtonPressed() throws InterruptedException {
-    	// stop playing audio if it is playing
-        if (_mediaPlayer != null) {
-            _mediaPlayer.stop();
-        }
+	@FXML
+	private void onCancelButtonPressed() throws InterruptedException {
+		// stop playing audio if it is playing
+		if (_mediaPlayer != null) {
+			_mediaPlayer.stop();
+		}
 
-    	// delete scm file
-    	BashCommands delete = new BashCommands("rm -f *.scm");
-    	delete.startBashProcess();
-    	delete.getProcess().waitFor();
-        _window.close();
-    }
+		// delete scm file
+		BashCommands delete = new BashCommands("rm -f *.scm");
+		delete.startBashProcess();
+		delete.getProcess().waitFor();
+		_window.close();
+	}
 
-    @FXML
-    private void onPlayStopButtonPressed() throws IOException {
-        if (_playStopButton.getText().equals("Play")) {
-            try {
-                // determine the factor to resize the audio
-                double factor = determineFactor();
+	@FXML
+	private void onPlayStopButtonPressed() throws IOException {
+		if (_playStopButton.getText().equals("Play")) {
+			try {
+				// determine the factor to resize the audio
+				double factor = determineFactor();
 
-                // set up preview voices and play
-                if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
-                    String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                    if (choice.equals("Default Machine Voice")) {
-                        setUpPreview("kal_diphone", factor);
-                    } else if (choice.equals("Male Voice")) {
-                        setUpPreview("akl_nz_jdt_diphone", factor);
-                    } else if (choice.equals("Female Voice")) {
-                        setUpPreview("akl_nz_cw_cg_cg", factor);
-                    }
-                }
-            } catch (NullPointerException e) {
-                Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
-                noVoiceSelectedAlert.setContentText("Pick a voice before playing");
-                noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
-                noVoiceSelectedAlert.show();
-            }
-        } else if (_playStopButton.getText().equals("Stop")) {
-            _mediaPlayer.stop();
-        }
-    }
+				// set up preview voices and play
+				if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
+					String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+					if (choice.equals("Default Machine Voice")) {
+						setUpPreview("kal_diphone", factor);
+					} else if (choice.equals("Male Voice")) {
+						setUpPreview("akl_nz_jdt_diphone", factor);
+					} else if (choice.equals("Female Voice")) {
+						setUpPreview("akl_nz_cw_cg_cg", factor);
+					}
+				}
+			} catch (NullPointerException e) {
+				Alert noVoiceSelectedAlert = createAlert(Alert.AlertType.ERROR, "No Voice Selected", null, "Pick a voice before playing");
+				noVoiceSelectedAlert.show();
+			}
+		} else if (_playStopButton.getText().equals("Stop")) {
+			_mediaPlayer.stop();
+		}
+	}
 
-    @FXML
-    private void onSaveButtonPressed() throws IOException {
-        try {
-            // determine the factor to resize the audio
-            double factor = determineFactor();
-            setSpeed(factor);
+	@FXML
+	private void onSaveButtonPressed() throws Exception {
+		try {
+			// determine the factor to resize the audio
+			double factor = determineFactor();
+			setSpeed(factor);
 
-            if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
-                String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
-                FileWriter text = new FileWriter("selected.txt");
-                text.write(_audioText);
-                text.close();
-                if (choice.equals("Male Voice")) {
-                	try {
-                		// convert text to wav file
-                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_jdt_diphone.scm");
-                		tts.startBashProcess();
-                		tts.getProcess().waitFor();            		        
-            		
-                		// update audio count
-                		_count.set(0, _count.get(0) + 1);
-                	
-                		// show confirmation box
-                		Alert confirm = new Alert(AlertType.INFORMATION);
-                		confirm.setTitle("Audio saved");
-                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
-                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
-                		confirm.showAndWait();
-                		if (!confirm.isShowing()) {
-                			_window.close();
-                		}
-                	} catch (InterruptedException e) {
-                		e.printStackTrace();
-                	}
-                } else if (choice.equals("Default Machine Voice")) {
-                	try {
-                		// convert text to wav file
-                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval kal_diphone.scm");
-                		tts.startBashProcess();
-                		tts.getProcess().waitFor();
-                		
-                		// update audio count
-                		_count.set(0, _count.get(0) + 1);
-                	                		
-                		// show confirmation box
-                		Alert confirm = new Alert(AlertType.INFORMATION);
-                		confirm.setTitle("Audio saved");
-                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu");
-                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
-                		confirm.showAndWait();
-                		if (!confirm.isShowing()) {
-                			_window.close();
-                		}
-                	} catch (InterruptedException e) {
-                		e.printStackTrace();
-                	}
-                } else if (choice.equals("Female Voice")) {
-                	try {
-                		// convert text to wav file
-                		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval akl_nz_cw_cg_cg.scm");
-                		tts.startBashProcess();
-                		tts.getProcess().waitFor();
-                		
-                		// update audio count
-                		_count.set(0, _count.get(0) + 1);
-                	                		
-                		// show confirmation box
-                		Alert confirm = new Alert(AlertType.INFORMATION);
-                		confirm.setTitle("Audio saved!");
-                		confirm.setHeaderText("Audio saved successfully, returning to main creation menu.");
-                		confirm.getDialogPane().getStylesheets().add("/resources/alert.css");
-                		confirm.showAndWait();
-                		if (!confirm.isShowing()) {
-                			_window.close();
-                		}
-                	} catch (InterruptedException e) {
-                		e.printStackTrace();
-                	} 
-                } else {
+			// Save audio based on user's choice of voice
+			if (!_choiceOfVoice.getSelectionModel().getSelectedItem().equals(null)) {
+				String choice = _choiceOfVoice.getSelectionModel().getSelectedItem();
+				FileWriter text = new FileWriter("selected.txt");
+				text.write(_audioText);
+				text.close();
+				if (choice.equals("Male Voice")) {
+					saveAudio("akl_nz_jdt_diphone.scm");
+				} else if (choice.equals("Default Machine Voice")) {				
+					saveAudio("kal_diphone.scm");           					
+				} else if (choice.equals("Female Voice")) {
+					saveAudio("akl_nz_cw_cg_cg.scm");
+				}
 
-                }
+				FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
+				subtitle.write(_audioText);
+				subtitle.close();
 
-                FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
-                subtitle.write(_audioText);
-                subtitle.close();
-                
-                // delete the text file
-                File file = new File("selected.txt");
-                file.delete();
+				// delete the text file
+				File file = new File("selected.txt");
+				file.delete();
+
+				// update audio list
+				_controller.updateAudio(_selectedText);
+
+				_combineButton.setDisable(false);
+			}
+		} catch (NullPointerException e) {
+			Alert noVoiceSelectedAlert = createAlert(Alert.AlertType.ERROR, "No Voice Selected", null, "Pick a voice before saving");
+			noVoiceSelectedAlert.show();
+		}
+	}
 
 
-                // update audio list
-                _controller.updateAudio(_selectedText);
+	public void setup(String selectedtext, Scene scene, List<Integer> count, CreationSceneController controller, Button combineButton) throws IOException {
+		_controller = controller;
 
-                _combineButton.setDisable(false);
+		_count = count;
+		_selectedText = selectedtext;
+		_previewTextArea.setText(selectedtext);
+		_previewTextArea.setEditable(false);
+		_previewTextArea.setWrapText(true);
+		_audioText = _selectedText.replaceAll("[^a-zA-Z0-9' ]", "");
+		_choiceOfVoice.setStyle("-fx-font-size: 1.1em ;");
+		_combineButton = combineButton;
 
-            }
-        } catch (NullPointerException e) {
-            Alert noVoiceSelectedAlert = new Alert(Alert.AlertType.ERROR);
-            noVoiceSelectedAlert.setContentText("Pick a voice before saving");
-            noVoiceSelectedAlert.getDialogPane().getStylesheets().add("/resources/alert.css");
-            noVoiceSelectedAlert.show();
-        }
-    }
+		_audioText = _audioText.replaceAll("\"", ""); //remove all instances of " to prevent code breaking
 
+		// Add all voices
+		setUpVoices();
 
-    public void setup(String selectedtext, Scene scene, List<Integer> count, CreationSceneController controller, Button combineButton) throws IOException {
-        _controller = controller;
+		// set up tool tips for buttons
+		_playStopButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
+		_cancelButton.setTooltip(new Tooltip("Cancel this preview"));
+		_saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
 
-    	_count = count;
-        _selectedText = selectedtext;
-        _previewTextArea.setText(selectedtext);
-        _previewTextArea.setEditable(false);
-        _previewTextArea.setWrapText(true);
-        _audioText = _selectedText.replaceAll("[^a-zA-Z0-9' ]", "");
-        _choiceOfVoice.setStyle("-fx-font-size: 1.1em ;");
-        _combineButton = combineButton;
-        
-        _audioText = _audioText.replaceAll("\"", ""); //remove all instances of " to prevent code breaking
-        
-        // Add all voices
-        setUpVoices();
+		// show window
+		_window = new Stage();
+		_window.initModality(Modality.APPLICATION_MODAL);
+		_window.setScene(scene);
+		_window.setResizable(false);
 
-        // set up tool tips for buttons
-        _playStopButton.setTooltip(new Tooltip("Play the speech in this voice setting"));
-        _cancelButton.setTooltip(new Tooltip("Cancel this preview"));
-        _saveButton.setTooltip(new Tooltip("Save this preview to an audio"));
+		_window.setOnCloseRequest(windowEvent -> {
+			try {
+				onCancelButtonPressed();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
 
-        // show window
-        _window = new Stage();
-        _window.initModality(Modality.APPLICATION_MODAL);
-        _window.setScene(scene);
-        _window.setResizable(false);
+		_window.show();
+	}
 
-        _window.setOnCloseRequest(windowEvent -> {
-            try {
-                onCancelButtonPressed();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+	private void setUpVoices() throws IOException {
+		// create scm files for all voices setup
+		FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm");
+		fileWriter1.write("(voice_akl_nz_jdt_diphone)");
+		FileWriter fileWriter2 = new FileWriter("kal_diphone.scm");
+		fileWriter2.write("(voice_kal_diphone)");
+		FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm");
+		fileWriter3.write("(voice_akl_nz_cw_cg_cg)");
+		fileWriter1.close();
+		fileWriter2.close();
+		fileWriter3.close();
 
-        _window.show();
-    }
-    
-    private void setUpVoices() throws IOException {
-    	// create scm files for all voices setup
-    	FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm");
-    	fileWriter1.write("(voice_akl_nz_jdt_diphone)");
-    	FileWriter fileWriter2 = new FileWriter("kal_diphone.scm");
-    	fileWriter2.write("(voice_kal_diphone)");
-    	FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm");
-    	fileWriter3.write("(voice_akl_nz_cw_cg_cg)");
-    	fileWriter1.close();
-    	fileWriter2.close();
-    	fileWriter3.close();
-    	
-    	// Add all voices
-    	ObservableList<String> choices = FXCollections.observableArrayList();
-        choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
-        _choiceOfVoice.setItems(choices);
-        _choiceOfVoice.setValue("Default Machine Voice");
+		// Add all voices
+		ObservableList<String> choices = FXCollections.observableArrayList();
+		choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
+		_choiceOfVoice.setItems(choices);
+		_choiceOfVoice.setValue("Default Machine Voice");
 
-        // Add all common speeds
-        ObservableList<String> speedChoice = FXCollections.observableArrayList();
-        speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
-        _choiceOfSpeed.setItems(speedChoice);
-        _choiceOfSpeed.setValue("Normal");
-    }
+		// Add all common speeds
+		ObservableList<String> speedChoice = FXCollections.observableArrayList();
+		speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
+		_choiceOfSpeed.setItems(speedChoice);
+		_choiceOfSpeed.setValue("Normal");
+	}
 
-    private void setUpPreview(String choice, double speed) throws IOException {
-        // Write preview scm file
-    	FileWriter writer = new FileWriter(choice + "_preview.scm");
-    	writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")");
-    	writer.close();
+	private void setUpPreview(String choice, double speed) throws IOException {
+		// Write preview scm file
+		FileWriter writer = new FileWriter(choice + "_preview.scm");
+		writer.write("(voice_" + choice + ")\n(Parameter.set 'Duration_Stretch " + speed + ")");
+		writer.close();
 
-    	// Write selected text file
-        FileWriter text = new FileWriter("selected.txt");
-        text.write(_audioText);
-        text.close();
+		// Write selected text file
+		FileWriter text = new FileWriter("selected.txt");
+		text.write(_audioText);
+		text.close();
 
-        // Make temp audio to play
-        BashCommands makeAudio = new BashCommands("text2wave -o temp.wav selected.txt -eval " + choice + "_preview.scm");
-        makeAudio.startBashProcess();
-        try {
-            makeAudio.getProcess().waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		// Make temp audio to play
+		BashCommands makeAudio = new BashCommands("text2wave -o temp.wav selected.txt -eval " + choice + "_preview.scm");
+		makeAudio.startBashProcess();
+		try {
+			makeAudio.getProcess().waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
-        // Check if the audio is playable
-        BufferedReader br = new BufferedReader(new FileReader("temp.wav"));
-        if (br.readLine() == null) {
-            tidyUpPreview();
-            _saveButton.setDisable(true);
-            Alert failedVoice = new Alert(Alert.AlertType.ERROR);
-            failedVoice.setTitle("Audio Creation Failed");
-            failedVoice.setHeaderText("Failed to make audio clip!");
-            failedVoice.setContentText("The selected text contains unpronounceable words for the current selected voice.\n" +
-                    "Please select a different voice or preview with whole English words in the text only.");
-            failedVoice.getDialogPane().getStylesheets().add("/resources/alert.css");
-            failedVoice.show();
-            return;
-        }
+		// Check if the audio is playable
+		BufferedReader br = new BufferedReader(new FileReader("temp.wav"));
+		if (br.readLine() == null) {
+			tidyUpPreview();
+			_saveButton.setDisable(true);
+			Alert failedVoice = createAlert(Alert.AlertType.ERROR, "Audio Creation Failed", "Failed to make audio clip!", 
+					"The selected text contains unpronounceable words for the current selected voice.\n" +
+					"Please select a different voice or preview with whole English words in the text only.");
+			failedVoice.show();
+			br.close();
+			return;
+		}
+		br.close();
 
-        // set up media player
-        Media sound = new Media(new File("temp.wav").toURI().toString());
-        _mediaPlayer = new MediaPlayer(sound);
-        _mediaPlayer.setOnEndOfMedia(() -> tidyUpPreview());
-        _mediaPlayer.setOnStopped(() -> tidyUpPreview());
-        _mediaPlayer.setOnPlaying(() -> {
-            _playStopButton.setText("Stop");
-            _saveButton.setDisable(true);
-        });
-        _mediaPlayer.play();
-    }
+		// set up media player
+		Media sound = new Media(new File("temp.wav").toURI().toString());
+		_mediaPlayer = new MediaPlayer(sound);
+		_mediaPlayer.setOnEndOfMedia(() -> tidyUpPreview());
+		_mediaPlayer.setOnStopped(() -> tidyUpPreview());
+		_mediaPlayer.setOnPlaying(() -> {
+			_playStopButton.setText("Stop");
+			_saveButton.setDisable(true);
+		});
+		_mediaPlayer.play();
+	}
 
-    private void setSpeed(double speed) throws IOException {
-        if (speed != 1.0) {
-            FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm", true);
-            fileWriter1.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-            FileWriter fileWriter2 = new FileWriter("kal_diphone.scm", true);
-            fileWriter2.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-            FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm", true);
-            fileWriter3.write("(Parameter.set 'Duration_Stretch " + speed + ")");
-            fileWriter1.close();
-            fileWriter2.close();
-            fileWriter3.close();
-        }
-    }
+	private void saveAudio(String synthesizer) throws InterruptedException {
+		// convert text to wav file
+		BashCommands tts = new BashCommands("text2wave -o audio" + _count.get(0).toString() + ".wav selected.txt -eval " + synthesizer);
+		tts.startBashProcess();
+		tts.getProcess().waitFor();            		        
 
-    private double determineFactor() {
-        double factor;
-        String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
-        if (speed.equals("Normal")) {
-            factor = 1.0;
-        } else {
-            factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
-        }
-        return factor;
-    }
+		// update audio count
+		_count.set(0, _count.get(0) + 1);
 
-    private void tidyUpPreview() {
-        _playStopButton.setText("Play");
-        _saveButton.setDisable(false);
-        // Delete temp files
-        File tempAudio = new File("temp.wav");
-        File tempText = new File("selected.txt");
-        tempAudio.delete();
-        tempText.delete();
-    }
+		// show confirmation box
+		Alert confirm = createAlert(AlertType.INFORMATION, "Audio saved", "Audio saved successfully, returning to main creation menu", null);
+		confirm.showAndWait();
+		if (!confirm.isShowing()) {
+			_window.close();
+		}
+	}
+
+	private void setSpeed(double speed) throws IOException {
+		if (speed != 1.0) {
+			FileWriter fileWriter1 = new FileWriter("akl_nz_jdt_diphone.scm", true);
+			fileWriter1.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+			FileWriter fileWriter2 = new FileWriter("kal_diphone.scm", true);
+			fileWriter2.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+			FileWriter fileWriter3 = new FileWriter("akl_nz_cw_cg_cg.scm", true);
+			fileWriter3.write("(Parameter.set 'Duration_Stretch " + speed + ")");
+			fileWriter1.close();
+			fileWriter2.close();
+			fileWriter3.close();
+		}
+	}
+
+	private double determineFactor() {
+		double factor;
+		String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
+		if (speed.equals("Normal")) {
+			factor = 1.0;
+		} else {
+			factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
+		}
+		return factor;
+	}
+
+	private void tidyUpPreview() {
+		_playStopButton.setText("Play");
+		_saveButton.setDisable(false);
+		// Delete temp files
+		File tempAudio = new File("temp.wav");
+		File tempText = new File("selected.txt");
+		tempAudio.delete();
+		tempText.delete();
+	}
+
+	private Alert createAlert(AlertType type, String title, String header, String content) {
+		Alert alert = new Alert(type);
+		alert.setTitle(title);
+		if (header != null) {
+			alert.setHeaderText(header);
+		}
+		if (content != null) {
+			alert.setContentText(content);
+		}
+		alert.getDialogPane().getStylesheets().add("/resources/alert.css");
+		return alert;
+	}
 }
