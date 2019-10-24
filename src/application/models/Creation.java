@@ -62,9 +62,11 @@ public class Creation implements Comparable<Creation> {
 
             if (subtitleSection == 1) {
                 if (formattedDur.length() == 4) { // if it is the first subtitle start at time zero
-                    writer.println("00:00:00,00 --> " + "00:00:0" + formattedDur);
+                    writer.println("00:00:00,00 --> " + "00:00:0" + formattedDur.substring(0, 1) + ",00");
+                    formattedDur = formattedDur.substring(0, 1) + ",00";
                 } else {
-                    writer.println("00:00:00,00 --> " + "00:00:" + formattedDur);
+                    writer.println("00:00:00,00 --> " + "00:00:" + formattedDur.substring(0, 2) + ",00");
+                    formattedDur = formattedDur.substring(0, 2) + ",00";
                 }
 
             } else { // otherwise start off from the last subtitle
@@ -83,16 +85,20 @@ public class Creation implements Comparable<Creation> {
 
                 if (old.length() == 4) {
                     if (formattedDur.length() == 4) {
-                        writer.println("00:00:0" + old + " --> " + "00:00:0" + formattedDur);
+                        writer.println("00:00:0" + old + " --> " + "00:00:0" + formattedDur.substring(0, 1) + ",00");
+                        formattedDur = formattedDur.substring(0, 1) + ",00";
                     } else {
-                        writer.println("00:00:0" + old + " --> " + "00:00:" + formattedDur);
+                        writer.println("00:00:0" + old + " --> " + "00:00:" + formattedDur.substring(0, 2) + ",00");
+                        formattedDur = formattedDur.substring(0, 2) + ",00";
                     }
 
                 } else {
                     if (formattedDur.length() == 4) {
-                        writer.println("00:00:" + old + " --> " + "00:00:0" + formattedDur);
+                        writer.println("00:00:" + old + " --> " + "00:00:0" + formattedDur.substring(0, 1) + ",00");
+                        formattedDur = formattedDur.substring(0, 1) + ",00";
                     } else {
-                        writer.println("00:00:" + old + " --> " + "00:00:" + formattedDur);
+                        writer.println("00:00:" + old + " --> " + "00:00:" + formattedDur.substring(0, 2) + ",00");
+                        formattedDur = formattedDur.substring(0, 2) + ",00";
                     }
                 }
             }
