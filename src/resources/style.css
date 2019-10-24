@@ -9,7 +9,7 @@
 
 .button {
     -fx-background-color: #EEEEEE;
-    -fx-background-radius: 5;
+    -fx-background-radius: 20;
 }
 
 .button:hover {
@@ -37,4 +37,8 @@
 
 #wrong-answer-label {
     -fx-text-fill: #FF0000;
+}
+
+#launch {
+    -fx-background-radius: 50;
 }

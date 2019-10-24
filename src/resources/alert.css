@@ -16,7 +16,7 @@
 
 .dialog-pane .button {
     -fx-background-color: #EEEEEE;
-    -fx-background-radius: 0;
+    -fx-background-radius: 30;
 }
 
 .dialog-pane .button:hover {
