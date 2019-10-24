@@ -81,11 +81,28 @@
                </children>
             </VBox>
             <TextArea fx:id="_searchResultArea" onMouseClicked="#onMouseDrag" prefHeight="414.0" prefWidth="420.0" wrapText="true" />
-            <Label text="Max 40 Words for each preview">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
+            <HBox>
+               <children>
+                  <VBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label text="Max 40 Words for each preview">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Label fx:id="_wordCount" alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="150.0" text="Word count: 0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <Button fx:id="_previewSpeech" mnemonicParsing="false" onAction="#onPreviewPressed" text="Preview Speech">
                <font>
                   <Font size="16.0" />

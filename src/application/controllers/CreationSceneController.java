@@ -34,6 +34,7 @@ public class CreationSceneController extends Controller{
     @FXML private Button _cancelButton;
     @FXML private ListView<String> _audiosList;
     @FXML private CheckBox _favourite;
+    @FXML private Label _wordCount;
 
     private CreationListModel _model;
     private Creation _creation;
@@ -78,24 +79,19 @@ public class CreationSceneController extends Controller{
         if (!_searchResultArea.getSelectedText().equals(null) && !_searchResultArea.getSelectedText().equals("")) {
             // Check if the amount of selected text is within limit
             String selectedText = _searchResultArea.getSelectedText();
-            selectedText = selectedText.trim();
-            int numSpaces = selectedText.length() - selectedText.replaceAll(" ", "").length();
             selectedText = selectedText.replaceAll("\n", " "); // replace new line
-            if (numSpaces > 39) {
-                Alert tooMuchTextAlert = createAlert(Alert.AlertType.ERROR, "Too Much Text", null, "Too much text to handle. Select Less than 40 words.");
-                tooMuchTextAlert.show();
-            } else { // load the preview window
-                try {
-                    FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
-                    Parent previewRoot = previewSceneLoader.load();
-                    PreviewController controller = previewSceneLoader.getController();
-                    Scene scene = new Scene(previewRoot, 400, 300);
-                    scene.getStylesheets().add("/resources/style.css");
-                    controller.setup(selectedText, scene, _audioCount, this, _combineAudio);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            // load the preview window
+            try {
+                FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
+                Parent previewRoot = previewSceneLoader.load();
+                PreviewController controller = previewSceneLoader.getController();
+                Scene scene = new Scene(previewRoot, 400, 300);
+                scene.getStylesheets().add("/resources/style.css");
+                controller.setup(selectedText, scene, _audioCount, this, _combineAudio);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         } else {
             Alert noSelectedTextAlert = createAlert(Alert.AlertType.ERROR, "No Text Selected", null, "Select some text before trying to preview");
             noSelectedTextAlert.show();
@@ -250,6 +246,38 @@ public class CreationSceneController extends Controller{
         _searchResultArea.setStyle("-fx-font-size: 1.1em ;");
         _combineAudio.setDisable(true);
         _previewSpeech.setDisable(true);
+
+        setUpListener();
+    }
+
+    /**
+     * Setup listener on the selectTextProperty. What the listener does it that whenever the selected text changes it
+     * updates the label to display the word count of the selected text.
+     *
+     */
+    public void setUpListener() {
+
+        _searchResultArea.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
+            int numWords = 0;
+            String selectedText = _searchResultArea.getSelectedText();
+            if (selectedText.equals("")) {
+                _wordCount.setText("Word count: " + 0);
+            } else {
+                selectedText = selectedText.trim();
+                numWords = (selectedText.length() - selectedText.replaceAll("[ ,\n]", "").length() + 1);
+                _wordCount.setText("Word count: " + numWords);
+            }
+
+            if (numWords > 40) {
+                _wordCount.setStyle("-fx-text-fill: red");
+                _previewSpeech.setDisable(true);
+            } else {
+                _wordCount.setStyle("-fx-text-fill: #EEEEEE");
+                _previewSpeech.setDisable(false);
+            }
+        });
+
+
     }
 
     /**

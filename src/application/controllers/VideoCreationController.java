@@ -5,11 +5,14 @@ import application.models.BashCommands;
 import application.models.CreateVideoTask;
 import application.models.Creation;
 import application.models.CreationListModel;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -151,6 +154,8 @@ public class VideoCreationController extends Controller{
     private void checkFields() {
         if (_nameField.getText().equals("")) {
             _createButton.setDisable(true);
+        } else {
+            _createButton.setDisable(false);
         }
     }
 
@@ -208,6 +213,16 @@ public class VideoCreationController extends Controller{
         });
 
         populateImages();
+
+        // add listener to text field so that pressing enter will fire the create button
+        _nameField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if(keyEvent.getCode() == KeyCode.ENTER) {
+                    _createButton.fire();
+                }
+            }
+        });
     }
 
     /**
