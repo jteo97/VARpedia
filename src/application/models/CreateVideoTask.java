@@ -2,13 +2,11 @@ package application.models;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.control.CheckBox;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,27 +30,32 @@ public class CreateVideoTask extends Task<Void> {
 		_numberOfImages = positions.size();
 	}
 
+	/**
+	 * The main method that is done in the background thread
+	 * @return null
+	 * @throws Exception
+	 */
 	@Override
 	protected Void call() throws Exception {
-		// get the paths
-		String _path = System.getProperty("user.dir") + System.getProperty("file.separator");
-		String _pathToCreation = _path + "creations" + System.getProperty("file.separator");
-		String _pathToQuiz = _path +"quiz" + System.getProperty("file.separator");
-		String _term = _creation.getSearchTerm();
+		// set up paths to all necessary directories
+		String path = System.getProperty("user.dir") + System.getProperty("file.separator");
+		String pathToCreation = path + "creations" + System.getProperty("file.separator");
+		String pathToQuiz = path +"quiz" + System.getProperty("file.separator");
+		String termInVideo = _creation.getSearchTerm();
 
-		double duration = findDuration(_path);
-		duration = duration/_numberOfImages;
+		double duration = findDuration(path);
+		duration = duration/_numberOfImages; // split total duration of the video evenly between how many images
 
-		setUpImage(_path, duration);
-		createSlideShow(_path, _term);
+		setUpImage(path, duration); // call helper method which sets up a text file for ffmpeg command
+		createSlideShow(path, termInVideo); // call helper method which creates the slideshow of the images
 
 		if (_includeMusic) {
 			addMusicToSlideShow();
 		}
 
-		makeCreationVideo(_pathToCreation);
-		makeQuizVideo(_path, _pathToQuiz, _term);
-		tidyup();
+		makeCreationVideo(pathToCreation); // merge audio and slideshow to make a video
+		makeQuizVideo(path, pathToQuiz, termInVideo); // make the test video
+		tidyUp();
 
 		// update model
 		Platform.runLater(() -> _model.create(_creation));
@@ -141,7 +144,7 @@ public class CreateVideoTask extends Task<Void> {
 	 * Tidy up and delete temporary files
 	 * @throws InterruptedException
 	 */
-	private void tidyup() throws InterruptedException {
+	private void tidyUp() throws InterruptedException {
 		String command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f *.scm ; rm -f subtitles.srt";
 		BashCommands tidyUp = new BashCommands(command);
 		tidyUp.startBashProcess();
@@ -149,16 +152,17 @@ public class CreateVideoTask extends Task<Void> {
 	}
 
 	/**
-	 * Make the final creation video
+	 * Make the final creation video, merges audio and video
 	 * @param pathToCreation path to the creations folder
 	 * @throws InterruptedException
 	 */
 	private void makeCreationVideo(String pathToCreation) throws InterruptedException {
 		String command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _creation.getVideoName() + ".mp4";
-		BashCommands merge = new BashCommands(command);
+		BashCommands merge = new BashCommands(command); //merge audio and video
 		merge.startBashProcess();
 		merge.getProcess().waitFor();
 
+		// add the subtitles into video
 		command = "ffmpeg -i " + _creation.getVideoName() + ".mp4 -vf subtitles=subtitles.srt " + pathToCreation + _creation.getVideoName() + ".mp4";
 		BashCommands subtitles = new BashCommands(command);
 		subtitles.startBashProcess();
@@ -166,7 +170,7 @@ public class CreateVideoTask extends Task<Void> {
 	}
 
 	/**
-	 * Make the video for quiz
+	 * Make the video for quiz, without the search term in the video
 	 * @param path path to working directory
 	 * @param pathToQuiz path to quiz folder
 	 * @param term the search term
@@ -182,7 +186,7 @@ public class CreateVideoTask extends Task<Void> {
 		createNoTerm.getProcess().waitFor();
 
 		command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + pathToQuiz + term + "quiz.mp4";
-		BashCommands merge = new BashCommands(command);
+		BashCommands merge = new BashCommands(command); // merge video and audio
 		merge.startBashProcess();
 		merge.getProcess().waitFor();
 	}

@@ -31,6 +31,9 @@ public class CompleteWikiSearch implements Runnable {
 		_stage = stage;
 	}
 
+	/**
+	 * This method is run in the GUI thread and so can update the user
+	 */
 	@Override
 	public void run() {
 		// error when the search term cannot be found
@@ -40,7 +43,7 @@ public class CompleteWikiSearch implements Runnable {
 			error.setHeaderText("Cannot find results for " + _term +", click OK to return to the menu");
 			error.getDialogPane().getStylesheets().add("/resources/alert.css");
 			error.showAndWait();
-			return;
+			return; // break out of method when this happens
 		}
 		
 		// reformat result

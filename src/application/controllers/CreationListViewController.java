@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
  *
  */
 public class CreationListViewController extends Controller{
+
 	@FXML private Button _createButton;
 	@FXML private Button _playButton;
 	@FXML private Button _deleteButton;
@@ -86,14 +87,14 @@ public class CreationListViewController extends Controller{
 	 */
 	@FXML
 	private void onTestButtonPressed() {
-		// check if the test video exists
+
 		File quizDir = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "quiz" + System.getProperty("file.separator"));
-		if (quizDir.isDirectory() && quizDir.list().length == 0) {
+		if (quizDir.isDirectory() && quizDir.list().length == 0) { // check there exist at least one test video
 			String content = "There are no test videos quiz you on.\nUse the New Creation button to create a creation along with a test video.";
 			Alert noTest = createAlert(AlertType.ERROR, "NO Tests", "No test videos!", content);
 			noTest.showAndWait();
 		} else {
-			// load the page
+			// there is at least one test so load the test page
 			try {
 				FXMLLoader testLoader = new FXMLLoader(getClass().getResource("/application/views/Test.fxml"));
 				Parent testRoot = testLoader.load();
@@ -111,11 +112,11 @@ public class CreationListViewController extends Controller{
 	 */
 	@FXML
 	private void onDeleteButtonPressed() {
+
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
 		if (creation != null) {
-			// wait for user confirmation
 			Alert confirmation = createAlert(AlertType.CONFIRMATION, "Deletion", "Do you want to delete " + creation + "?", null);
-			Optional<ButtonType> result = confirmation.showAndWait();
+			Optional<ButtonType> result = confirmation.showAndWait(); // wait for user confirmation
 			
 			// delete the creation if user confirmed
 			if (result.get() == ButtonType.OK) {
@@ -127,7 +128,7 @@ public class CreationListViewController extends Controller{
 				Alert info = createAlert(AlertType.INFORMATION, "Deletion successful", creation + " has been deleted successfully", null);
 				info.showAndWait();
 			}
-		} else {
+		} else { // throw an alert if user didn't select a creation to delete
 			Alert error = createAlert(AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to delete", null);
 			error.showAndWait();
 		}
@@ -138,9 +139,10 @@ public class CreationListViewController extends Controller{
 	 */
 	@FXML
 	private void onPlayButtonPressed() {
+
 		Creation creation = _creationList.getSelectionModel().getSelectedItem();
 		if (creation != null) {
-			try {
+			try { // if user has selected a create play the creation
 				FXMLLoader videoPlayerLoader = new FXMLLoader(getClass().getResource("/application/views/VideoPlayer.fxml"));
 				Parent videoRoot = videoPlayerLoader.load();
 				VideoPlayerController controller = videoPlayerLoader.getController();
@@ -150,7 +152,7 @@ public class CreationListViewController extends Controller{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else { // otherwise throw an alert
 			Alert error = createAlert(AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to play", null);
 			error.showAndWait();
 		}
@@ -161,6 +163,7 @@ public class CreationListViewController extends Controller{
 	 */
 	@FXML
 	private void onCreateButtonPressed() {
+
 		// Get user input for search term
 		TextInputDialog userInput = new TextInputDialog();
 		userInput.setTitle("VARpedia Creation");
@@ -168,27 +171,29 @@ public class CreationListViewController extends Controller{
 		userInput.setContentText("Please enter the term:");
 		userInput.getDialogPane().getStylesheets().add("/resources/alert.css");
 		userInput.initStyle(StageStyle.UNDECORATED);
-		Optional<String> result = userInput.showAndWait();
+		Optional<String> result = userInput.showAndWait(); // wait until user has entered input and continues
 
 		// start the search
 		if (result.isPresent() && !result.get().equals("")) {
 			try {
-				// check if the search term is the favourite
+				// check if the search term is a favourite term
 				String command = "ls \".favourites/" + result.get() + "\"";
 				BashCommands checkFavourites = new BashCommands(command);
 				checkFavourites.startBashProcess();
 				checkFavourites.getProcess().waitFor();
 				int isFavourite = checkFavourites.getExitStatus();
-				if (isFavourite == 0) {
+
+				if (isFavourite == 0) { // if search term is a favourite
 					// get search result directly and load next scene
 					File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
 							System.getProperty("file.separator") + result.get());
 					Scanner sc = new Scanner(file);
 					String wikiResults = "";
+
 					while (sc.hasNextLine()) {
 						wikiResults =  wikiResults + sc.nextLine() + "\n";
 					}
-					try {
+					try { // load the next scene
 						FXMLLoader creationSceneLoader = new FXMLLoader(getClass().getResource("/application/views/CreationScene.fxml"));
 						Parent creationRoot = creationSceneLoader.load();
 						CreationSceneController controller = creationSceneLoader.getController();
@@ -197,11 +202,12 @@ public class CreationListViewController extends Controller{
 						Stage stage = (Stage) _createButton.getScene().getWindow();
 						controller.setup(wikiResults, scene, _scene, result.get(), _creationListModel, true);
 						stage.setScene(scene);
+
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				} else {
-					// set up information box for searching term
+				} else { // if term is not favourite
+					// set up loading/information box for searching term
 					Alert searching = createAlert(AlertType.INFORMATION, "Creation", "Searching...Press cancel to stop the search and return to the menu list.", null);
 					searching.setGraphic(progressIndicator);
 					ButtonType cancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
@@ -215,7 +221,7 @@ public class CreationListViewController extends Controller{
 
 					task.setOnRunning(event -> {
 						searching.showAndWait();
-						if (!searching.isShowing()) {
+						if (!searching.isShowing()) { // if the user clicks the cancel button on the loading box then cancel the wiki search task
 							task.cancel();
 						}
 					});
@@ -225,7 +231,7 @@ public class CreationListViewController extends Controller{
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else { // if no search term entered then throw alert
 			Alert noInput = createAlert(AlertType.INFORMATION, "Error!!", "No input from the user.", "Please enter a search term ");
 			noInput.show();
 		}

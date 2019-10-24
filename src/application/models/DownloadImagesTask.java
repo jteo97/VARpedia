@@ -13,6 +13,7 @@ import javafx.concurrent.Task;
 
 /**
  * The task for the worker thread to run in order to download images from Flickr in the background
+ * Code provided by Dr Nasser Giacaman
  * @author Tommy Shi and Justin Teo
  *
  */
@@ -43,7 +44,7 @@ public class DownloadImagesTask extends Task<Void> {
         File file = new File(config);
         BufferedReader br = new BufferedReader(new FileReader(file));
 
-        String line;
+        String line; // read the file
         while ( (line = br.readLine()) != null ) {
             if (line.trim().startsWith(key)) {
                 br.close();
@@ -63,7 +64,7 @@ public class DownloadImagesTask extends Task<Void> {
             Flickr flickr = new Flickr(apiKey, sharedSecret, new REST());
 
             int page = 0;
-
+            //set up search
             PhotosInterface photos = flickr.getPhotosInterface();
             SearchParameters params = new SearchParameters();
             params.setSort(SearchParameters.RELEVANCE);
@@ -75,7 +76,7 @@ public class DownloadImagesTask extends Task<Void> {
             int count = 0;
             for (Photo photo: results) {
                 count++;
-                try {
+                try { // download all 10 images
                     BufferedImage image = photos.getImage(photo,Size.LARGE);
                     String filename = "image" + count + ".jpg";
                     File outputFile = new File(_destinationFolder,filename);

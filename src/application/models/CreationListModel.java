@@ -94,7 +94,7 @@ public class CreationListModel {
 	 * @return the list of creation after deletion
 	 */
 	public ObservableList<Creation> delete(Creation creation) {
-		_creationList.remove(creation);
+		_creationList.remove(creation); // delete from the list and the file itself
 		String deleteCreation = "rm -f " + System.getProperty("user.dir")+ System.getProperty("file.separator") +
 				"creations" + System.getProperty("file.separator") + creation + ".mp4";
 		BashCommands deletion = new BashCommands(deleteCreation);

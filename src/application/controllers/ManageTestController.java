@@ -1,13 +1,10 @@
 package application.controllers;
 
 import application.models.BashCommands;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +41,7 @@ public class ManageTestController extends Controller {
      */
     @FXML
     private void onDeleteButtonPressed() {
+
         String selected = _testList.getSelectionModel().getSelectedItem();
         if (selected != null) {
             // wait for user confirmation
@@ -66,11 +64,12 @@ public class ManageTestController extends Controller {
                     e.printStackTrace();
                 }
 
+                // prompt that deletion has been done
                 Alert info = createAlert(Alert.AlertType.INFORMATION, "Deletion successful", selected + " has been deleted successfully", null);
                 info.showAndWait();
 
             }
-        } else {
+        } else { // give feedback for when no creation selected
             Alert error = createAlert(Alert.AlertType.ERROR, "No creation selected", "You have not selected a creation, please select a creation to delete", null);
             error.showAndWait();
         }
@@ -86,7 +85,6 @@ public class ManageTestController extends Controller {
         _currentscene = scene;
         _prevScene = listScene;
         _window = window;
-
         _currentscene.getStylesheets().add("resources/style.css");
         _window.setScene(scene);
     }
@@ -109,21 +107,17 @@ public class ManageTestController extends Controller {
         BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
         List<String> outputList = new ArrayList<String>();
         String output = null;
+
         try {
-            output = stdoutBuffered.readLine();
+            while ((output = stdoutBuffered.readLine()) != null) { // read the contents of the output
+                outputList.add(output.substring(0, output.length() - 8)); // and add to the list of test videos
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        while (output != null) {
-            outputList.add(output.substring(0, output.length() - 8));
-            try {
-                output = stdoutBuffered.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
-        // set up
+
+        // add all the items to the view and increase font size
         _testList.getItems().addAll(outputList);
         _testList.setStyle("-fx-font-size: 1.2em ;");
     }

@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.StageStyle;
 
 /**
  * Main class for the application
@@ -22,10 +21,9 @@ public class Main extends Application {
 			FXMLLoader mainMenuLoader = new FXMLLoader(getClass().getResource("views/MainMenu.fxml"));
 			Parent menuRoot = mainMenuLoader.load();
 			
-			// properly exit the application
+			// properly exit the application and clean up any unnecessary files
 			primaryStage.setOnCloseRequest(event -> {
 				String command = "rm -f *.jpg ; rm -f *.wav ; rm -f *.mp4 ; rm -f commands.txt ; rm -f audio*.txt ;  rm -f *.scm ; rm -f subtitles.srt";
-
 				BashCommands tidyUp = new BashCommands(command);
 				tidyUp.startBashProcess();
 				try {
@@ -52,5 +50,4 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

@@ -11,10 +11,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +44,7 @@ public class TestController extends Controller {
     private void onCheckButtonPressed() {
         _wrong.setVisible(false);
         String answer = _answer.getText().toLowerCase();
-        if (answer.equals(_video)) { // shoe message for correctness
+        if (answer.equals(_video)) { // show message for correctness
             _player.pause();
             Alert correctAnswer = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             correctAnswer.setTitle("Well Done");
@@ -114,7 +112,7 @@ public class TestController extends Controller {
             e.printStackTrace();
         }
 
-        // get the quizs output
+        // get the quizzes output
         String fileToOpen = null;
         try {
             fileToOpen = listQuiz.getStdout();
@@ -122,7 +120,7 @@ public class TestController extends Controller {
             e.printStackTrace();
         }
 
-        // shuffle the quizs
+        // shuffle the quizzes
         String[] array = fileToOpen.split(".mp4");
         List<String> listOfCreations = Arrays.asList(array);
         Collections.shuffle(listOfCreations);
@@ -138,7 +136,7 @@ public class TestController extends Controller {
         _player = new MediaPlayer(video);
         _player.setAutoPlay(true);
         _media.setMediaPlayer(_player);
-        _player.setOnEndOfMedia(() -> {
+        _player.setOnEndOfMedia(() -> { // automatically replay the test video in case the user needs to listen again
             _player.seek(Duration.ZERO);
             _player.play();
         });

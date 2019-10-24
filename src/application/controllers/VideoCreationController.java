@@ -47,9 +47,9 @@ public class VideoCreationController extends Controller{
     private Scene _mainScene;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
     private Button _combineButton;
-    private List<Image> _images = new ArrayList<>();
-    private ArrayList<ImageView> _imageViews;
-    private ArrayList<CheckBox> _checkBoxes;
+    private List<Image> _images = new ArrayList<>(); // A list to hold all the images downloaded
+    private ArrayList<ImageView> _imageViews; // A list to hold all the imageViews
+    private ArrayList<CheckBox> _checkBoxes; // A list to hold all the checkBoxes
 
     /**
      * Cancel the video creation and delete all images and audio chunks
@@ -83,23 +83,27 @@ public class VideoCreationController extends Controller{
      */
     @FXML
     private void onCreateButtonPressed() {
+
         String name = _nameField.getText();
         String pathToCreation = System.getProperty("user.dir") + System.getProperty("file.separator") +
                 "creations" + System.getProperty("file.separator") + name + ".mp4";
-        boolean exists = new File(pathToCreation).isFile();
+        boolean exists = new File(pathToCreation).isFile(); // check if there is an existing creation with the same name
+
         _checkBoxes = new ArrayList<>(Arrays.asList(_checkBox1, _checkBox2, _checkBox3, _checkBox4, _checkBox5,
                 _checkBox6, _checkBox7, _checkBox8, _checkBox9, _checkBox10));
+
         boolean includeMusic = _musicChoice.getValue().equals("Yes");
         List<Integer> positions = getImageSelections();
 
         if (!atLeastOneChecked(_checkBoxes)) {
             Alert noneChecked = createAlert(Alert.AlertType.ERROR, "Invalid image selected", "No images selected", "Please select at least one image before clicking create.");
             noneChecked.show();
+            // block weird characters for file names
         } else if (name.equals(null) || name.equals("") || !name.matches("[a-zA-Z0-9_-]*")) {
             String content = "Please provide a suitable name before clicking create. \n We only accept alphanumeric characters and \"_\" and \"-\".";
             Alert noName = createAlert(Alert.AlertType.ERROR, "Invalid Name", "invalid name provided!", content);
             noName.show();
-        } else if (exists) {
+        } else if (exists) { // if there is an existing creation with the same name
             // wait for user confirmation
             Alert confirmation = createAlert(Alert.AlertType.CONFIRMATION, "File already exists", "Do you want to override " + name + ".mp4?", null);
             Optional<ButtonType> result = confirmation.showAndWait();
@@ -109,10 +113,11 @@ public class VideoCreationController extends Controller{
                 // delete the conflicting creation
                 _model.delete(name);
                 _window.close();
-                Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating... Please Wait...", null);
+                Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating creation... Please Wait... This may take some time.", null);
                 creating.setGraphic(progressIndicator);
                 creating.show();
 
+                // create background task to perform ffmpeg commands to create creation
                 CreateVideoTask createTask = _creation.createVideo(name, _model, positions, includeMusic);
                 createTask.setOnSucceeded(workerStateEvent1 -> {
                     creating.close();
@@ -121,12 +126,12 @@ public class VideoCreationController extends Controller{
             }
         } else {
             _window.close();
-            Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating... Please Wait...", null);
+            Alert creating = createAlert(Alert.AlertType.INFORMATION, "Creation", "Creating... Please Wait... This may take some time.", null);
             creating.setGraphic(progressIndicator);
             creating.show();
 
             CreateVideoTask createTask = _creation.createVideo(name, _model, positions, includeMusic);
-            createTask.setOnSucceeded(workerStateEvent12 -> {
+            createTask.setOnSucceeded(workerStateEvent2 -> {
                 creating.close();
                 _creationWindow.setScene(_mainScene);
             });
@@ -178,6 +183,7 @@ public class VideoCreationController extends Controller{
      * @param mainScene the main previous creation scene
      */
     public void setup(Scene scene, Creation creation, CreationListModel model, Stage creationWindow, Scene mainScene) {
+
         _mainScene = mainScene;
         _creation = creation;
         _creationWindow = creationWindow;
@@ -199,9 +205,9 @@ public class VideoCreationController extends Controller{
             suggestedName = creation.getSearchTerm() + "-" + count;
             suggestion = new File("creations/" + suggestedName + ".mp4");
         }
-        _nameField.setText(suggestedName);
+        _nameField.setText(suggestedName); // set the suggested name
 
-        _window.setOnCloseRequest(windowEvent -> {
+        _window.setOnCloseRequest(windowEvent -> { // tidy up when window is closed
             _combineButton.setDisable(true);
             try {
                 Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + System.getProperty("file.separator")
@@ -212,7 +218,7 @@ public class VideoCreationController extends Controller{
             }
         });
 
-        populateImages();
+        populateImages(); // populate the images in the corresponding views
 
         // add listener to text field so that pressing enter will fire the create button
         _nameField.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -226,7 +232,7 @@ public class VideoCreationController extends Controller{
     }
 
     /**
-     * Populate all the downloaded images
+     * Populate all the downloaded images into their own imageViews
      */
     private void populateImages() {
         for (int i = 1; i < 11; i++) {
@@ -252,7 +258,7 @@ public class VideoCreationController extends Controller{
     	int count = 1;
 		for (CheckBox c: _checkBoxes) {
 			if (c.isSelected()) {
-				positions.add(count);
+				positions.add(count); // add the position number that the of the selected image
 			}
 			count++;
 		}

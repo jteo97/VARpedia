@@ -50,7 +50,7 @@ public class VideoPlayerController extends Controller {
         _media.setMediaPlayer(_player);
 
         _window = stage;
-        _player.setOnEndOfMedia(() -> _window.setScene(_prevScene));
+        _player.setOnEndOfMedia(() -> _window.setScene(_prevScene)); // at the end of the video send the user back to main menu
         _window.setScene(_nextScene);
         _window.setTitle("Play Video");
 

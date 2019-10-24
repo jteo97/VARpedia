@@ -37,6 +37,7 @@ public class Creation implements Comparable<Creation> {
 	 * @throws Exception
 	 */
 	public void combineAudios(InputStream stdout, String path) throws Exception {
+
 		PrintWriter writer = new PrintWriter("subtitles.srt", "UTF-8");
 		BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
         String cmd = "sox ";
@@ -44,26 +45,32 @@ public class Creation implements Comparable<Creation> {
         int subtitleSection = 1;
         String old = null;
         while ((line = stdoutBuffered.readLine()) != null) {
-            cmd += line + " ";
 
+            cmd += line + " ";
             writer.println(subtitleSection);
             String command = "soxi -D \"" + path + line + "\"";
-            BashCommands findDuration = new BashCommands(command);
+            BashCommands findDuration = new BashCommands(command); // find duration of each audio clip
             findDuration.startBashProcess();
             findDuration.getProcess().waitFor();
+
             double duration = Double.parseDouble(findDuration.getStdout());
-            duration += 0.1;
-            DecimalFormat df = new DecimalFormat("##.##");
+            duration += 0.1; // add 0.1 second to duration so that subtitles aren't overlapping
+
+            DecimalFormat df = new DecimalFormat("##.##"); // ensure that the format of the duration of the subtitles is correct
             String formattedDur = df.format(duration);
             formattedDur = formattedDur.replaceFirst("[.]", ",");
 
             if (subtitleSection == 1) {
-                if (formattedDur.length() == 4) {
+                if (formattedDur.length() == 4) { // if it is the first subtitle start at time zero
                     writer.println("00:00:00,00 --> " + "00:00:0" + formattedDur);
                 } else {
                     writer.println("00:00:00,00 --> " + "00:00:" + formattedDur);
                 }
-            } else {
+
+            } else { // otherwise start off from the last subtitle
+
+                // this chunk of code starts the subtitle from the time of the previous subtitle and ends after the
+                // duration of the audio relating to that subtitle
                 old = old.replaceFirst("[,]", ".");
                 double temp = Double.parseDouble(old);
                 formattedDur = formattedDur.replaceFirst("[,]", ".");
@@ -73,6 +80,7 @@ public class Creation implements Comparable<Creation> {
                 df = new DecimalFormat("##.##");
                 formattedDur = df.format(temp2);
                 formattedDur = formattedDur.replaceFirst("[.]", ",");
+
                 if (old.length() == 4) {
                     if (formattedDur.length() == 4) {
                         writer.println("00:00:0" + old + " --> " + "00:00:0" + formattedDur);
@@ -88,11 +96,12 @@ public class Creation implements Comparable<Creation> {
                     }
                 }
             }
+
             line = line.substring(0, line.length() - 4);
             BufferedReader br = new BufferedReader(new FileReader(line + ".txt"));
             String subtitle = br.readLine();
             br.close();
-            writer.println(subtitle);
+            writer.println(subtitle); // writes to the file the text
             writer.println();
 
             old = formattedDur;

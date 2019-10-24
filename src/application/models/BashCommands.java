@@ -19,7 +19,7 @@ public class BashCommands {
     }
 
     /**
-     * Start the bash process
+     * Method to start the bash process
      */
     public void startBashProcess() {
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", _command);
@@ -62,10 +62,18 @@ public class BashCommands {
         return output;
     }
 
+    /**
+     * Method gets the exit status of the process
+     * @return the exit value of the process
+     */
     public int getExitStatus() {
         return _process.exitValue();
     }
 
+    /**
+     * Method gets the process itself
+     * @return the process itself
+     */
     public Process getProcess() {
         return _process;
     }

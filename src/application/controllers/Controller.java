@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 
 /**
  * A class represents the controller
- *
+ * @author Tommy Shi and Justin Teo
  */
 public abstract class Controller {
 

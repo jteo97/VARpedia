@@ -14,7 +14,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +53,8 @@ public class CreationSceneController extends Controller{
             String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + ".favourites" +
                     System.getProperty("file.separator") + _creation.getSearchTerm();
             FileWriter fileWriter = null;
-            try {
+
+            try { // write the wiki search results in to a text file named <search term>
                 fileWriter = new FileWriter(filename);
                 PrintWriter printWriter = new PrintWriter(fileWriter);
                 printWriter.print(_creation.getSearchResult());
@@ -81,6 +81,7 @@ public class CreationSceneController extends Controller{
             String selectedText = _searchResultArea.getSelectedText();
             selectedText = selectedText.replaceAll("\n", " "); // replace new line
             // load the preview window
+
             try {
                 FXMLLoader previewSceneLoader = new FXMLLoader(getClass().getResource("/application/views/Preview.fxml"));
                 Parent previewRoot = previewSceneLoader.load();
@@ -104,7 +105,7 @@ public class CreationSceneController extends Controller{
      */
     @FXML
     private void onCombineAudioPressed() throws Exception {
-        // get the list of auido chunks
+        // get a list of auido chunks
         String checkAudio = "ls " + System.getProperty("user.dir") + System.getProperty("file.separator") +
                 " | grep audio | grep .wav";
         BashCommands checkAudioExists = new BashCommands(checkAudio);
@@ -144,6 +145,7 @@ public class CreationSceneController extends Controller{
                     controller.setScene(scene, _combineAudio);
                     Stage stage = (Stage) _combineAudio.getScene().getWindow();
                     controller.setup(scene, _creation, _model, stage, _prevScene);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -179,15 +181,17 @@ public class CreationSceneController extends Controller{
      */
     @FXML
     private void onPlayStopPressed() {
+
         if (_playStopAudio.getText().equals("Play Audio")) { // play the selected audio
             String selection = _audiosList.getSelectionModel().getSelectedItem();
             if (selection != null) {
+
                 int position = _audiosList.getItems().indexOf(selection);
                 String audioFile = "audio" + position + ".wav";
                 Media sound = new Media(new File(audioFile).toURI().toString());
                 _mediaPlayer = new MediaPlayer(sound);
-                _mediaPlayer.setOnEndOfMedia(() -> finishPlaying());
-                _mediaPlayer.setOnStopped(() -> finishPlaying());
+                _mediaPlayer.setOnEndOfMedia(() -> finishPlaying()); // reset buttons
+                _mediaPlayer.setOnStopped(() -> finishPlaying()); // reset buttons
                 _mediaPlayer.setOnPlaying(() -> {
                     _playStopAudio.setText("Stop Audio");
                     _combineAudio.setDisable(true);
@@ -251,7 +255,7 @@ public class CreationSceneController extends Controller{
     }
 
     /**
-     * Setup listener on the selectTextProperty. What the listener does it that whenever the selected text changes it
+     * Setup listener on the selectTextProperty. The listener whenever the selected text changes
      * updates the label to display the word count of the selected text.
      *
      */
@@ -260,15 +264,16 @@ public class CreationSceneController extends Controller{
         _searchResultArea.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
             int numWords = 0;
             String selectedText = _searchResultArea.getSelectedText();
+
             if (selectedText.equals("")) {
                 _wordCount.setText("Word count: " + 0);
             } else {
-                selectedText = selectedText.trim();
+                selectedText = selectedText.trim(); // calculate number of words in the selected text
                 numWords = (selectedText.length() - selectedText.replaceAll("[ ,\n]", "").length() + 1);
                 _wordCount.setText("Word count: " + numWords);
             }
 
-            if (numWords > 40) {
+            if (numWords > 40) { // show feedback when they go over the word count
                 _wordCount.setStyle("-fx-text-fill: red");
                 _previewSpeech.setDisable(true);
             } else {
@@ -276,8 +281,6 @@ public class CreationSceneController extends Controller{
                 _previewSpeech.setDisable(false);
             }
         });
-
-
     }
 
     /**

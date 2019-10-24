@@ -31,6 +31,7 @@ public class PreviewController extends Controller {
 	@FXML private Button _playStopButton;
 	@FXML private Button _saveButton;
 
+	// set up the voice keys and values
 	private static Map<String, String> VOICES_RECORDS = new HashMap<>(Map.of("Male Voice", "akl_nz_jdt_diphone",
 			"Female Voice", "akl_nz_cw_cg_cg",
 			"Default Machine Voice", "kal_diphone"
@@ -45,7 +46,8 @@ public class PreviewController extends Controller {
 	private MediaPlayer _mediaPlayer;
 
 	/**
-	 * Enable play button when voice has been selected
+	 * Get user choice of voice and speed.
+	 * Enable play button when voice has been selected.
 	 */
 	@FXML
 	private void onVoiceOptionChanged() {
@@ -131,8 +133,9 @@ public class PreviewController extends Controller {
 				text.write(_audioText);
 				text.close();
 
-				saveAudio(VOICES_RECORDS.get(choice) + ".scm");
+				saveAudio(VOICES_RECORDS.get(choice) + ".scm"); // call helper method
 
+				// make a text file with contents being the speech words to later form the subtitles
 				FileWriter subtitle = new FileWriter("audio" + (Integer.parseInt(_count.get(0).toString()) - 1) + ".txt");
 				subtitle.write(_audioText);
 				subtitle.close();
@@ -183,14 +186,13 @@ public class PreviewController extends Controller {
 		_window.setScene(scene);
 		_window.setResizable(false);
 
-		_window.setOnCloseRequest(windowEvent -> {
+		_window.setOnCloseRequest(windowEvent -> { // set closing the window like cancelling the audio
 			try {
-				onCancelButtonPressed();
+				onCancelButtonPressed(); // delete created files
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		});
-
 		_window.show();
 	}
 
@@ -210,13 +212,13 @@ public class PreviewController extends Controller {
 		ObservableList<String> choices = FXCollections.observableArrayList();
 		choices.addAll("Default Machine Voice", "Male Voice", "Female Voice");
 		_choiceOfVoice.setItems(choices);
-		_choiceOfVoice.setValue("Default Machine Voice");
+		_choiceOfVoice.setValue("Default Machine Voice"); // preset the common case
 
 		// Add all common speeds
 		ObservableList<String> speedChoice = FXCollections.observableArrayList();
 		speedChoice.addAll("0.25x", "0.5x", "Normal", "1.25x", "1.5x", "2x");
 		_choiceOfSpeed.setItems(speedChoice);
-		_choiceOfSpeed.setValue("Normal");
+		_choiceOfSpeed.setValue("Normal"); // preset the common case
 	}
 
 	/**
@@ -247,9 +249,9 @@ public class PreviewController extends Controller {
 
 		// Check if the audio is playable
 		BufferedReader br = new BufferedReader(new FileReader("temp.wav"));
-		if (br.readLine() == null) {
+		if (br.readLine() == null) { // if the audio is unplayable the contents will be null since it didn't create successfully
 			tidyUpPreview();
-			_saveButton.setDisable(true);
+			_saveButton.setDisable(true); // throw an alert if this is the case and give a reason why
 			Alert failedVoice = createAlert(Alert.AlertType.ERROR, "Audio Creation Failed", "Failed to make audio clip!", 
 					"The selected text contains unpronounceable words for the current selected voice.\n" +
 					"Please select a different voice or preview with whole English words in the text only.");
@@ -313,7 +315,7 @@ public class PreviewController extends Controller {
 		String speed = _choiceOfSpeed.getSelectionModel().getSelectedItem();
 		if (speed.equals("Normal")) {
 			factor = 1.0;
-		} else {
+		} else { // perform calculation to find of the speed factor
 			factor = 1.0 / Double.parseDouble(speed.substring(0, speed.length() - 1));
 		}
 		return factor;
@@ -332,7 +334,7 @@ public class PreviewController extends Controller {
 
 	/**
 	 * Write the statement to all scm files
-	 * @param statement the statement to be written in
+	 * @param statement the statement to be written in, holds speed information
 	 * @param append true if statement is appended to the file, false otherwise
 	 * @throws IOException
 	 */
