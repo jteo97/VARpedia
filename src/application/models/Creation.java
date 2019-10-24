@@ -130,7 +130,7 @@ public class Creation implements Comparable<Creation> {
         if (includeMusic) {
             createTask = new CreateVideoTask(this, model, positions, true);
         } else {
-            createTask = new CreateVideoTask(this, model, positions, true);
+            createTask = new CreateVideoTask(this, model, positions, false);
         }
         team.submit(createTask);
         return createTask;
