@@ -216,18 +216,6 @@ public class CreationSceneController extends Controller{
     }
 
     /**
-     * Enable preview button when some text has been selected
-     */
-//    @FXML
-//    private void onMouseDrag() {
-//        if (!_searchResultArea.getSelectedText().equals("")) {
-//            _previewSpeech.setDisable(false);
-//        } else if (numWords < 40){
-//            _previewSpeech.setDisable(true);
-//        }
-//    }
-
-    /**
      * Set up the controller
      * @param result the wiki search result
      * @param scene the current scene to manage
