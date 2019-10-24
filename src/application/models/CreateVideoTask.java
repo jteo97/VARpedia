@@ -44,16 +44,16 @@ public class CreateVideoTask extends Task<Void> {
 		String termInVideo = _creation.getSearchTerm();
 
 		double duration = findDuration(path);
-		duration = duration/_numberOfImages; // split total duration of the video evenly between how many images
+		double durationPerImage = duration/_numberOfImages; // split total duration of the video evenly between how many images
 
-		setUpImage(path, duration); // call helper method which sets up a text file for ffmpeg command
+		setUpImage(path, durationPerImage); // call helper method which sets up a text file for ffmpeg command
 		createSlideShow(path, termInVideo); // call helper method which creates the slideshow of the images
 
 		if (_includeMusic) {
 			addMusicToSlideShow();
 		}
 
-		makeCreationVideo(pathToCreation); // merge audio and slideshow to make a video
+		makeCreationVideo(pathToCreation, duration); // merge audio and slideshow to make a video
 		makeQuizVideo(path, pathToQuiz, termInVideo); // make the test video
 		tidyUp();
 
@@ -156,17 +156,21 @@ public class CreateVideoTask extends Task<Void> {
 	 * @param pathToCreation path to the creations folder
 	 * @throws InterruptedException
 	 */
-	private void makeCreationVideo(String pathToCreation) throws InterruptedException {
+	private void makeCreationVideo(String pathToCreation, double duration) throws InterruptedException {
 		String command = "ffmpeg -y -i \"good.mp4\" -i \"combine.wav\" " + _creation.getVideoName() + ".mp4";
 		BashCommands merge = new BashCommands(command); //merge audio and video
 		merge.startBashProcess();
 		merge.getProcess().waitFor();
 
 		// add the subtitles into video
-		command = "ffmpeg -i " + _creation.getVideoName() + ".mp4 -vf subtitles=subtitles.srt " + pathToCreation + _creation.getVideoName() + ".mp4";
-		BashCommands subtitles = new BashCommands(command);
-		subtitles.startBashProcess();
-		subtitles.getProcess().waitFor();
+		if (duration > 60) {
+			//don't put in subtitles
+		} else {
+			command = "ffmpeg -i " + _creation.getVideoName() + ".mp4 -vf subtitles=subtitles.srt " + pathToCreation + _creation.getVideoName() + ".mp4";
+			BashCommands subtitles = new BashCommands(command);
+			subtitles.startBashProcess();
+			subtitles.getProcess().waitFor();
+		}
 	}
 
 	/**
