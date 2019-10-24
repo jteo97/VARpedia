@@ -80,7 +80,7 @@
                   </HBox>
                </children>
             </VBox>
-            <TextArea fx:id="_searchResultArea" onMouseClicked="#onMouseDrag" prefHeight="414.0" prefWidth="420.0" wrapText="true" />
+            <TextArea fx:id="_searchResultArea" prefHeight="414.0" prefWidth="420.0" wrapText="true" />
             <HBox>
                <children>
                   <VBox alignment="CENTER_LEFT">

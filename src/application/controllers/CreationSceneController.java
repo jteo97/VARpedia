@@ -38,6 +38,7 @@ public class CreationSceneController extends Controller{
     private CreationListModel _model;
     private Creation _creation;
     private List<Integer> _audioCount; // wrapper for count
+    private int _numWords;
     private Scene _scene;
     private Scene _prevScene;
     private ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -217,14 +218,14 @@ public class CreationSceneController extends Controller{
     /**
      * Enable preview button when some text has been selected
      */
-    @FXML
-    private void onMouseDrag() {
-        if (!_searchResultArea.getSelectedText().equals("")) {
-            _previewSpeech.setDisable(false);
-        } else {
-            _previewSpeech.setDisable(true);
-        }
-    }
+//    @FXML
+//    private void onMouseDrag() {
+//        if (!_searchResultArea.getSelectedText().equals("")) {
+//            _previewSpeech.setDisable(false);
+//        } else if (numWords < 40){
+//            _previewSpeech.setDisable(true);
+//        }
+//    }
 
     /**
      * Set up the controller
@@ -262,19 +263,23 @@ public class CreationSceneController extends Controller{
     public void setUpListener() {
 
         _searchResultArea.selectedTextProperty().addListener((observable, oldValue, newValue) -> {
-            int numWords = 0;
+            _numWords = 0;
             String selectedText = _searchResultArea.getSelectedText();
 
             if (selectedText.equals("")) {
+                _numWords = 0;
                 _wordCount.setText("Word count: " + 0);
             } else {
                 selectedText = selectedText.trim(); // calculate number of words in the selected text
-                numWords = (selectedText.length() - selectedText.replaceAll("[ ,\n]", "").length() + 1);
-                _wordCount.setText("Word count: " + numWords);
+                _numWords = (selectedText.length() - selectedText.replaceAll("[ ,\n]", "").length() + 1);
+                _wordCount.setText("Word count: " + _numWords);
             }
 
-            if (numWords > 40) { // show feedback when they go over the word count
+            if (_numWords > 40) { // show feedback when they go over the word count
                 _wordCount.setStyle("-fx-text-fill: red");
+                _previewSpeech.setDisable(true);
+            } else if (_numWords == 0) {
+                _wordCount.setStyle("-fx-text-fill: #EEEEEE");
                 _previewSpeech.setDisable(true);
             } else {
                 _wordCount.setStyle("-fx-text-fill: #EEEEEE");
