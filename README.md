@@ -1,12 +1,11 @@
 # VARpedia - SOFTENG 206
-# Beta Version
 
 ## Author
-Tommy Shi and Justin Teo
+Tommy Shi (yshi428) and Justin Teo (jteo158)
 
 ## Execution
 1. Download the jar file VARpedia.jar and flickr-api-keys.txt and Musics folder, and move them to your desired working directory.
-2. Execute the application by opening the working directory in terminal and run the run.sh script or execute the command: PATH=/home/student/Downloads/openjdk-13_linux-x64_bin/jdk-13/bin:$PATH
+2. Execute the application by opening the working directory in terminal and run the run.sh script with the command (bash run.sh) or execute the command: PATH=/home/student/Downloads/openjdk-13_linux-x64_bin/jdk-13/bin:$PATH
 java --module-path /home/student/Downloads/openjfx-13-rc+2_linux-x64_bin-sdk/javafx-sdk-13/lib --add-modules javafx.base,javafx.controls,javafx.media,javafx.graphics,javafx.fxml -jar VARpedia.jar
 3. Once executed, a creation folder will be creation to house all the user creations.
 
@@ -28,3 +27,6 @@ The images downloaded from flickr is legally downloading and in accordance with 
 ## External libraries
 Flickr API,
 Javafx
+
+## Link to GitHub Repository
+https://github.com/tommyshi55/VARpedia
