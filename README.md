@@ -22,7 +22,7 @@ Author: panu \
 License: https://creativecommons.org/licenses/by-nc/3.0/
 
 ## Images
-The images downloaded from flickr is legally downloading and in accordance with the T&Cs of never displaying over 30 images at once.
+The images downloaded from flickr is legally downloaded and in accordance with the T&Cs of never displaying over 30 images at once.
 
 ## External libraries
 Flickr API,
