@@ -30,3 +30,17 @@ Javafx
 
 ## Link to GitHub Repository
 https://github.com/tommyshi55/VARpedia
+
+## Code Attributions
+Special thanks to:
+Dr Nasser Giacaman for flickr API code and libraries
+Dr Nasser Giacaman for Embedding video into GUI code
+Dr Catherine Watson for festival code
+
+We attribute the following sources:
+Inline CSS and CSS stylesheets: https://www.youtube.com/watch?v=MAiKpkQqb6Q
+How to write to a file: https://www.baeldung.com/java-write-to-file
+How to add subtitles to video ffmpeg: https://trac.ffmpeg.org/wiki/HowToBurnSubtitlesIntoVideo
+How to merge audio files into one: https://stackoverflow.com/questions/9457020/merge-2-audio-files-in-sox
+How to add background music to video ffmpeg: https://www.4dots-software.com/codeblog/ffmpeg/how-to-add-background-music-to-video-with-audio.php
+How to do CSS in an Alert: https://www.programcreek.com/java-api-examples/?class=javafx.scene.Node&method=setId
