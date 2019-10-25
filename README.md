@@ -32,10 +32,10 @@ Javafx
 https://github.com/tommyshi55/VARpedia
 
 ## Code Attributions
-Special thanks to:
-Dr Nasser Giacaman for flickr API code and libraries
-Dr Nasser Giacaman for Embedding video into GUI code
-Dr Catherine Watson for festival code
+Special thanks to: \
+Dr Nasser Giacaman for flickr API code and libraries \
+Dr Nasser Giacaman for Embedding video into GUI code \
+Dr Catherine Watson for festival code \
 
 We attribute the following sources:
 Inline CSS and CSS stylesheets: https://www.youtube.com/watch?v=MAiKpkQqb6Q
