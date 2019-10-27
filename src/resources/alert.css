@@ -8,15 +8,18 @@
 
 .dialog-pane:header .header-panel .label{
     -fx-text-fill: #EEEEEE;
+    -fx-font-size: 2em;
 }
 
 .dialog-pane .content {
     -fx-text-fill: #EEEEEE;
+    -fx-font-size: 1.5em;
 }
 
 .dialog-pane .button {
     -fx-background-color: #EEEEEE;
     -fx-background-radius: 30;
+    -fx-font-size: 16;
 }
 
 .dialog-pane .button:hover {
