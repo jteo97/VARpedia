@@ -11,7 +11,6 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.TestController">
    <top>
       <MediaView fx:id="_media" fitHeight="475.0" fitWidth="800.0" preserveRatio="false" BorderPane.alignment="CENTER">
@@ -57,7 +56,7 @@
                         <Font size="16.0" />
                      </font>
                   </TextField>
-                  <Button mnemonicParsing="false" onAction="#onCheckButtonPressed" text="Check">
+                  <Button fx:id="_checkButton" mnemonicParsing="false" onAction="#onCheckButtonPressed" text="Check">
                      <font>
                         <Font size="16.0" />
                      </font>

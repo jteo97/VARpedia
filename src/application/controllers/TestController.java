@@ -1,9 +1,12 @@
 package application.controllers;
 
 import application.models.BashCommands;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -31,6 +34,7 @@ public class TestController extends Controller {
     @FXML private Button _pausePlay;
     @FXML private TextField _answer;
     @FXML private Label _wrong;
+    @FXML private Button _checkButton;
 
     private Stage _window;
     private Scene _currentScene;
@@ -151,5 +155,15 @@ public class TestController extends Controller {
         _window.setOnCloseRequest(windowEvent -> _player.stop());
         _window.setResizable(false);
         _window.show();
+
+        // add listener to text field so that pressing enter will fire the create button
+        _answer.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if(keyEvent.getCode() == KeyCode.ENTER) {
+                    _checkButton.fire();
+                }
+            }
+        });
     }
 }
