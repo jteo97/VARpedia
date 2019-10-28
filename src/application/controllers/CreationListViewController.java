@@ -167,7 +167,7 @@ public class CreationListViewController extends Controller{
 		// Get user input for search term
 		TextInputDialog userInput = new TextInputDialog();
 		userInput.setTitle("VARpedia Creation");
-		userInput.setHeaderText("Which term are you searching?");
+		userInput.setHeaderText("What word would you like to learn today?");
 		userInput.setContentText("Please enter the term:");
 		userInput.getDialogPane().getStylesheets().add("/resources/alert.css");
 		userInput.initStyle(StageStyle.UNDECORATED);
