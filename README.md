@@ -28,9 +28,6 @@ The images downloaded from flickr is legally downloaded and in accordance with t
 Flickr API,
 Javafx
 
-## Link to GitHub Repository
-https://github.com/tommyshi55/VARpedia
-
 ## Code Attributions
 Special thanks to: \
 Dr Nasser Giacaman for flickr API code and libraries \
